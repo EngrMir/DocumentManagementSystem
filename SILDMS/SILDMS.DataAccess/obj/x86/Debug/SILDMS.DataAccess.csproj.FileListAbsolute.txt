@@ -1,0 +1,56 @@
+E:\DMS_Final\SILDMS\SILDMS.DataAccess\bin\x86\Debug\SILDMS.DataAccess.dll.config
+E:\DMS_Final\SILDMS\SILDMS.DataAccess\bin\x86\Debug\SILDMS.DataAccess.dll
+E:\DMS_Final\SILDMS\SILDMS.DataAccess\bin\x86\Debug\SILDMS.DataAccess.pdb
+E:\DMS_Final\SILDMS\SILDMS.DataAccess\bin\x86\Debug\EntityFramework.dll
+E:\DMS_Final\SILDMS\SILDMS.DataAccess\bin\x86\Debug\EntityFramework.SqlServer.dll
+E:\DMS_Final\SILDMS\SILDMS.DataAccess\bin\x86\Debug\Microsoft.Practices.EnterpriseLibrary.Common.dll
+E:\DMS_Final\SILDMS\SILDMS.DataAccess\bin\x86\Debug\Microsoft.Practices.EnterpriseLibrary.Data.dll
+E:\DMS_Final\SILDMS\SILDMS.DataAccess\bin\x86\Debug\Microsoft.Web.Infrastructure.dll
+E:\DMS_Final\SILDMS\SILDMS.DataAccess\bin\x86\Debug\Ninject.dll
+E:\DMS_Final\SILDMS\SILDMS.DataAccess\bin\x86\Debug\Ninject.Web.Common.dll
+E:\DMS_Final\SILDMS\SILDMS.DataAccess\bin\x86\Debug\Ninject.Web.Mvc.dll
+E:\DMS_Final\SILDMS\SILDMS.DataAccess\bin\x86\Debug\SILDMS.DataAccessInterface.dll
+E:\DMS_Final\SILDMS\SILDMS.DataAccess\bin\x86\Debug\SILDMS.Model.dll
+E:\DMS_Final\SILDMS\SILDMS.DataAccess\bin\x86\Debug\SILDMS.Utillity.dll
+E:\DMS_Final\SILDMS\SILDMS.DataAccess\bin\x86\Debug\WebActivatorEx.dll
+E:\DMS_Final\SILDMS\SILDMS.DataAccess\bin\x86\Debug\SILDMS.DataAccessInterface.pdb
+E:\DMS_Final\SILDMS\SILDMS.DataAccess\bin\x86\Debug\SILDMS.Model.pdb
+E:\DMS_Final\SILDMS\SILDMS.DataAccess\bin\x86\Debug\SILDMS.Utillity.pdb
+E:\DMS_Final\SILDMS\SILDMS.DataAccess\bin\x86\Debug\EntityFramework.xml
+E:\DMS_Final\SILDMS\SILDMS.DataAccess\bin\x86\Debug\EntityFramework.SqlServer.xml
+E:\DMS_Final\SILDMS\SILDMS.DataAccess\bin\x86\Debug\Microsoft.Practices.EnterpriseLibrary.Common.xml
+E:\DMS_Final\SILDMS\SILDMS.DataAccess\bin\x86\Debug\Microsoft.Practices.EnterpriseLibrary.Data.xml
+E:\DMS_Final\SILDMS\SILDMS.DataAccess\bin\x86\Debug\Ninject.xml
+E:\DMS_Final\SILDMS\SILDMS.DataAccess\bin\x86\Debug\Ninject.Web.Common.xml
+E:\DMS_Final\SILDMS\SILDMS.DataAccess\bin\x86\Debug\Ninject.Web.Mvc.xml
+E:\DMS_Final\SILDMS\SILDMS.DataAccess\obj\x86\Debug\SILDMS.DataAccess.csprojResolveAssemblyReference.cache
+E:\DMS_Final\SILDMS\SILDMS.DataAccess\obj\x86\Debug\SILDMS.DataAccess.dll
+E:\DMS_Final\SILDMS\SILDMS.DataAccess\obj\x86\Debug\SILDMS.DataAccess.pdb
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccess\bin\x86\Debug\SILDMS.DataAccess.dll.config
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccess\bin\x86\Debug\SILDMS.DataAccess.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccess\bin\x86\Debug\SILDMS.DataAccess.pdb
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccess\bin\x86\Debug\EntityFramework.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccess\bin\x86\Debug\EntityFramework.SqlServer.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccess\bin\x86\Debug\Microsoft.Practices.EnterpriseLibrary.Common.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccess\bin\x86\Debug\Microsoft.Practices.EnterpriseLibrary.Data.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccess\bin\x86\Debug\Microsoft.Web.Infrastructure.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccess\bin\x86\Debug\Ninject.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccess\bin\x86\Debug\Ninject.Web.Common.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccess\bin\x86\Debug\Ninject.Web.Mvc.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccess\bin\x86\Debug\SILDMS.DataAccessInterface.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccess\bin\x86\Debug\SILDMS.Model.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccess\bin\x86\Debug\SILDMS.Utillity.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccess\bin\x86\Debug\WebActivatorEx.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccess\bin\x86\Debug\SILDMS.DataAccessInterface.pdb
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccess\bin\x86\Debug\SILDMS.Model.pdb
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccess\bin\x86\Debug\SILDMS.Utillity.pdb
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccess\bin\x86\Debug\EntityFramework.xml
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccess\bin\x86\Debug\EntityFramework.SqlServer.xml
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccess\bin\x86\Debug\Microsoft.Practices.EnterpriseLibrary.Common.xml
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccess\bin\x86\Debug\Microsoft.Practices.EnterpriseLibrary.Data.xml
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccess\bin\x86\Debug\Ninject.xml
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccess\bin\x86\Debug\Ninject.Web.Common.xml
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccess\bin\x86\Debug\Ninject.Web.Mvc.xml
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccess\obj\x86\Debug\SILDMS.DataAccess.csprojResolveAssemblyReference.cache
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccess\obj\x86\Debug\SILDMS.DataAccess.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccess\obj\x86\Debug\SILDMS.DataAccess.pdb

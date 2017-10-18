@@ -1,0 +1,554 @@
+﻿@{
+    ViewBag.Title = "Server Information";
+    Layout = "~/Views/Shared/_AdminLteLayout.cshtml";
+}
+
+<div class="box box-primary box-body" ng-controller="serverInfoCtrl">
+    <!-- box-header -->
+    <div class="box-header with-border">
+        <i class="fa  fa-files-o"></i>
+        <h3 class="box-title">Server List</h3>
+        <div class="box-tools pull-right">
+            <button type="button" id="btnRefresh" data-ng-click="toggleRefreshTable(row)" class="btn btn-flat pull-right" ng-disabled="loading"><i class="fa fa-refresh"></i> Refresh</button>
+            <button type="button" id="btnAdd" data-ng-click="toggleAdd(row)" class="btn btn-flat btn-primary pull-right" ng-disabled="loading"> <i class="fa fa-plus"></i> Add New</button>
+        </div>
+    </div>
+    <!-- /.box-header -->
+
+    <div class="box-body">
+        <div class="box-body table-responsive" data-ng-disabled="">
+            <!-- Data table for Server Information -->
+            <table st-table="displayedCollection" st-safe-src="servers" class="table table-condensed table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th st-sort="ServerName">Server Name</th>
+                        <th st-sort="ServerIP">Server IP</th>
+                        <th st-sort="Location">Location</th>
+                        <th st-sort="OwnerName">Server Owner</th>
+                        <th st-sort="Status">Status</th>
+                        @*<th st-sort="DocPreservationPolicy">Preservation Policy</th>
+                            <th st-sort="Status">Status</th>*@
+                        <th>Action</th>
+                    </tr>
+                    <tr>
+
+                        <th><input st-search="ServerName" placeholder="Server Name" class="input-sm form-control" type="search" /></th>
+                        @*<th><input st-search="ServerIP" placeholder="Server IP" class="input-sm form-control" type="search" /></th>
+                            <th><input st-search="Location" placeholder="Location" class="input-sm form-control" type="search" /></th>
+                            <th><input st-search="OwnerName" placeholder="Server Owner" class="input-sm form-control" type="search" /></th>
+                            <th><input st-search="Status" placeholder="Status" class="input-sm form-control" type="search" /></th>*@
+                        @*<th><input st-search="DocPreservationPolicy" placeholder="Preservation Policy" class="input-sm form-control" type="search" /></th>
+                            <th><input st-search="Status" placeholder="Status" class="input-sm form-control" type="search" /></th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="row in displayedCollection" ng-cloak>
+                        <td>{{row.ServerName}}</td>
+                        <td>{{row.ServerIP}}</td>
+                        <td>{{row.ServerLocation}}</td>
+                        <td>{{row.OwnerName}}</td>
+                        @*<td>{{row.DocPreservationPolicy}}</td>*@
+                        <td class="col-lg-1 col-md-1 col-sm-1 text-center">
+                            <span ng-attr-class="{{row.Status ==true? 'label label-success' : 'label label-danger' }}">
+                                {{row.Status == true? 'Active':'InActive'}}
+                            </span>
+                        </td>
+                        <td class="col-lg-1 col-md-1 col-sm-1 text-center">
+                            <button type="button" class="btn btn-sm btn-primary btn-flat" data-ng-click="toggleEdit(row)"><i class="fa fa-edit"></i>Edit</button>
+                            @*<button type="button" class="btn btn-sm btn-primary btn-flat" data-ng-click="ipChange(row)"><i class="fa fa-edit"></i>IP Change</button>*@
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="6" class="text-center">
+                            <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div><!-- Data table for Server Information end -->
+        <form name="serverFrm" id="name" ng-submit="">
+            <!-- Add/Edit Server Information Modal -->
+            <div class="bs-example">
+                <div id="addModal" class="modal fade">
+                    <!-- Modal HTML -->
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                <h3 class="modal-title" ng-show="!mode2">Server IP Change Form</h3>
+                                <h3 class="modal-title" ng-show="mode2">Server Information Entry Form</h3>
+                            </div>
+                            <div class="modal-body">
+                                <div class="box-body">
+                                    <div class="row" ng-show="mode2">
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            <div class="form-group">
+                                                <!--Drop Down for Owner Level-->
+                                                <label for="AddOwnerLevel">Owner Level</label>
+                                                <select id="AddOwnerLevel" name="ownerLevel" class="form-control" ng-model="serverInfo.OwnerLevel"
+                                                        ng-change="changeOwnerLevel(serverInfo.OwnerLevel.OwnerLevelID)" required="required"
+                                                        ng-options="ownerLevel as ownerLevel.LevelName for ownerLevel in ownerLevels track by ownerLevel.OwnerLevelID">
+                                                    <option value="" style="display: none">-- Select Owner Level --</option>
+                                                </select>
+                                                <div ng-show="serverFrm.$submitted || serverFrm.ownerLevel.$touched">
+                                                    <span ng-show="!serverFrm.ownerLevel.$dirty && serverFrm.ownerLevel.$pristine"
+                                                          class="label label-danger">Please select an owner level.</span>
+                                                </div>
+                                            </div><!--Drop Down for Owner Level end -->
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            <div class="form-group">
+                                                <!-- Drop Down for Owner -->
+                                                <label for="AddOwner">Owner</label>
+                                                <select id="AddOwner" name="owner" class="form-control" ng-model="serverInfo.Owner" required="required"
+                                                        data-ng-options="owner as owner.OwnerName for owner in owners track by owner.OwnerID">
+                                                    <option value="" style="display: none">-- Select Owner --</option>
+                                                </select>
+                                                <div ng-show="serverFrm.$submitted || serverFrm.owner.$touched">
+                                                    <span ng-show="!serverFrm.owner.$dirty && serverFrm.owner.$pristine"
+                                                          class="label label-danger">Please select an owner.</span>
+                                                </div>
+                                            </div><!-- Drop Down for Owner end -->
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            <div class="form-group">
+                                                <!-- Text box for Server ID -->
+                                                <label for="ServerID">Server ID</label>
+                                                <input type="text" data-ng-model="serverInfo.ServerID" class="form-control" id="ServerID"
+                                                       placeholder="System Generated Sever ID" readonly="readonly" />
+                                            </div><!-- Drop Down for Document Category end -->
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            <div class="form-group">
+                                                <!-- Text box for Server IP -->
+                                                <label for="ServerIP">Server IP</label>
+                                                <input type="text" name="serverIp" data-ng-model="serverInfo.ServerIP" class="form-control" id="ServerIP"
+                                                       placeholder="Server IP Address" required="required"/>
+                                                <div ng-show="serverFrm.$submitted || serverFrm.serverIp.$touched">
+                                                    <span ng-show="serverFrm.serverIp.$error.required" class="label label-danger">Please enter a server IP.</span>
+                                                </div>
+                                            </div><!-- Text box for Document Type Code end -->
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            <div class="form-group">
+                                                <!-- Text box for Document Type SL -->
+                                                <label for="LastReplacedIP">Last Replaced IP</label>
+                                                <input type="text" data-ng-model="serverInfo.LastReplacedIP" class="form-control" id="LastReplacedIP"
+                                                       placeholder="" readonly="readonly" />
+                                            </div><!-- Text box for Document Type SL end -->
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            <div class="form-group">
+                                                <!-- Text box for Document Type SL -->
+                                                <label for="ServerName">Server Name</label>
+                                                <input type="text" data-ng-model="serverInfo.ServerName" class="form-control" id="ServerName"
+                                                       placeholder="" />
+                                            </div><!-- Text box for Document Type SL end -->
+                                        </div>
+                                        <hr />
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-lg-4 col-md-4 col-sm-4" ng-show="mode2">
+                                            <div class="form-group">
+                                                <!-- Text box for User Defined(UD) Document Type Code -->
+                                                <label for="ServerFor">Server For</label>
+                                                <select id="ServerFor" class="form-control" ng-model="serverInfo.ServerFor">
+                                                    <option value="" style="display: none">-- Select Server For --</option>
+                                                    <option value="Database">Database</option>
+                                                    <option value="File">File</option>
+                                                </select>
+                                            </div><!-- Text box for User Defined(UD) Document Type Code end -->
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            <div class="form-group">
+                                                <!-- Text box for Document Type Name -->
+                                                <label for="ServerType">Server Type</label>
+                                                <select id="ServerType" class="form-control" ng-model="serverInfo.ServerType">
+                                                    <option value="" style="display: none">-- Select Server Type --</option>
+                                                    <option value="Rack Mount">Rack Mount</option>
+                                                    <option value="Blade">Blade</option>
+                                                </select>
+                                            </div><!-- Text box for Document Type Name end -->
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            <div class="form-group">
+                                                <!-- Text box for Document Preservation Policy -->
+                                                <label for="ServerLocation">Server Location</label>
+                                                <input type="text" data-ng-model="serverInfo.ServerLocation" class="form-control"
+                                                       id="ServerLocation" placeholder="" />
+                                            </div> <!-- Text box for Document Preservation Policy end -->
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row" ng-show="mode2">
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            <div class="form-group">
+                                                <!-- Text box for Document Physical Location -->
+                                                <label for="PurchaseDate">Purchase Date</label>
+                                                @*<input type="text" data-ng-model="serverInfo.PurchaseDate" class="form-control" id="PurchaseDate"
+                                                    placeholder=""/>*@
+                                                <div class="input-group" data-provide="">
+                                                    <input type="text" data-ng-model="serverInfo.PurchaseDate" class="form-control" id="PurchaseDate">
+                                                    <div class="input-group-addon">
+                                                        <span class="fa fa-calendar"></span>
+                                                    </div>
+                                                </div>
+                                            </div><!-- Text box for Document Physical Location end -->
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            <div class="form-group">
+                                                <!-- Text box for Document Physical Location -->
+                                                <label for="WarrantyPeriod">Warranty Period</label>
+                                                <div class="input-group" data-provide="">
+                                                    <input type="text" data-ng-model="serverInfo.WarrantyPeriod" class="form-control" id="WarrantyPeriod">
+                                                    <div class="input-group-addon">
+                                                        <span class="">Months</span>
+                                                    </div>
+                                                </div>
+                                            </div><!-- Text box for Document Physical Location end -->
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            <div class="form-group">
+                                                <!-- Text box for Document Physical Location -->
+                                                <label for="ServerProcessor">Server Processor</label>
+                                                <input type="text" data-ng-model="serverInfo.ServerProcessor" class="form-control" id="ServerProcessor"
+                                                       placeholder="" />
+                                            </div><!-- Text box for Document Physical Location end -->
+                                        </div>
+
+                                    </div>
+
+                                    <div class="row" ng-show="mode2">
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            <div class="form-group">
+                                                <!-- Text box for Document Physical Location -->
+                                                <label for="ServerRAM">Server RAM</label>
+                                                <input type="text" data-ng-model="serverInfo.ServerRAM" class="form-control" id="ServerRAM"
+                                                       placeholder="" />
+                                            </div><!-- Text box for Document Physical Location end -->
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            <div class="form-group">
+                                                <!-- Text box for Document Physical Location -->
+                                                <label for="ServerHDD">Storage Capacity</label>
+                                                <input type="text" data-ng-model="serverInfo.ServerHDD" class="form-control" id="ServerHDD"
+                                                       placeholder="" />
+                                            </div><!-- Text box for Document Physical Location end -->
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            <div class="form-group">
+                                                <!-- Text box for Document Physical Location -->
+                                                <label for="FtpPort">Ftp Port</label>
+                                                <input type="text" data-ng-model="serverInfo.FtpPort" class="form-control" id="FtpPort"
+                                                       placeholder="" />
+                                            </div><!-- Text box for Document Physical Location end -->
+                                        </div>
+                                        <hr />
+                                    </div>
+
+                                    <div class="row" ng-show="mode2">
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            <div class="form-group">
+                                                <!-- Text box for Document Physical Location -->
+                                                <label for="FtpUserName">Ftp User Name</label>
+                                                <input type="text" name="ftpUserName" data-ng-model="serverInfo.FtpUserName" class="form-control" id="FtpUserName"
+                                                       placeholder="" required="required"/>
+                                                <div ng-show="serverFrm.$submitted || serverFrm.ftpUserName.$touched">
+                                                    <span ng-show="serverFrm.ftpUserName.$error.required" class="label label-danger">Please enter an user name.</span>
+                                                </div>
+                                            </div><!-- Text box for Document Physical Location end -->
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            <div class="form-group">
+                                                <!-- Text box for Document Physical Location -->
+                                                <label for="FtpPassword">Ftp Password</label>
+                                                <input type="password" name="ftpPassword" data-ng-model="serverInfo.FtpPassword" class="form-control" id="FtpPassword"
+                                                       placeholder="" required="required" />
+                                                <div ng-show="serverFrm.$submitted || serverFrm.ftpPassword.$touched">
+                                                    <span ng-show="serverFrm.ftpPassword.$error.required" class="label label-danger">Please enter a password.</span>
+                                                </div>
+                                            </div><!-- Text box for Document Physical Location end -->
+                                        </div>
+                                        <div class="col-lg-4 col-md-4 col-sm-4">
+                                            <div class="form-group">
+                                                <!-- Drop down for Document Type Status -->
+                                                <label for="Status">Status</label>
+                                                <select id="Status" class="form-control" ng-model="serverInfo.Status">
+                                                    <option value="" style="display: none">-- None --</option>
+                                                    <option value="1">Active</option>
+                                                    <option value="0">Inactive</option>
+                                                </select>
+                                            </div><!-- Drop down for Document Type Status end -->
+                                        </div>
+                                    </div>
+                                    @*<div class="row">
+
+
+                                        </div>
+                                        <div class="row">
+
+                                        </div>
+                                        <div class="row" ng-show="mode2">
+
+                                        </div>*@
+
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="col-sm-12 col-md-12 col-lg-12">
+                                    <div class="form-group">
+                                        <button type="submit" id="btnSubmit" class="btn btn-primary btn-flat" 
+                                                ng-click="serverFrm.$setSubmitted(); serverFrm.$valid && Save()" ng-disabled="loading">Save</button>
+                                        <button type="button" id="btnClose" class="btn btn-default btn-flat" data-dismiss="modal">Close</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div><!-- /.box-body -->
+                    </div>
+                </div>
+            </div>
+        </form><!-- /Add DocProperty Modal end -->
+
+    </div>
+    <div id="mydiv" data-ng-show="loading">
+        <div class="overlay">
+            <i class="fa fa-refresh fa-spin"></i>Loading...
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    // When the document is ready
+    $(document).ready(function () {
+        $('#PurchaseDate').datepicker({
+            format: "dd/mm/yyyy",
+            Default: true
+        });
+    });
+</script>
+
+
+<script type="text/javascript">
+    // Controller for Document Type page
+    app.controller("serverInfoCtrl", ["$scope", "$http", function ($scope, $http) {
+
+        // Model for Document Type
+        $scope.resetServerInfo = function () {
+            $scope.serverInfo = {
+                ServerID: "",
+                ServerIP: "",
+                LastReplacedIP: "",
+                ServerName: "",
+                ServerFor: "",
+                ServerType: "",
+                ServerLocation: "",
+                PurchaseDate: "",
+                WarrantyPeriod: "",
+                ServerProcessor: "",
+                ServerRAM: "",
+                ServerHDD: "",
+                Owner: { OwnerID: "", OwnerName: "" },
+                OwnerLevel: { OwnerLevelID: "", LevelName: "" },
+                FtpPort: "",
+                FtpUserName: "",
+                FtpPassword: "",
+                Status: ""
+            };
+        };
+        $scope.resetServerInfo();
+
+        // Variables and Constant
+        $scope.mode = true;
+        $scope.mode2 = true;
+        $scope.saveModel = [];
+        $scope.servers = [];
+        $scope.displayedCollection = [].concat($scope.servers);
+        $scope.itemsByPage = 10;
+        $scope.loading = true;
+        // Get all owner levels
+        $scope.getOwnerLevels = function () {
+            $http.get("/SecurityModule/Server/GetOwnerLevel?id=")
+                .success(function (response) {
+                    $scope.ownerLevels = response.result;
+                    $scope.loading = false;
+                })
+                .error(function () { });
+        };
+        $scope.getOwnerLevels();
+        // Get all owners for the selected owner level on owner level dropdown change
+        $scope.changeOwnerLevel = function (id) {
+
+            $http.get("/SecurityModule/Server/GetOwners?id=" + id)
+                .success(function (response) {
+                    $scope.owners = response.result;
+                    $scope.loading = false;
+                })
+                .error(function () { });
+        }
+        // Get all server
+        $scope.getServers = function () {
+            $http.get("/SecurityModule/Server/GetServers?id=")
+                .success(function (response) {
+                    $scope.servers = response.result;
+                    $scope.displayedCollection = [].concat($scope.servers);
+                    $scope.loading = false;
+                })
+                .error(function () { });
+        };
+
+        $scope.getServers();
+
+        // Add new Document Type
+        $scope.toggleAdd = function (row) {
+            $scope.resetServerInfo();
+            $scope.serverInfo.Status = "1";
+
+            $scope.serverFrm.$setPristine();
+            $scope.serverFrm.$setUntouched();
+
+            $scope.mode = false;
+            $('#addModal').modal('show');
+        };
+
+        // Edit Document Type
+        $scope.toggleEdit = function (row) {
+            console.log(row);
+            $scope.getOwnerLevels();
+            $scope.serverInfo.OwnerLevel.OwnerLevelID = row.OwnerLevelID;
+            $scope.serverInfo.OwnerLevel.LevelName = row.LevelName;
+            $scope.changeOwnerLevel(row.OwnerLevelID);
+            $scope.mode = true;
+
+
+            $scope.serverInfo.ServerID = row.ServerID;
+            $scope.serverInfo.ServerIP = row.ServerIP;
+            $scope.serverInfo.LastReplacedIP = row.LastReplacedIP;
+            $scope.serverInfo.ServerName = row.ServerName;
+            $scope.serverInfo.ServerFor = row.ServerFor;
+            $scope.serverInfo.ServerType = row.ServerType;
+            $scope.serverInfo.ServerLocation = row.ServerLocation;
+            $scope.serverInfo.PurchaseDate = row.PurchaseDate;
+            $scope.serverInfo.WarrantyPeriod = row.WarrantyPeriod;
+            $scope.serverInfo.ServerProcessor = row.ServerProcessor;
+            $scope.serverInfo.ServerRAM = row.ServerRAM;
+            $scope.serverInfo.ServerHDD = row.ServerHDD;
+            $scope.serverInfo.Owner.OwnerID = row.OwnerID;
+            $scope.serverInfo.Owner.OwnerName = row.OwnerName;
+            $scope.serverInfo.FtpPort = row.FtpPort;
+            $scope.serverInfo.FtpUserName = row.FtpUserName;
+            $scope.serverInfo.FtpPassword = row.FtpPassword;
+            $scope.serverInfo.Status = row.Status.toString();
+
+            $scope.serverFrm.$setPristine();
+            $scope.serverFrm.$setUntouched();
+            if ($scope.serverInfo.Owner.OwnerID !== "") {
+                $scope.serverFrm.owner.$setDirty();
+                $scope.serverFrm.owner.$setValidity("", true);
+            }
+            if ($scope.serverInfo.OwnerLevel.OwnerLevelID !== "") {
+                $scope.serverFrm.ownerLevel.$setDirty();
+                $scope.serverFrm.ownerLevel.$setValidity("", true);
+            }
+            $("#addModal").modal("show");
+
+        };
+
+        //$scope.ipChange = function (row) {
+
+        //    $scope.mode = false;
+        //    $scope.mode2 = false;
+
+        //    $scope.serverInfo.ServerID = row.ServerID;
+        //    $scope.serverInfo.ServerIP = row.ServerIP;
+        //    $scope.serverInfo.LastReplacedIP = row.LastReplacedIP;
+        //    $scope.serverInfo.ServerName = row.ServerName;
+
+        //    $("#addModal").modal("show");
+        //}
+
+        // Convert current model to save model
+        $scope.convertModel = function () {
+            $scope.saveModel.ServerID = $scope.serverInfo.ServerID;
+            $scope.saveModel.ServerIP = $scope.serverInfo.ServerIP;
+            $scope.saveModel.LastReplacedIP = $scope.serverInfo.LastReplacedIP;
+            $scope.saveModel.ServerName = $scope.serverInfo.ServerName;
+            $scope.saveModel.ServerFor = $scope.serverInfo.ServerFor;
+            $scope.saveModel.ServerType = $scope.serverInfo.ServerType;
+            $scope.saveModel.ServerLocation = $scope.serverInfo.ServerLocation;
+            $scope.saveModel.PurchaseDate = $('#PurchaseDate').val();//$scope.serverInfo.PurchaseDate;
+            $scope.saveModel.WarrantyPeriod = $scope.serverInfo.WarrantyPeriod;
+            $scope.saveModel.ServerProcessor = $scope.serverInfo.ServerProcessor;
+            $scope.saveModel.ServerRAM = $scope.serverInfo.ServerRAM;
+            $scope.saveModel.ServerHDD = $scope.serverInfo.ServerHDD;
+            $scope.saveModel.OwnerID = $scope.serverInfo.Owner.OwnerID;
+            $scope.saveModel.Status = $scope.serverInfo.Status.toString();
+            $scope.saveModel.FtpPort = $scope.serverInfo.FtpPort;
+            $scope.saveModel.FtpUserName = $scope.serverInfo.FtpUserName;
+            $scope.saveModel.FtpPassword = $scope.serverInfo.FtpPassword;
+        };
+
+        // Save/Update Document Type
+        $scope.Save = function () {
+
+            $scope.loading = true;
+            $scope.convertModel();
+
+            console.log($scope.saveModel);
+            console.log($scope.serverInfo);
+            if ($scope.serverInfo.ServerID) {
+                // Update
+                $http.post("/SecurityModule/Server/EditServer/", JSON.stringify(convArrToObj($scope.saveModel)))
+                    .success(function (data) {
+                        if (data._respStatus.Status === "1") {
+                            $scope.loading = false;
+                            $scope.getServers();
+                            $scope.resetServerInfo();
+                            $("#addModal").modal("hide");
+                            toastr.success(data.Message);
+                        } else {
+                            $scope.loading = false;
+                            toastr.error(data.Message);
+                        }
+                    })
+                    .error(function (data) {
+                        $scope.loading = false;
+                        toastr.error("Update Failed.");
+                    });
+            } else {
+                // Save
+                $http.post("/SecurityModule/Server/AddServer/", JSON.stringify(convArrToObj($scope.saveModel)))
+                    .success(function (data) {
+                        if (data._respStatus.Status === "1") {
+                            $scope.loading = false;
+                            $scope.getServers();
+                            $scope.resetServerInfo();
+                            //$("#addModal").modal("hide");
+                            toastr.success(data.Message);
+                        } else {
+                            $scope.loading = false;
+                            toastr.error(data.Message);
+                        }
+                    })
+                    .error(function (data) {
+                        $scope.loading = false;
+                        toastr.error("Save Failed.");
+                    });
+            }
+        }
+        // Refresh Documnet Type Table
+        $scope.toggleRefreshTable = function () {
+            $scope.loading = true;
+            $scope.resetServerInfo();
+            $scope.getServers();
+        };
+    }]);
+</script>

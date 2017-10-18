@@ -1,0 +1,1136 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLteLayout.cshtml";
+}
+
+
+
+
+<div class="box box-primary box-body" ng-controller="OwnerProperIdentityCtrl" data-ng-init="init()">
+    <div class="box-header with-border">
+        <i class="fa fa-key"></i>
+        <h3 class="box-title">Data Level Permisson Setup Form</h3>
+        <div class="box-tools pull-right">
+            <button type="button" id="btnRefresh" data-ng-click="toggleRefreshTable(row)" class="btn btn-flat pull-right" ng-disabled="loading"><i class="fa fa-refresh"></i> Refresh</button>
+        </div>
+    </div>
+
+    <div class="box-body">
+        <div class="row form-group">
+            <div class="col-lg-2">
+                <label>Owner Level</label>
+
+            </div>
+            <div class="col-lg-4">
+                <select class="form-control" ng-model="UserModel.OwnerLevel"
+                        ng-options="ownerLevel as ownerLevel.LevelName for ownerLevel in UserownerLevels
+                            track by ownerLevel.OwnerLevelID">
+                    <option value="">--Select--</option>
+                </select>
+            </div>
+
+            <div class="col-lg-2">
+                <label>Number of User</label>
+            </div>
+            <div class="col-lg-4">
+                <input type="text" class="form-control" placeholder="Number of User"
+                       ng-model="UserModel.UserNo" readonly="readonly" />
+                
+            </div>
+
+        </div>
+
+        <div class="row form-group">
+            <div class="col-lg-2">
+                <label for="Owner">Owner</label>
+            </div>
+            <div class="col-lg-4">
+                <select class="form-control" ng-model="UserModel.Owner"
+                        data-ng-options="owner as owner.OwnerName for owner in UserownersForSpecificOwnerLevel track by owner.OwnerID"
+                        data-ng-disabled="!UserModel.OwnerLevel">
+                    <option value="">--Select--</option>
+                </select>
+            </div>
+
+            <div class="col-lg-2">
+                <label>User Name</label>
+            </div>
+            <div class="col-lg-4">
+                <input type="text" class="form-control" placeholder="User Name"
+                       ng-model="UserModel.UserName" readonly="readonly" />
+            </div>
+
+        </div>
+
+        <div class="row form-group">
+            <div class="col-lg-2">
+                <label>Employee ID</label>
+            </div>
+            <div class="col-lg-2">
+                <input type="text" class="form-control" placeholder="Employee ID"
+                       ng-model="UserModel.EmployeeID" readonly="readonly" />
+                <input type="hidden" class="form-control" placeholder="User ID"
+                       ng-model="UserModel.UserID" readonly="readonly"/>
+                <input type="hidden" class="form-control"
+                       ng-model="UserModel.UserOwnerAccessID" readonly="readonly" />
+            </div>
+            <div class="col-lg-2">
+                <input type="button" class="form-control btn btn-info"
+                       value="Employee List" ng-click="showEmployeeList()" />
+            </div>
+
+            <div class="col-lg-2">
+                <label>User Role</label>
+            </div>
+            <div class="col-lg-4">
+                <input type="text" class="form-control" placeholder="User Role"
+                       ng-model="UserModel.RoleTitle" readonly="readonly" />
+            </div>
+        </div>
+
+        <div class="row form-group">
+            <div class="col-lg-2">
+                <label>User Full Name</label>
+
+            </div>
+            <div class="col-lg-4">
+                <input type="text" class="form-control" placeholder="User Full Name"
+                       ng-model="UserModel.UserFullName" readonly="readonly" />
+            </div>
+
+            <div class="col-lg-2">
+                <label>Permission Level</label>
+            </div>
+            <div class="col-lg-4">
+                <input type="text" class="form-control" placeholder="Permission Level"
+                       ng-model="UserModel.PermissionLevel" readonly="readonly" />
+            </div>
+
+        </div>
+
+        <div class="row form-group">
+            <div class="col-lg-2">
+                <label>Designation</label>
+            </div>
+            <div class="col-lg-4">
+                <input type="text" class="form-control" placeholder="Designation"
+                       ng-model="UserModel.UserDesignation" readonly="readonly" />
+            </div>
+
+            <div class="col-lg-2">
+                <label>Supervisor Level</label>
+            </div>
+            <div class="col-lg-4">
+                <input type="text" class="form-control" placeholder="Supervisor Level"
+                       ng-model="UserModel.SupervisorLevel" readonly="readonly" />
+            </div>
+
+        </div>
+
+        <div class="row form-group">
+            <div class="col-lg-2">
+                <label>Job Location</label>
+            </div>
+            <div class="col-lg-4">
+                <input type="text" class="form-control" placeholder="Job Location"
+                       ng-model="UserModel.JobLocation" readonly="readonly"/>
+            </div>
+
+            <div class="col-lg-2">
+                <label>User Level</label>
+            </div>
+            <div class="col-lg-4">
+                <input type="text" class="form-control" placeholder="User Level"
+                       ng-model="UserModel.UserLevel" readonly="readonly"/>
+            </div>
+
+        </div>
+
+        <div class="row form-group">
+            <div class="col-lg-2">
+                <label>Owner Security?</label>
+
+            </div>
+            <div class="col-lg-4">
+                <input type="text" class="form-control" placeholder="User Level"
+                       ng-model="UserModel.EnableOwnerSecurity" readonly="readonly" />
+            </div>
+        </div>
+
+    </div>
+    <div class="box-body">
+        <form role="form" ng-submit="Save()">
+            <div class="row form-group">
+                <div class="col-lg-2">
+                    <label>Enable Data Security</label>
+
+                </div>
+                <div class="col-lg-4">
+                    <select class="form-control" data-ng-model="DataLevelPermissionModel.EnableDataSecurity">
+                        <option value="">--Select--</option>
+                        <option value="1">Yes</option>
+                        <option value="0">No</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-2">
+                    <label>Data Level Access</label>
+                </div>
+                <div class="col-lg-4">
+                    <select class="form-control" data-ng-model="DataLevelPermissionModel.DataLevelAccess"
+                             ng-disabled="!DataLevelPermissionModel.EnableDataSecurity">
+                        <option value="">--Select--</option>
+                        <option value="DocumentCategory">Document Category</option>
+                        <option value="DocumentType">Document Type</option>
+                        <option value="DocumentProperty">Document Property</option>
+                        <option value="DocumentPropertyValue">Document Property Value</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="row form-group">
+
+            </div>
+
+            <div class="row form-group">
+                <div class="col-lg-2">
+                    <label>Owner</label>
+                </div>
+                <div class="col-lg-4">
+                    <select class="form-control" ng-model="DataLevelPermissionModel.Owner"
+                            data-ng-options="owner as owner.OwnerName for owner in ownersListForSpecificUser track by owner.OwnerID"
+                            data-ng-disabled="!DataLevelPermissionModel.DataLevelAccess">
+                        <option value="">--Select--</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-2">
+                    <label>Document Category</label>
+                </div>
+                <div class="col-lg-4">
+                    <select class="form-control" data-ng-model="DataLevelPermissionModel.DocCategory"
+                            data-ng-options="docCategory as docCategory.DocCategoryName for docCategory in
+                         docCategoriesForSpecificOwner track by docCategory.DocCategoryID"
+                            data-ng-disabled="!DataLevelPermissionModel.Owner">
+                        <option value="">--Select--</option>
+                    </select>
+                </div>
+
+            </div>
+
+            <div class="row form-group">
+                <div class="col-lg-2">
+                    <label>Document Type</label>
+                </div>
+                <div class="col-lg-4">
+                    <select class="form-control" data-ng-model="DataLevelPermissionModel.DocType"
+                            data-ng-options="docType as docType.DocTypeName for docType in
+                         docTypeForSpecificDocCategory track by docType.DocTypeID"
+                            data-ng-disabled="!DataLevelPermissionModel.DocCategory">
+                        <option value="">--Select--</option>
+                    </select>
+                </div>
+
+                <div class="col-lg-2">
+                    <label>Document Property</label>
+                </div>
+                <div class="col-lg-4">
+                    <select class="form-control" data-ng-model="DataLevelPermissionModel.DocProperty"
+                            data-ng-options="docProperty as docProperty.DocPropertyName for docProperty in
+                         docPropertyForSpecificDocType track by docProperty.DocPropertyID"
+                            data-ng-disabled="!DataLevelPermissionModel.DocType">
+                        <option value="">--Select--</option>
+                    </select>
+                </div>
+
+            </div>
+            
+            <div class="row form-group">
+                <div class="col-lg-6">
+                    <input type="button" class="btn btn-flat btn-primary" value="Select All" ng-click="SelectAll()"/>
+                    <input type="button" class="btn btn-flat btn-primary" value="Unselect All" ng-click="UnSelectAll()"/>
+                    <input type="hidden" id="AccessLevel" />
+                </div>
+            </div>
+
+        
+        
+
+            <div id="docCategoryCheckbox" class="row hidden">
+                <div class="row form-group ">
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                        <label>Category</label>
+                        @*<input type="text" id="DocumentCategory" value="DocumentCategory" />*@
+                        
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                        <label>Time Limit</label>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                        <label>Remarks</label>
+                    </div>
+                </div>
+                <div class="row form-group ">
+                    <div ng-repeat="category in docCategoriesCheckboxForSpecificOwner">
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                            <input type="checkbox" name="docCategory" ng-model="category.IsSelected"
+                                   /> {{category.DocCategoryName}}
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                            <i class="fa fa-calendar"></i>
+                            <input type="text" class="DatePicker" placeholder="DD/MM/YYYY" id="{{'T_' + category.DocCategoryID}}" />
+
+                            <script type="text/javascript">
+                                $('.DatePicker').datepicker({
+                                    format: "dd/mm/yyyy"
+                                });
+                            </script>
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                            <input type="text" id="{{'R_' + category.DocCategoryID}}" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="docTypeCheckbox" class="row hidden">
+                <div class="row form-group">
+                    <div class="col-lg-4 col-md-4 col-sm-4">
+                        <label>Type</label>
+                        @*<input type="text" id="DocumentType" value="DocumentType" />*@
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4">
+                        <label>Time Limit</label>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4">
+                        <label>Remarks</label>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div ng-repeat="type in docTypeCheckboxForSpecificDocCategory">
+                        <div class="col-lg-4 col-md-4 col-sm-4">
+                            <input type="checkbox" name="docType" ng-model="type.IsSelected"
+                                   ng-change="" /> {{type.DocTypeName}}
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4">
+                            <i class="fa fa-calendar"></i>
+                            <input type="text" class="DatePicker" placeholder="DD/MM/YYYY" id="{{'T_' + type.DocTypeID}}" />
+
+                            <script type="text/javascript">
+                                $('.DatePicker').datepicker({
+                                    format: "dd/mm/yyyy"
+                                });
+                            </script>
+
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4">
+                            <input type="text" id="{{'R_' + type.DocTypeID}}" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="propertyCheckbox" class="row hidden">
+                <div class="row form-group">
+                    <div class="col-lg-4 col-md-4 col-sm-4">
+                        <label>Property</label>
+                        @*<input type="text" id="DocumentProperty" value="DocumentProperty" />*@
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4">
+                        <label>Time Limit</label>
+                    </div>
+                    <div class="col-lg-4 col-md-4 col-sm-4">
+                        <label>Remarks</label>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div ng-repeat="property in docPropertyCheckboxForSpecificDocType">
+                        <div class="col-lg-4 col-md-4 col-sm-4">
+                            <input type="checkbox" name="property" ng-model="property.IsSelected"
+                                   ng-change="" /> {{property.DocPropertyName}}
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4">
+                            <i class="fa fa-calendar"></i>
+                            <input type="text" class="DatePicker" placeholder="DD/MM/YYYY" id="{{'T_' + property.DocPropertyID}}" />
+
+                            <script type="text/javascript">
+                                $('.DatePicker').datepicker({
+                                    format: "dd/mm/yyyy"
+                                });
+                            </script>
+
+                        </div>
+                        <div class="col-lg-4 col-md-4 col-sm-4">
+                            <input type="text" id="{{'R_' + property.DocPropertyID}}" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="propIdentityCheckbox" class="row hidden">
+                <div class="row form-group">
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                        <label>Identification Attribute</label>
+                        @*<input type="text" id="DocumentPropertyValue" value="DocumentPropertyValue" />*@
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                        <label>Attribute Value</label>
+                    </div>
+
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                        <label>Time Limit</label>
+                    </div>
+                    <div class="col-lg-3 col-md-3 col-sm-3">
+                        <label>Remarks</label>
+                    </div>
+                </div>
+                <div class="row form-group">
+                    <div ng-repeat="propIdentity in docPropIdentityCheckbox">
+                        <div class="col-lg-3 col-md-3 col-sm-3">
+                            <input type="checkbox" name="propIdentity" ng-model="propIdentity.IsSelected"
+                                   ng-change="" /> {{propIdentity.IdentificationAttribute}}
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3">
+                            <input type="text" id="{{'M_' + propIdentity.DocPropIdentifyID}}" />
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3">
+                            <i class="fa fa-calendar"></i>
+                            <input type="text" class="DatePicker" placeholder="DD/MM/YYYY" id="{{'T_' + propIdentity.DocPropIdentifyID}}" />
+
+                            <script type="text/javascript">
+                                $('.DatePicker').datepicker({
+                                    format: "dd/mm/yyyy"
+                                });
+                            </script>
+                        </div>
+                        <div class="col-lg-3 col-md-3 col-sm-3">
+                            <input type="text" id="{{'R_' + propIdentity.DocPropIdentifyID}}" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+
+        <div class="row form-group">
+              
+        </div>
+
+        <div class="row form-group">
+            <div class="col-lg-12">
+                <input type="submit" value="Save" class="btn btn-success pull-right" />
+            </div>
+        </div>
+        </form>
+
+    </div>
+
+
+    <!-- Add Menu Modal -->
+    <div id="addModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" ng-click="ResetModel()" aria-hidden="true">x</button>
+                    <h3 class="modal-title">Employee List</h3>
+                </div>
+                <div class="modal-body table-responsive">
+                    <table st-table="" st-safe-src="" class="table table-condensed table-bordered table-striped table-hover">
+                        <thead>
+                            <tr>
+                                @*<th st-sort="UserID">User ID</th>
+                                <th st-sort="UserOwnerAccessID">UserOwnerAccessID</th>*@
+                                <th st-sort="EmployeeID">Employee ID</th>
+                                <th st-sort="UserFullName">Full Name</th>
+                                <th st-sort="UserDesignation">Designation</th>
+                                <th st-sort="JobLocation">Job Location</th>
+                                <th st-sort="UserNo">User No.</th>
+                                <th st-sort="UserName">User Name</th>
+                                <th st-sort="RoleName">Role</th>
+                                <th st-sort="PermissionLevel">Permission Level</th>
+                                <th st-sort="SupervisorLevel">Supervisor Level</th>
+                                <th st-sort="UserLevelName">User Level</th>
+                                <th st-sort="EnableOwnerSecurity">Owner Security?</th>
+                                <th>Action</th>
+                            </tr>
+                            <tr>
+                                @*<th>
+                                    <input st-search="UserID"
+                                           placeholder="UserID" class="input-sm form-control" type="search"/>
+                                </th>
+                                <th>
+                                    <input st-search="UserOwnerAccessID"
+                                           placeholder="UserOwnerAccessID" class="input-sm form-control" type="search" />
+                                </th>*@
+                                <th>
+                                    <input st-search="EmployeeID" placeholder="EmployeeID"
+                                           class="input-sm form-control" type="search" />
+                                </th>
+                                <th>
+                                    <input st-search="UserFullName"
+                                           placeholder="UserFullName" class="input-sm form-control"
+                                           type="search" />
+                                </th>
+                                <th>
+                                    <input st-search="UserDesignation" placeholder="UserDesignation"
+                                           class="input-sm form-control" type="search" />
+                                </th>
+
+                                <th>
+                                    <input st-search="JobLocation"
+                                           placeholder="JobLocation" class="input-sm form-control" type="search" />
+                                </th>
+                                <th>
+                                    <input st-search="UserNo" placeholder="UserNo"
+                                           class="input-sm form-control" type="search" />
+                                </th>
+                                <th>
+                                    <input st-search="UserName"
+                                           placeholder="UserName" class="input-sm form-control" type="search" />
+                                </th>
+                                <th>
+                                    <input st-search="RoleName" placeholder="RoleName"
+                                           class="input-sm form-control" type="search" />
+                                </th>
+
+                                <th>
+                                    <input st-search="PermissionLevel"
+                                           placeholder="PermissionLevel" class="input-sm form-control" type="search" />
+                                </th>
+                                <th>
+                                    <input st-search="SupervisorLevel" placeholder="SupervisorLevel"
+                                           class="input-sm form-control" type="search" />
+                                </th>
+                                <th>
+                                    <input st-search="UserLevelName"
+                                           placeholder="UserLevelName" class="input-sm form-control" type="search"/>
+                                </th>
+                                <th>
+                                    <input st-search="EnableOwnerSecurity"
+                                           placeholder="Owner Security?" class="input-sm form-control" type="search" />
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="row in EmployeeGridData">
+
+                                @*<td>{{row.UserID}}</td>
+                                <td>{{row.UserOwnerAccessID}}</td>*@
+                                <td>{{row.EmployeeID}}</td>
+                                <td>{{row.UserFullName}}</td>
+                                <td>{{row.UserDesignation}}</td>
+                                <td>{{row.JobLocation}}</td>
+                                <td>{{row.UserNo}}</td>
+                                <td>{{row.UserName}}</td>
+                                <td>{{row.RoleTitle}}</td>
+                                <td>{{row.PermissionLevel}}</td>
+                                <td>{{row.SupervisorLevel}}</td>
+                                <td>{{row.UserLevel}}</td>
+                                <td>{{row.EnableOwnerSecurity == '1'? 'Yes':'No'}}</td>
+                                <td><a ng-href="#" ng-rel="" data-ng-click="toggleSelect(row)">Select</a></td>
+                            </tr>
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colspan="6" class="text-center">
+                                    <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
+                                </td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <div class="col-sm-12 col-md-12 col-lg-12">
+                        <div class="form-group">
+                            <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="ResetModel()">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Add Menu Modal -->
+
+    <div id="mydiv" data-ng-show="loading">
+        <div class="overlay">
+            <i class="fa fa-refresh fa-spin"></i>Loading...
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    
+    app.controller('OwnerProperIdentityCtrl', function ($scope, $http) {
+
+        
+
+        $scope.DataLevelPermissionModel = {
+            OwnerLevelAccess: { OwnerLevelID: "", LevelName: "" },
+            Owner: { OwnerID: "", OwnerName: "" },
+
+            DocCategory: { DocCategoryID: "", DocCategoryName: "" },
+            DocType: { DocTypeID: "", DocTypeName: "" },
+            DocProperty: { DocPropertyID: "", DocPropertyName: "" },
+
+            Status: "",
+            EnableDataSecurity: "",
+            DataLevelAccess: ""
+        };
+
+        $scope.UserModel = {
+            OwnerLevel: { OwnerLevelID: "", LevelName: "" },
+            Owner: { OwnerID: "", OwnerName: "" },
+            UserID: "",
+            UserOwnerAccessID: "",
+            EmployeeID: "",
+            UserFullName: "",
+            UserDesignation: "",
+            JobLocation: "",
+            UserNo: "",
+            UserName: "",
+            UserPassword: "",
+            RoleTitle: "",
+            PermissionLevel: "",
+            UserLevel: "",
+            SupervisorLevel: "",
+            EnableOwnerSecurity: ""
+        };
+
+
+        //$scope.myArray = [];
+
+        $scope.itemsByPage = 10;
+        $scope.loading = true;
+
+        // User Data Population Section
+        $http.get('/DocScanningModule/OwnerProperIdentity/GetOwnerLevel?_OwnerLevelID=')
+            .success(function (response) {
+                $scope.UserownerLevels = response.result;
+                //$scope.ownerLevelsAccess = response.result; // New
+                $scope.UserModel.OwnerLevel = "";
+                //$scope.DataLevelPermissionModel.OwnerLevelAccess = ""; // New
+                $scope.loading = false;
+            })
+            .error(function () {
+                $scope.loading = false;
+            });
+
+        $scope.$watch('UserModel.OwnerLevel', function (newVal, oldVal) {
+            if (newVal !== oldVal) {
+                $scope.UserModel.Owner = "";
+                $http.post('/DocScanningModule/OwnerProperIdentity/GetOwnerForSpecificOwnerLevel',
+                    { _OwnerLevelID: $scope.UserModel.OwnerLevel.OwnerLevelID })
+                    .success(function (response) {
+                        $scope.UserownersForSpecificOwnerLevel = response.result;
+                        $scope.loading = false;
+                    }).error(function () {
+                        $scope.loading = false;
+                    });
+            }
+        });
+
+        $scope.showEmployeeList = function (model) {
+            $http.post('/SecurityModule/DataLevelPermission/GetEmployeeListForOwner',
+                {
+                    _OwnerID: $scope.UserModel.Owner.OwnerID
+                })
+                .success(function (response) {
+                    $scope.EmployeeGridData = response;
+                    $scope.loading = false;
+                }).error(function () {
+                    $scope.loading = false;
+                });
+
+            $('#addModal').modal('show');
+        };
+
+        $scope.toggleSelect = function (tableRow) {
+
+            $scope.UserModel.UserID = tableRow.UserID;
+            $scope.UserModel.UserOwnerAccessID = tableRow.UserOwnerAccessID;
+            $scope.UserModel.EmployeeID = tableRow.EmployeeID;
+            $scope.UserModel.UserFullName = tableRow.UserFullName;
+            $scope.UserModel.UserDesignation = tableRow.UserDesignation;
+
+            $scope.UserModel.JobLocation = tableRow.JobLocation;
+            $scope.UserModel.UserNo = (tableRow.UserNo).toString();
+            $scope.UserModel.UserName = (tableRow.UserName).toString();
+            $scope.UserModel.RoleTitle = (tableRow.RoleTitle).toString();
+            $scope.UserModel.PermissionLevel = (tableRow.PermissionLevel).toString();
+
+            $scope.UserModel.SupervisorLevel = (tableRow.SupervisorLevel).toString();
+            $scope.UserModel.UserLevel = (tableRow.UserLevel).toString();
+            $scope.UserModel.EnableOwnerSecurity = (tableRow.EnableOwnerSecurity === "1" ? "Yes" : "No");
+
+
+            $scope.DataLevelPermissionModel.EnableDataSecurity = "";
+            $scope.DataLevelPermissionModel.DataLevelAccess = "";
+
+            $scope.ownersListForSpecificUser = [];
+
+            $scope.docCategoriesForSpecificOwner = [];
+            $scope.docCategoriesCheckboxForSpecificOwner = [];
+
+            $scope.docTypeForSpecificDocCategory = [];
+            $scope.docTypeCheckboxForSpecificDocCategory = [];
+
+            $scope.docPropertyForSpecificDocType = [];
+            $scope.docPropertyCheckboxForSpecificDocType = [];
+
+
+            $scope.docPropIdentityCheckbox = [];
+
+            $('#addModal').modal('hide');
+        };
+
+        // User Data Population Section
+
+        $scope.ResetPermissionData = function() {
+            
+        }
+
+        $scope.$watch('DataLevelPermissionModel.EnableDataSecurity', function (newVal, oldVal) {
+            if (newVal !== oldVal) {
+                $scope.DataLevelPermissionModel.DataLevelAccess = "";
+
+                $scope.ownersListForSpecificUser = [];
+
+                $scope.docCategoriesForSpecificOwner = [];
+                $scope.docCategoriesCheckboxForSpecificOwner = [];
+
+                $scope.docTypeForSpecificDocCategory = [];
+                $scope.docTypeCheckboxForSpecificDocCategory = [];
+
+                $scope.docPropertyForSpecificDocType = [];
+                $scope.docPropertyCheckboxForSpecificDocType = [];
+
+
+                $scope.docPropIdentityCheckbox = [];
+            }
+        });
+
+        $scope.$watch('DataLevelPermissionModel.DataLevelAccess', function (newVal, oldVal) {
+            if (newVal !== oldVal) {
+                $scope.ownersListForSpecificUser = [];
+
+                $scope.docCategoriesForSpecificOwner = [];
+                $scope.docCategoriesCheckboxForSpecificOwner = [];
+
+                $scope.docTypeForSpecificDocCategory = [];
+                $scope.docTypeCheckboxForSpecificDocCategory = [];
+
+                $scope.docPropertyForSpecificDocType = [];
+                $scope.docPropertyCheckboxForSpecificDocType = [];
+
+
+                $scope.docPropIdentityCheckbox = [];
+
+
+
+                $http.post('/SecurityModule/DataLevelPermission/GetOwnersForSelectedUser',
+                    {
+                        _UserID: $scope.UserModel.UserID
+
+                    })
+                    .success(function (response) {
+                        $scope.ownersListForSpecificUser = response;
+                        $scope.loading = false;
+                    }).error(function () {
+                        $scope.loading = false;
+                    });
+            }
+        });
+
+        $scope.$watch('DataLevelPermissionModel.Owner', function (newVal, oldVal) {
+            if (newVal !== oldVal) {
+                $("#AccessLevel").val("DocumentCategory");
+
+
+                $scope.docCategoriesForSpecificOwner = [];
+                $scope.docCategoriesCheckboxForSpecificOwner = [];
+
+                $scope.docTypeForSpecificDocCategory = [];
+                $scope.docTypeCheckboxForSpecificDocCategory = [];
+
+                $scope.docPropertyForSpecificDocType = [];
+                $scope.docPropertyCheckboxForSpecificDocType = [];
+
+
+                $scope.docPropIdentityCheckbox = [];
+
+                $("#docCategoryCheckbox").addClass('hidden');
+                $("#docTypeCheckbox").addClass('hidden');
+                $("#propertyCheckbox").addClass('hidden');
+                $("#propIdentityCheckbox").addClass('hidden');
+                
+                $http.post('/SecurityModule/DataLevelPermission/GetDocCategoriesForSpecificUser',
+                    {
+                        _OwnerID: $scope.DataLevelPermissionModel.Owner.OwnerID,
+                        _UserID: $scope.UserModel.UserID
+                    })
+                    .success(function (response) {
+                        $scope.docCategoriesForSpecificOwner = response;
+                        $scope.docCategoriesCheckboxForSpecificOwner = response;
+                        $("#docCategoryCheckbox").removeClass('hidden');
+
+                        var number = response.length;
+                        setTimeout(function () {
+                            for (var i = 0; i < number; i++) {
+                                $("#T_" + response[i].DocCategoryID)
+                                    .val(response[i].TimeLimit);
+                                $("#R_" + response[i].DocCategoryID)
+                                    .val(response[i].Remarks);
+                                //$("#HD_" + response[i].DocCategoryID)
+                                //    .val(response[i].UserOwnerAccessID);
+                            };
+                        }, 0);
+
+
+
+
+                        $scope.loading = false;
+                    }).error(function () {
+                        $scope.loading = false;
+                    });
+            }
+        });
+
+        $scope.$watch('DataLevelPermissionModel.DocCategory', function (newValue, oldValue) {
+            if (newValue !== oldValue) {
+                $("#AccessLevel").val("DocumentType");
+                $scope.docTypeForSpecificDocCategory = [];
+                $scope.docTypeCheckboxForSpecificDocCategory = [];
+
+                $scope.docPropertyForSpecificDocType = [];
+                $scope.docPropertyCheckboxForSpecificDocType = [];
+
+
+                $scope.docPropIdentityCheckbox = [];
+
+
+                $("#docCategoryCheckbox").addClass('hidden');
+                $("#docTypeCheckbox").addClass('hidden');
+                $("#propertyCheckbox").addClass('hidden');
+                $("#propIdentityCheckbox").addClass('hidden');
+                //$scope.docPropIdentityGridData = "";
+                $http.post('/SecurityModule/DataLevelPermission/GetDocumentTypeForSpecificUser',
+                    {
+                        _DocCategoryID: $scope.DataLevelPermissionModel.DocCategory.DocCategoryID,
+                        _UserID: $scope.UserModel.UserID
+                    })
+                    .success(function (response) {
+                        $scope.docCategoriesCheckboxForSpecificOwner = [];
+                        $scope.docTypeForSpecificDocCategory = response;
+                        $scope.docTypeCheckboxForSpecificDocCategory = response;
+                        $("#docTypeCheckbox").removeClass('hidden');
+
+                        var number = response.length;
+                        setTimeout(function () {
+                            for (var i = 0; i < number; i++) {
+                                $("#T_" + response[i].DocTypeID)
+                                    .val(response[i].TimeLimit);
+                                $("#R_" + response[i].DocTypeID)
+                                    .val(response[i].Remarks);
+                                //$("#HD_" + response[i].DocCategoryID)
+                                //    .val(response[i].UserOwnerAccessID);
+                            };
+                        }, 0);
+
+
+                        $scope.loading = false;
+                    }).error(function () {
+                        $scope.loading = false;
+                    });
+            }
+        });
+
+        $scope.$watch('DataLevelPermissionModel.DocType', function (newValue, oldValue) {
+            if (newValue !== oldValue) {
+                $("#AccessLevel").val("DocumentProperty");
+
+                $scope.docPropertyForSpecificDocType = [];
+                $scope.docPropertyCheckboxForSpecificDocType = [];
+
+
+                $scope.docPropIdentityCheckbox = [];
+
+
+                $("#docCategoryCheckbox").addClass('hidden');
+                $("#docTypeCheckbox").addClass('hidden');
+                $("#propertyCheckbox").addClass('hidden');
+                $("#propIdentityCheckbox").addClass('hidden');
+
+                //$scope.docPropIdentityGridData = "";
+                $http.post('/SecurityModule/DataLevelPermission/GetDocumentPropertyForSpecificUser',
+                    {
+                        _UserID: $scope.UserModel.UserID,
+                        _DocTypeID: $scope.DataLevelPermissionModel.DocType.DocTypeID
+                    })
+                    .success(function (response) {
+                        $scope.docTypeCheckboxForSpecificDocCategory = [];
+                        $scope.docPropertyForSpecificDocType = response;
+                        $scope.docPropertyCheckboxForSpecificDocType = response;
+
+                        $("#propertyCheckbox").removeClass('hidden');
+
+
+                        var number = response.length;
+                        setTimeout(function () {
+                            for (var i = 0; i < number; i++) {
+                                $("#T_" + response[i].DocPropertyID)
+                                    .val(response[i].TimeLimit);
+                                $("#R_" + response[i].DocPropertyID)
+                                    .val(response[i].Remarks);
+                                //$("#HD_" + response[i].DocCategoryID)
+                                //    .val(response[i].UserOwnerAccessID);
+                            };
+                        }, 0);
+
+                        $scope.loading = false;
+                    }).error(function () {
+                        $scope.loading = false;
+                    });
+            }
+        });
+
+        $scope.$watch('DataLevelPermissionModel.DocProperty', function (newValue, oldValue) {
+            if (newValue !== oldValue) {
+                $("#AccessLevel").val("DocumentPropertyValue");
+
+                $scope.docPropIdentityCheckbox = [];
+
+                $("#docCategoryCheckbox").addClass('hidden');
+                $("#docTypeCheckbox").addClass('hidden');
+                $("#propertyCheckbox").addClass('hidden');
+                $("#propIdentityCheckbox").addClass('hidden');
+
+                $http.post('/SecurityModule/DataLevelPermission/GetDocPropIdentityForSpecificUser',
+                    {
+                        _UserID: $scope.UserModel.UserID,
+                        _DocPropertyID: $scope.DataLevelPermissionModel.DocProperty.DocPropertyID
+                    })
+                    .success(function (response) {
+                        $scope.docPropertyCheckboxForSpecificDocType = [];
+                        $scope.docPropIdentityCheckbox = response;
+                        $("#propIdentityCheckbox").removeClass('hidden');
+
+                        var number = response.length;
+                        setTimeout(function () {
+                            for (var i = 0; i < number; i++) {
+                                $("#T_" + response[i].DocPropIdentifyID)
+                                    .val(response[i].TimeLimit);
+                                $("#R_" + response[i].DocPropIdentifyID)
+                                    .val(response[i].Remarks);
+                                $("#M_" + response[i].DocPropIdentifyID)
+                                    .val(response[i].MetaValue);
+                            };
+                        }, 0);
+
+                        $scope.loading = false;
+                    }).error(function () {
+                        $scope.loading = false;
+                    });
+            };
+        });
+
+        $scope.SelectAll = function () {
+            if ($scope.DataLevelPermissionModel.DataLevelAccess === "DocumentCategory") {
+                angular.forEach($scope.docCategoriesCheckboxForSpecificOwner, function (item) {
+                    item.IsSelected = true;
+                });
+            }
+            else if ($scope.DataLevelPermissionModel.DataLevelAccess === "DocumentType") {
+                angular.forEach($scope.docTypeCheckboxForSpecificDocCategory, function (item) {
+                    item.IsSelected = true;
+                });
+            }
+            else if ($scope.DataLevelPermissionModel.DataLevelAccess === "DocumentProperty") {
+                angular.forEach($scope.docPropertyCheckboxForSpecificDocType, function (item) {
+                    item.IsSelected = true;
+                });
+            }
+            else if ($scope.DataLevelPermissionModel.DataLevelAccess === "DocumentPropertyValue") {
+                angular.forEach($scope.docPropIdentityCheckbox, function (item) {
+                    item.IsSelected = true;
+                });
+            }
+        };
+
+        $scope.UnSelectAll = function () {
+            if ($scope.DataLevelPermissionModel.DataLevelAccess === "DocumentCategory") {
+                angular.forEach($scope.docCategoriesCheckboxForSpecificOwner, function (item) {
+                    item.IsSelected = false;
+                });
+            }
+            else if ($scope.DataLevelPermissionModel.DataLevelAccess === "DocumentType") {
+                angular.forEach($scope.docTypeCheckboxForSpecificDocCategory, function (item) {
+                    item.IsSelected = false;
+                });
+            }
+            else if ($scope.DataLevelPermissionModel.DataLevelAccess === "DocumentProperty") {
+                angular.forEach($scope.docPropertyCheckboxForSpecificDocType, function (item) {
+                    item.IsSelected = false;
+                });
+            }
+            else if ($scope.DataLevelPermissionModel.DataLevelAccess === "DocumentPropertyValue") {
+                angular.forEach($scope.docPropIdentityCheckbox, function (item) {
+                    item.IsSelected = false;
+                });
+            }
+        };
+
+        //---------------------------------------------
+
+
+        //############## Save Modal ########################
+        var DocCategoryModel = {
+            CategoryID: "",
+            CategoryTime: "",
+            CategoryRemarks: ""
+        };
+
+        var DocTypeModel = {
+            TypeID: "",
+            TypeTime: "",
+            TypeRemarks: ""
+        };
+
+        var DocPropertyModel = {
+            PropertyID: "",
+            PropertyTime: "",
+            PropertyRemarks: ""
+        };
+
+        var DocPropIdentityModel = {
+            PropIdentityID: "",
+            PropIdentityTime: "",
+            PropIdentityRemarks: "",
+            PropIdentityMetaValue: ""
+        };
+
+        var FinalObject = {
+            "DocCategoryID": "", "DocPropertyID": "", "DocTypeID": "",
+            "UserID": "", "DataLevelAccess": "", "OwnerID": "", "UserOwnerAccessID": "",
+            "DocCategoryModel": [], "DocTypeModel": [], "DocPropertyModel": [], "DocPropIdentityModel": []
+        };
+
+
+        $scope.Save = function() {
+            if ($("#AccessLevel").val() === $scope.DataLevelPermissionModel.DataLevelAccess) {
+                angular.forEach($scope.docCategoriesCheckboxForSpecificOwner, function(item) {
+                    if (item.IsSelected) {
+
+                        DocCategoryModel.CategoryID = item.DocCategoryID;
+                        DocCategoryModel.CategoryTime = $("#T_" + item.DocCategoryID).val();
+                        DocCategoryModel.CategoryRemarks = $("#R_" + item.DocCategoryID).val();
+
+                        FinalObject.DocCategoryModel.push(DocCategoryModel);
+
+                        DocCategoryModel = {
+                            CategoryID: "",
+                            CategoryTime: "",
+                            CategoryRemarks: ""
+                        };
+                    };
+                });
+
+                angular.forEach($scope.docTypeCheckboxForSpecificDocCategory, function(item) {
+                    if (item.IsSelected) {
+                        DocTypeModel.TypeID = item.DocTypeID;
+                        DocTypeModel.TypeTime = $("#T_" + item.DocTypeID).val();
+                        DocTypeModel.TypeRemarks = $("#R_" + item.DocTypeID).val();
+
+                        FinalObject.DocTypeModel.push(DocTypeModel);
+
+                        DocTypeModel = {
+                            TypeID: "",
+                            TypeTime: "",
+                            TypeRemarks: ""
+                        };
+                    };
+                });
+
+                angular.forEach($scope.docPropertyCheckboxForSpecificDocType, function(item) {
+                    if (item.IsSelected) {
+
+                        DocPropertyModel.PropertyID = item.DocPropertyID;
+                        DocPropertyModel.PropertyTime = $("#T_" + item.DocPropertyID).val();
+                        DocPropertyModel.PropertyRemarks = $("#R_" + item.DocPropertyID).val();
+
+                        FinalObject.DocPropertyModel.push(DocPropertyModel);
+
+                        DocPropertyModel = {
+                            PropertyID: "",
+                            PropertyTime: "",
+                            PropertyRemarks: ""
+                        };
+                    };
+                });
+
+                angular.forEach($scope.docPropIdentityCheckbox, function(item) {
+                    if (item.IsSelected) {
+                        DocPropIdentityModel.PropIdentityID = item.DocPropIdentifyID;
+                        DocPropIdentityModel.PropIdentityTime = $("#T_" + item.DocPropIdentifyID).val();
+                        DocPropIdentityModel.PropIdentityRemarks = $("#R_" + item.DocPropIdentifyID).val();
+                        DocPropIdentityModel.PropIdentityMetaValue = $("#M_" + item.DocPropIdentifyID).val();
+
+                        FinalObject.DocPropIdentityModel.push(DocPropIdentityModel);
+
+                        DocPropIdentityModel = {
+                            PropIdentityID: "",
+                            PropIdentityTime: "",
+                            PropIdentityRemarks: "",
+                            PropIdentityMetaValue: ""
+                        };
+                    };
+                });
+
+                FinalObject.UserID = $scope.UserModel.UserID;
+                FinalObject.OwnerID = $scope.DataLevelPermissionModel.Owner.OwnerID;
+                FinalObject.UserOwnerAccessID = $scope.UserModel.UserOwnerAccessID;
+                FinalObject.DataLevelAccess = $scope.DataLevelPermissionModel.DataLevelAccess;
+
+                FinalObject.DocCategoryID = $scope.DataLevelPermissionModel.DocCategory.DocCategoryID;
+                FinalObject.DocTypeID = $scope.DataLevelPermissionModel.DocType.DocTypeID;
+                FinalObject.DocPropertyID = $scope.DataLevelPermissionModel.DocProperty.DocPropertyID;
+
+
+                $.ajax({
+                    url: '/SecurityModule/DataLevelPermission/SetDataLevelPermission',
+                    data: JSON.stringify(FinalObject),
+                    type: 'POST',
+                    contentType: 'application/json;',
+                    dataType: 'json',
+                    success: function(response) {
+                        $scope.loading = false;
+                        toastr.success(response.Message);
+                    } //End of success call
+                });
+
+                FinalObject = {
+                    "DocCategoryID": "",
+                    "DocPropertyID": "",
+                    "DocTypeID": "",
+                    "UserID": "",
+                    "DataLevelAccess": "",
+                    "OwnerID": "",
+                    "UserOwnerAccessID": "",
+                    "DocCategoryModel": [],
+                    "DocTypeModel": [],
+                    "DocPropertyModel": [],
+                    "DocPropIdentityModel": []
+                };
+
+            } else {
+                toastr.error("Please select correct Data Level Access");
+            }
+
+        };
+
+
+    });
+
+</script>
+
+
+
+

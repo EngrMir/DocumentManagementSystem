@@ -1,0 +1,679 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLteLayout.cshtml";
+}
+
+<div class="box box-primary box-body" ng-controller="OwnerProperIdentityCtrl">
+
+    <div class="box-header with-border">
+        <i class="fa fa-list-alt"></i>
+        <h3 class="box-title">Document Identity List</h3>
+        <div class="box-tools pull-right">
+            <button type="button" id="btnRefresh" data-ng-click="toggleRefreshTable(row)" class="btn btn-flat pull-right" ng-disabled="loading"><i class="fa fa-refresh"></i> Refresh</button>
+            <button type="button" id="btnAdd" data-ng-click="toggleAdd(row)" class="btn btnSave btn-flat btn-primary pull-right" ng-disabled="loading"> <i class="fa fa-plus"></i> Add New</button>
+
+        </div>
+    </div>
+
+    <div class="box-body">
+
+        <div class="row">
+            <div class="col-sm-2 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label for="OwnerLevel">Owner Level</label>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-4">
+                <div class="form-group">
+                    <select class="form-control" ng-model="docPropIdentityModel.OwnerLevel"
+                            ng-options="ownerLevel as ownerLevel.LevelName for ownerLevel in ownerLevels
+                        track by ownerLevel.OwnerLevelID">
+                        <option value="">--Select--</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-2 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label for="Owner">Owner</label>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-4">
+                <div class="form-group">
+                    <select class="form-control" ng-model="docPropIdentityModel.Owner"
+                            data-ng-options="owner as owner.OwnerName for owner in ownersForSpecificOwnerLevel track by owner.OwnerID"
+                            data-ng-disabled="!docPropIdentityModel.OwnerLevel">
+                        <option value="">--Select--</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label>Document Category</label>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-4">
+                <div class="form-group">
+                    <select class="form-control" data-ng-model="docPropIdentityModel.DocCategory"
+                            data-ng-options="docCategory as docCategory.DocCategoryName for docCategory in
+                         docCategoriesForSpecificOwner track by docCategory.DocCategoryID"
+                            data-ng-disabled="!docPropIdentityModel.Owner">
+                        <option value="">--Select--</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-2 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label>Document Type</label>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-4">
+                <div class="form-group">
+                    <select class="form-control" data-ng-model="docPropIdentityModel.DocType"
+                            data-ng-options="docType as docType.DocTypeName for docType in
+                         docTypeForSpecificDocCategory track by docType.DocTypeID"
+                            data-ng-disabled="!docPropIdentityModel.DocCategory">
+                        <option value="">--Select--</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label>Documents</label>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-4">
+                <select class="form-control" data-ng-model="docPropIdentityModel.DocProperty"
+                        data-ng-options="docProperty as docProperty.DocPropertyName for docProperty in
+                         docPropertyForSpecificDocType track by docProperty.DocPropertyID"
+                        data-ng-disabled="!docPropIdentityModel.DocType">
+                    <option value="">--Select--</option>
+                </select>
+            </div>
+            <div class="col-sm-2 col-md-2 col-lg-2">
+
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-4">
+
+            </div>
+        </div>
+
+        <br />
+
+        <div class="table-responsive">
+            <table st-table="GridDisplayCollection" st-safe-src="docPropIdentityGridData" class="table table-condensed table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        @*<th st-sort="ID">ID</th>*@
+                        <th st-sort="IdentificationSL">Serial No.</th>
+                        <th st-sort="IdentificationAttribute">Identificaiton Attribute</th>
+                        <th st-sort="IdentificationCode">Identification Code</th>
+                        <th st-sort="IsRequired"> Required</th>
+                        <th st-sort="IsAuto">Auto</th>
+                        <th st-sort="IsRestricted">Restricted</th>
+                        <th st-sort="Remarks">Remarks</th>
+                        <th st-sort="Status">Status</th>
+                        <th>Action</th>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th>
+                            <input st-search="IdentificationAttribute" placeholder="Attribute" class="input-sm form-control" type="search" />
+                        </th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="row in GridDisplayCollection">
+                        <td>{{row.IdentificationSL}}</td>
+                        <td>{{row.IdentificationAttribute}}</td>
+                        <td>{{row.IdentificationCode}}</td>
+                        <td>{{row.IsRequired == true? 'Yes':'No'}}</td>
+                        <td>{{row.IsAuto == true? 'Yes':'No'}}</td>
+                        <td>{{row.IsRestricted == true? 'Yes':'No'}}</td>
+                        <td>{{row.Remarks}}</td>
+                        <td>
+                            <span ng-attr-class="{{row.Status ==true? 'label label-success' : 'label label-danger' }}">
+                                {{row.Status == true? 'Active':'InActive'}}
+                            </span>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-sm btn-primary btn-flat" data-ng-click="toggleEdit(row)"><i class="fa fa-edit"></i> Edit</button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="9" class="text-center">
+                            <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="10"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <form id="docPropIdntyFrm" name="docPropIdntyFrm" ng-submit="">
+        <div class="bs-example">
+            <!-- Modal HTML -->
+            <div id="addModal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" ng-click="ResetModel()" aria-hidden="true">x</button>
+                            <h3 class="modal-title">Documents Identity</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="box-body">
+
+                                <div class="row">
+                                    <div class="col-sm-4 col-md-4 col-lg-4">
+                                        <div class="form-group">
+                                            <label>Owner Level</label>
+                                            <select name="ownerLevel" class="form-control" ng-model="docPropIdentityModel.OwnerLevel"
+                                                    ng-options="ownerLevel as ownerLevel.LevelName for ownerLevel in ownerLevels
+                                                    track by ownerLevel.OwnerLevelID" required>
+                                                <option value="">--Select--</option>
+                                            </select>
+                                            <div ng-show="docPropIdntyFrm.$submitted || docPropIdntyFrm.ownerLevel.$touched">
+                                                <span ng-show="!docPropIdntyFrm.ownerLevel.$dirty && docPropIdntyFrm.ownerLevel.$pristine"
+                                                      class="label label-danger">Please select an owner level.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4 col-md-4 col-lg-4">
+                                        <div class="form-group">
+                                            <label>Identification SL.</label>
+                                            <input type="text" data-ng-model="docPropIdentityModel.IdentificationSL"
+                                                   class="form-control" placeholder="Identification SL."
+                                                   ng-maxlength="128" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4 col-md-4 col-lg-4">
+                                        <div class="form-group">
+                                            <label>Auto Code</label>
+                                            <select class="form-control" data-ng-model="docPropIdentityModel.IsAuto">
+                                                <option value="">--Select--</option>
+                                                <option value="1">Yes</option>
+                                                <option value="0">No</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-sm-4 col-md-4 col-lg-4">
+                                        <div class="form-group">
+                                            <label>Owner</label>
+                                            <select name="owner" class="form-control" ng-model="docPropIdentityModel.Owner"
+                                                    data-ng-options="owner as owner.OwnerName for owner in ownersForSpecificOwnerLevel track by owner.OwnerID"
+                                                    data-ng-disabled="!docPropIdentityModel.OwnerLevel" required>
+                                                <option value="">--Select--</option>
+                                            </select>
+                                            <div ng-show="docPropIdntyFrm.$submitted || docPropIdntyFrm.owner.$touched">
+                                                <span ng-show="!docPropIdntyFrm.owner.$dirty && docPropIdntyFrm.owner.$pristine"
+                                                      class="label label-danger">Please select an owner.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4 col-md- col-lg-4">
+                                        <div class="form-group">
+                                            <label>Identification Code</label>
+                                            <input type="hidden" data-ng-model="docPropIdentityModel.DocPropIdentifyID" class="form-control" />
+                                            <input type="text" class="form-control" placeholder="Identification Code" ng-model="docPropIdentityModel.IdentificationCode" ng-maxlength="50" />
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4 col-md-4 col-lg-4">
+                                        <div class="form-group">
+                                            <label>Required</label>
+                                            <select name="isReq" class="form-control" data-ng-model="docPropIdentityModel.IsRequired" required>
+                                                <option value="">--Select--</option>
+                                                <option value="1">Yes</option>
+                                                <option value="0">No</option>
+                                            </select>
+                                            <div ng-show="docPropIdntyFrm.$submitted || docPropIdntyFrm.isReq.$touched">
+                                                <span ng-show="!docPropIdntyFrm.isReq.$dirty && docPropIdntyFrm.isReq.$pristine"
+                                                      class="label label-danger">Please select an option.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-sm-4 col-md-4 col-lg-4">
+                                        <div class="form-group">
+                                            <label>Document Category</label>
+                                            <select name="docCategory" class="form-control" data-ng-model="docPropIdentityModel.DocCategory"
+                                                    data-ng-options="docCategory as docCategory.DocCategoryName for docCategory in
+                                                    docCategoriesForSpecificOwner track by docCategory.DocCategoryID"
+                                                    data-ng-disabled="!docPropIdentityModel.Owner" required>
+                                                <option value="">--Select--</option>
+                                            </select>
+                                            <div ng-show="docPropIdntyFrm.$submitted || docPropIdntyFrm.docCategory.$touched">
+                                                <span ng-show="!docPropIdntyFrm.docCategory.$dirty && docPropIdntyFrm.docCategory.$pristine"
+                                                      class="label label-danger">Please select a document category.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    @*<div class="col-sm-4 col-md-4 col-lg-4">
+                                            <div class="form-group">
+                                                <label>Attribute Group</label>
+                                                <input type="text" data-ng-model="docPropIdentityModel.AttributeGroup" class="form-control" placeholder="Attribute Group" ng-maxlength="128" />
+                                            </div>
+                                        </div>*@
+                                    <div class="col-sm-4 col-md-4 col-lg-4">
+                                        <div class="form-group">
+                                            <label>Identification Attribute</label>
+                                            <input name="indtyAttr" type="text" data-ng-model="docPropIdentityModel.IdentificationAttribute"
+                                                   class="form-control" placeholder="Identification Attribute"
+                                                   ng-maxlength="256" required />
+                                            <div ng-show="docPropIdntyFrm.$submitted || docPropIdntyFrm.indtyAttr.$touched">
+                                                <span ng-show="docPropIdntyFrm.indtyAttr.$error.required" class="label label-danger">Please enter identification attribute name</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-4 col-md-4 col-lg-4">
+                                        <div class="form-group">
+                                            <label>Is Restricted</label>
+                                            <select class="form-control" data-ng-model="docPropIdentityModel.IsRestricted">
+                                                <option value="">--Select--</option>
+                                                <option value="1">Yes</option>
+                                                <option value="0">No</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-sm-4 col-md-4 col-lg-4">
+                                        <div class="form-group">
+                                            <label>Document Type</label>
+                                            <select name="docType" class="form-control" data-ng-model="docPropIdentityModel.DocType"
+                                                    data-ng-options="docType as docType.DocTypeName for docType in
+                                                    docTypeForSpecificDocCategory track by docType.DocTypeID"
+                                                    data-ng-disabled="!docPropIdentityModel.DocCategory" required>
+                                                <option value="">--Select--</option>
+                                            </select>
+                                            <div ng-show="docPropIdntyFrm.$submitted || docPropIdntyFrm.docType.$touched">
+                                                <span ng-show="!docPropIdntyFrm.docType.$dirty && docPropIdntyFrm.docType.$pristine"
+                                                      class="label label-danger">Please select a document type.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 col-md-4 col-lg-4">
+                                        <div class="form-group">
+                                            <label>Remarks</label>
+                                            <input type="text" data-ng-model="docPropIdentityModel.Remarks" class="form-control"
+                                                   placeholder="Remarks" ng-maxlength="128" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-4 col-md-4 col-lg-4">
+                                        <div class="form-group">
+                                            <label>Active Status</label>
+                                            <select data-ng-model="docPropIdentityModel.Status"
+                                                    class="form-control">
+                                                <option value="">--Select--</option>
+                                                <option value="1">Active</option>
+                                                <option value="0">Inactive</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-4 col-md-4 col-lg-4">
+                                        <div class="form-group">
+                                            <label>Documents</label>
+                                            <select name="propIdentity" class="form-control" data-ng-model="docPropIdentityModel.DocProperty"
+                                                    data-ng-options="docProperty as docProperty.DocPropertyName for docProperty in
+                                                    docPropertyForSpecificDocType track by docProperty.DocPropertyID"
+                                                    data-ng-disabled="!docPropIdentityModel.DocType" required>
+                                                <option value="">--Select--</option>
+                                            </select>
+                                            <div ng-show="docPropIdntyFrm.$submitted || docPropIdntyFrm.propIdentity.$touched">
+                                                <span ng-show="!docPropIdntyFrm.propIdentity.$dirty && docPropIdntyFrm.propIdentity.$pristine"
+                                                      class="label label-danger">Please select a document property identity.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div><!-- /.box-body -->
+                        </div>
+                        <div class="modal-footer">
+                            <div class="col-sm-12 col-md-12 col-lg-12">
+                                <div class="form-group">
+                                    <button type="button" data-ng-click="docPropIdntyFrm.$setSubmitted();docPropIdntyFrm.$valid && Save()"
+                                            class="btn btn-primary btn-flat" ng-disabled="loading">
+                                        Save
+                                    </button>
+                                    <button type="button" class="btn btn-default btn-flat" data-dismiss="modal" ng-click="ResetModel()">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+    <div id="mydiv" data-ng-show="loading">
+        <div class="overlay">
+            <i class="fa fa-refresh fa-spin"></i>Loading...
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    app.controller('OwnerProperIdentityCtrl', function ($scope, $http) {
+
+        $scope.docPropIdentityModel = {
+            DocPropIdentifyID: "",
+            DocProperty: { DocPropertyID: "", DocPropertyName: "" },
+            DocType: { DocTypeID: "", DocTypeName: "" },
+            DocCategory: { DocCategoryID: "", DocCategoryName: "" },
+            OwnerLevel: { OwnerLevelID: "", LevelName: "" },
+            Owner: { OwnerID: "", OwnerName: "" },
+            IdentificationCode: "",
+            IdentificationSL: "",
+            IdentificationAttribute: "",
+            AttributeGroup: "",
+            IsRequired: "",
+            IsAuto: "",
+            IsRestriction: "",
+            Remarks: "",
+            Status: ""
+        };
+
+
+
+        $scope.docPropIdentityGridData = [];  // base collection
+        $scope.GridDisplayCollection = [].concat($scope.docPropIdentityGridData);  // displayed collection
+
+        $scope.itemsByPage = 10;
+        $scope.loading = true;
+
+
+        // To get all the active owner level to bind to the dropdown
+        $http.get('/DocScanningModule/OwnerProperIdentity/GetOwnerLevel?_OwnerLevelID=')
+            .success(function (response) {
+                $scope.ownerLevels = response.result;
+                $scope.docPropIdentityModel.OwnerLevel.OwnerLevelID = "";
+                $scope.docPropIdentityModel.OwnerLevel.LevelName = "";
+                $scope.loading = false;
+            })
+            .error(function () {
+                $scope.loading = false;
+            });
+
+        // to bind owner dropdown against owner level dropdown change of value
+        $scope.$watch('docPropIdentityModel.OwnerLevel', function (newVal) {
+            if (newVal) {
+                $scope.docPropIdentityModel.Owner.OwnerID = "";
+                $scope.docPropIdentityModel.Owner.OwnerName = "";
+                $scope.docPropIdentityModel.DocCategory.DocCategoryID = "";
+                $scope.docPropIdentityModel.DocCategory.DocCategoryName = "";
+                $scope.docPropIdentityModel.DocType.DocTypeID = "";
+                $scope.docPropIdentityModel.DocType.DocTypeName = "";
+                $scope.docPropIdentityModel.DocProperty.DocPropertyID = "";
+                $scope.docPropIdentityModel.DocProperty.DocPropertyName = "";
+                $scope.docPropIdentityGridData = "";
+                $http.post('/DocScanningModule/OwnerProperIdentity/GetOwnerForSpecificOwnerLevel',
+                    { _OwnerLevelID: $scope.docPropIdentityModel.OwnerLevel.OwnerLevelID })
+                    .success(function (response) {
+                        $scope.ownersForSpecificOwnerLevel = response.result;
+                        $scope.loading = false;
+                    }).error(function () {
+                        $scope.loading = false;
+                    });
+            }
+        });
+
+        // to bind Doc Category dropdown against owner dropdown change of value
+        $scope.$watch('docPropIdentityModel.Owner', function (newVal) {
+            if (newVal) {
+                $scope.docPropIdentityModel.DocCategory.DocCategoryID = "";
+                $scope.docPropIdentityModel.DocCategory.DocCategoryName = "";
+                $scope.docPropIdentityModel.DocType.DocTypeID = "";
+                $scope.docPropIdentityModel.DocType.DocTypeName = "";
+                $scope.docPropIdentityModel.DocProperty.DocPropertyID = "";
+                $scope.docPropIdentityModel.DocProperty.DocPropertyName = "";
+                $scope.docPropIdentityGridData = "";
+                $http.post('/DocScanningModule/OwnerProperIdentity/GetDocumentCategoriesForSpecificOwner',
+                    { _OwnerID: $scope.docPropIdentityModel.Owner.OwnerID })
+                    .success(function (response) {
+                        $scope.docCategoriesForSpecificOwner = response.result;
+                        $scope.loading = false;
+                    }).error(function () {
+                        $scope.loading = false;
+                    });
+            }
+        });
+
+        // to bind Doc type dropdown against doc category dropdown change of value
+        $scope.$watch('docPropIdentityModel.DocCategory', function (newVal) {
+            if (newVal) {
+                $scope.docPropIdentityModel.DocType.DocTypeID = "";
+                $scope.docPropIdentityModel.DocType.DocTypeName = "";
+                $scope.docPropIdentityModel.DocProperty.DocPropertyID = "";
+                $scope.docPropIdentityModel.DocProperty.DocPropertyName = "";
+                $scope.docPropIdentityGridData = "";
+                $http.post('/DocScanningModule/OwnerProperIdentity/GetDocumentTypeForSpecificDocCategory',
+                    {
+                        _DocCategoryID: $scope.docPropIdentityModel.DocCategory.DocCategoryID,
+                        _OwnerID: $scope.docPropIdentityModel.Owner.OwnerID
+                    })
+                    .success(function (response) {
+                        $scope.docTypeForSpecificDocCategory = response.result;
+                        $scope.loading = false;
+                    }).error(function () {
+                        $scope.loading = false;
+                    });
+            }
+        });
+
+
+        // to bind Doc property dropdown against doc type dropdown change of value
+        $scope.$watch('docPropIdentityModel.DocType', function (newVal) {
+            if (newVal) {
+                $scope.docPropIdentityModel.DocProperty.DocPropertyID = "";
+                $scope.docPropIdentityModel.DocProperty.DocPropertyName = "";
+                $scope.docPropIdentityGridData = "";
+                $http.post('/DocScanningModule/OwnerProperIdentity/GetDocumentPropertyForSpecificDocCategory',
+                    {
+                        _DocCategoryID: $scope.docPropIdentityModel.DocCategory.DocCategoryID,
+                        _OwnerID: $scope.docPropIdentityModel.Owner.OwnerID,
+                        _DocTypeID: $scope.docPropIdentityModel.DocType.DocTypeID
+                    })
+                    .success(function (response) {
+                        $scope.docPropertyForSpecificDocType = response.result;
+                        $scope.loading = false;
+                    }).error(function () {
+                        $scope.loading = false;
+                    });
+            }
+        });
+
+        //---------------------------------------------
+        var BindDataToGrid = function () {
+            $http.post('/DocScanningModule/OwnerProperIdentity/GetDocPropIdentityForSpecificDocType',
+                {
+                    _DocCategoryID: $scope.docPropIdentityModel.DocCategory.DocCategoryID,
+                    _OwnerID: $scope.docPropIdentityModel.Owner.OwnerID,
+                    _DocTypeID: $scope.docPropIdentityModel.DocType.DocTypeID,
+                    _DocPropertyID: $scope.docPropIdentityModel.DocProperty.DocPropertyID
+                })
+                .success(function (response) {
+                    $scope.docPropIdentityGridData = response.result;
+                    $scope.GridDisplayCollection = [].concat($scope.docPropIdentityGridData);
+                    $scope.loading = false;
+                }).error(function () {
+                    $scope.loading = false;
+                });
+
+        };
+
+        $scope.$watch('docPropIdentityModel.DocProperty', function (newVal) {
+            if (newVal) {
+                BindDataToGrid();
+            };
+        });
+
+
+
+        //############## Save Modal ########################
+        $scope.toggleAdd = function (model) {
+            $scope.ResetModel();
+            $scope.docPropIdentityModel.Status = "1";
+            $scope.docPropIdntyFrm.$setPristine();
+            $scope.docPropIdntyFrm.$setUntouched();
+            if ($scope.docPropIdentityModel.Owner.OwnerID !== "") {
+                $scope.docPropIdntyFrm.owner.$setDirty();
+                $scope.docPropIdntyFrm.owner.$setValidity("",true);
+            }
+            if ($scope.docPropIdentityModel.OwnerLevel.OwnerLevelID !== "") {
+                $scope.docPropIdntyFrm.ownerLevel.$setDirty();
+                $scope.docPropIdntyFrm.ownerLevel.$setValidity("",true);
+            }
+            if ($scope.docPropIdentityModel.DocCategory.DocCategoryID !== "") {
+                $scope.docPropIdntyFrm.docCategory.$setDirty();
+                $scope.docPropIdntyFrm.docCategory.$setValidity("", true);
+
+            }
+            if ($scope.docPropIdentityModel.DocType.DocTypeID !== "") {
+                $scope.docPropIdntyFrm.docType.$setDirty();
+                $scope.docPropIdntyFrm.docType.$setValidity("", true);
+            }
+            if ($scope.docPropIdentityModel.DocProperty.DocPropertyID !== "") {
+                $scope.docPropIdntyFrm.propIdentity.$setDirty();
+                $scope.docPropIdntyFrm.propIdentity.$setValidity("", true);
+            }
+            $('#addModal').modal('show');
+        };
+
+        $scope.Save = function () {
+            //console.log(x);
+            $scope.loading = true;
+
+            if ($scope.docPropIdentityModel.DocPropIdentifyID === "") {
+                // Save
+                $scope.loading = true;
+                $http.post('/DocScanningModule/OwnerProperIdentity/AddOwnerPropIdentity', JSON.stringify($scope.docPropIdentityModel))
+                    .success(function (response) {
+                        //alert("Test");
+                        $scope.loading = false;
+                        $('#addModal').modal('hide');
+                        BindDataToGrid();
+                        toastr.success(response.Message);
+                    }).error(function (response) {
+                        $scope.loading = false;
+                        toastr.error('Fail to Save.');
+                    });
+
+            }
+            else {
+                $http.post('/DocScanningModule/OwnerProperIdentity/EditOwnerPropIdentity',
+                    JSON.stringify(convArrToObj($scope.docPropIdentityModel)))
+                    .success(function (response) {
+                        $('#addModal').modal('hide');
+                        $scope.loading = false;
+                        toastr.success(response.Message);
+                        BindDataToGrid();
+                    })
+                    .error(function (data) {
+                        $scope.loading = false;
+                        toastr.error('Failed to Update.');
+                    });
+
+            }
+        }
+
+        // ################# Edit Modal ####################
+        $scope.toggleEdit = function (tableRow) {
+
+            $scope.docPropIdentityModel.DocPropIdentifyID = tableRow.DocPropIdentifyID;
+            $scope.docPropIdentityModel.AttributeGroup = tableRow.AttributeGroup;
+            $scope.docPropIdentityModel.IdentificationSL = tableRow.IdentificationSL;
+            $scope.docPropIdentityModel.IdentificationCode = tableRow.IdentificationCode;
+
+            $scope.docPropIdentityModel.IdentificationAttribute = tableRow.IdentificationAttribute;
+            $scope.docPropIdentityModel.IsRequired = (tableRow.IsRequired).toString();
+            $scope.docPropIdentityModel.IsAuto = (tableRow.IsAuto).toString();
+            $scope.docPropIdentityModel.IsRestricted = (tableRow.IsRestricted).toString();
+            $scope.docPropIdentityModel.Status = (tableRow.Status).toString();
+            $scope.docPropIdentityModel.Remarks = (tableRow.Remarks).toString();
+
+            $scope.docPropIdntyFrm.$setPristine();
+            $scope.docPropIdntyFrm.$setUntouched();
+            if ($scope.docPropIdentityModel.Owner.OwnerID !== "") {
+                $scope.docPropIdntyFrm.owner.$setDirty();
+                $scope.docPropIdntyFrm.owner.$setValidity("", true);
+            }
+            if ($scope.docPropIdentityModel.OwnerLevel.OwnerLevelID !== "") {
+                $scope.docPropIdntyFrm.ownerLevel.$setDirty();
+                $scope.docPropIdntyFrm.ownerLevel.$setValidity("", true);
+            }
+            if ($scope.docPropIdentityModel.DocCategory.DocCategoryID !== "") {
+                $scope.docPropIdntyFrm.docCategory.$setDirty();
+                $scope.docPropIdntyFrm.docCategory.$setValidity("", true);
+
+            }
+            if ($scope.docPropIdentityModel.DocType.DocTypeID !== "") {
+                $scope.docPropIdntyFrm.docType.$setDirty();
+                $scope.docPropIdntyFrm.docType.$setValidity("", true);
+            }
+            if ($scope.docPropIdentityModel.DocProperty.DocPropertyID !== "") {
+                $scope.docPropIdntyFrm.propIdentity.$setDirty();
+                $scope.docPropIdntyFrm.propIdentity.$setValidity("", true);
+            }
+            if ($scope.docPropIdentityModel.IsRequired !== "") {
+                $scope.docPropIdntyFrm.isReq.$setDirty();
+                $scope.docPropIdntyFrm.isReq.$setValidity("", true);
+            }
+            $('#addModal').modal('show');
+        };
+
+        $scope.ResetModel = function () {
+            $scope.docPropIdentityModel.DocPropIdentifyID = "";
+            $scope.docPropIdentityModel.AttributeGroup = [];
+            $scope.docPropIdentityModel.IdentificationSL = [];
+            $scope.docPropIdentityModel.IdentificationCode = [];
+            $scope.docPropIdentityModel.IdentificationAttribute = [];
+            $scope.docPropIdentityModel.IsRequired = "";
+            $scope.docPropIdentityModel.IsAuto = "";
+            $scope.docPropIdentityModel.Status = "";
+            $scope.docPropIdentityModel.Remarks = [];
+        };
+        //#################### Set Dropdown ################
+
+        $scope.toggleRefreshTable = function () {
+            $scope.loading = true;
+            BindDataToGrid();
+            $scope.loading = false;
+        };
+
+    });
+
+</script>

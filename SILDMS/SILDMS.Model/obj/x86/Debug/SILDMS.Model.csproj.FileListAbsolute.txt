@@ -1,0 +1,40 @@
+E:\DMS_Final\SILDMS\SILDMS.Model\bin\x86\Debug\SILDMS.Model.dll.config
+E:\DMS_Final\SILDMS\SILDMS.Model\bin\x86\Debug\SILDMS.Model.dll
+E:\DMS_Final\SILDMS\SILDMS.Model\bin\x86\Debug\SILDMS.Model.pdb
+E:\DMS_Final\SILDMS\SILDMS.Model\bin\x86\Debug\EntityFramework.dll
+E:\DMS_Final\SILDMS\SILDMS.Model\bin\x86\Debug\EntityFramework.SqlServer.dll
+E:\DMS_Final\SILDMS\SILDMS.Model\bin\x86\Debug\Microsoft.Web.Infrastructure.dll
+E:\DMS_Final\SILDMS\SILDMS.Model\bin\x86\Debug\Ninject.dll
+E:\DMS_Final\SILDMS\SILDMS.Model\bin\x86\Debug\Ninject.Web.Common.dll
+E:\DMS_Final\SILDMS\SILDMS.Model\bin\x86\Debug\Ninject.Web.Mvc.dll
+E:\DMS_Final\SILDMS\SILDMS.Model\bin\x86\Debug\WebActivatorEx.dll
+E:\DMS_Final\SILDMS\SILDMS.Model\bin\x86\Debug\EntityFramework.xml
+E:\DMS_Final\SILDMS\SILDMS.Model\bin\x86\Debug\EntityFramework.SqlServer.xml
+E:\DMS_Final\SILDMS\SILDMS.Model\bin\x86\Debug\Ninject.xml
+E:\DMS_Final\SILDMS\SILDMS.Model\bin\x86\Debug\Ninject.Web.Common.xml
+E:\DMS_Final\SILDMS\SILDMS.Model\bin\x86\Debug\Ninject.Web.Mvc.xml
+E:\DMS_Final\SILDMS\SILDMS.Model\obj\x86\Debug\SILDMS.Model.Resources.resources
+E:\DMS_Final\SILDMS\SILDMS.Model\obj\x86\Debug\SILDMS.Model.csproj.GenerateResource.Cache
+E:\DMS_Final\SILDMS\SILDMS.Model\obj\x86\Debug\SILDMS.Model.dll
+E:\DMS_Final\SILDMS\SILDMS.Model\obj\x86\Debug\SILDMS.Model.pdb
+E:\DMS_Final\SILDMS\SILDMS.Model\obj\x86\Debug\SILDMS.Model.csprojResolveAssemblyReference.cache
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.Model\bin\x86\Debug\SILDMS.Model.dll.config
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.Model\bin\x86\Debug\SILDMS.Model.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.Model\bin\x86\Debug\SILDMS.Model.pdb
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.Model\bin\x86\Debug\EntityFramework.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.Model\bin\x86\Debug\EntityFramework.SqlServer.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.Model\bin\x86\Debug\Microsoft.Web.Infrastructure.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.Model\bin\x86\Debug\Ninject.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.Model\bin\x86\Debug\Ninject.Web.Common.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.Model\bin\x86\Debug\Ninject.Web.Mvc.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.Model\bin\x86\Debug\WebActivatorEx.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.Model\bin\x86\Debug\EntityFramework.xml
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.Model\bin\x86\Debug\EntityFramework.SqlServer.xml
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.Model\bin\x86\Debug\Ninject.xml
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.Model\bin\x86\Debug\Ninject.Web.Common.xml
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.Model\bin\x86\Debug\Ninject.Web.Mvc.xml
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.Model\obj\x86\Debug\SILDMS.Model.csprojResolveAssemblyReference.cache
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.Model\obj\x86\Debug\SILDMS.Model.Resources.resources
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.Model\obj\x86\Debug\SILDMS.Model.csproj.GenerateResource.Cache
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.Model\obj\x86\Debug\SILDMS.Model.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.Model\obj\x86\Debug\SILDMS.Model.pdb

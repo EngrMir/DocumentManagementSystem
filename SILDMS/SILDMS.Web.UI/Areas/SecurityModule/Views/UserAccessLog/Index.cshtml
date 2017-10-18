@@ -1,0 +1,285 @@
+﻿@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_AdminLteLayout.cshtml";
+}
+
+<div class="box box-primary box-body" ng-controller="userAccessLogCtrl">
+    <!-- box-header -->
+    <div class="box-header with-border">
+        <i class="fa  fa-files-o"></i>
+        <h3 class="box-title">User Log</h3>
+        @*<div class="box-tools pull-right">
+            <button type="button" id="btnRefresh" data-ng-click="toggleRefreshTable(row)" class="btn btn-flat pull-right" ng-disabled="loading"><i class="fa fa-refresh"></i> Refresh</button>
+            <button type="button" id="btnAdd" data-ng-click="toggleAdd(row)" class="btn btn-flat btn-primary pull-right" ng-disabled="loading"> <i class="fa fa-plus"></i> Add New</button>
+        </div>*@
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+        <div class="row">
+            <!-- Filters for Document Type page -->
+            <div class="col-sm-4 col-md-4 col-lg-4">
+                <div class="form-group">
+                    <!-- Drop down for Owner Level -->
+                    <label for="OwnerLevel">Owner Level</label>
+                    <select id="OwnerLevel" class="form-control" ng-model="OwnerLevel" ng-change="changeOwnerLevel(OwnerLevel.OwnerLevelID)"
+                            ng-options="ownerLevel as ownerLevel.LevelName for ownerLevel in ownerLevels track by ownerLevel.OwnerLevelID">
+                        <option value="" style="display: none">-- Select One --</option>
+                    </select>
+                </div><!-- Drop down for Owner Level end -->
+            </div>           
+            <div class="col-sm-4 col-md-4 col-lg-4">
+                <div class="form-group">
+                    <!-- Drop down for Owner -->
+                    <label for="Owner">Owner</label>
+                    <select id="Owner" class="form-control" ng-model="Owner" ng-change="changeOwner(Owner.OwnerID)"
+                            data-ng-options="owner as owner.OwnerName for owner in owners track by owner.OwnerID" data-ng-disabled="">
+                        <option value="" style="display: none">-- Select One --</option>
+                    </select>
+                </div><!-- Drop down for Owner end -->
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-4">
+                <div class="form-group">
+                    <!-- Drop down for Document Category -->
+                    <label for="user">User</label>
+                    <select id="user" class="form-control" ng-model="User"
+                            ng-change=""
+                            data-ng-options="user as user.UserFullName for user in users track by user.UserID"
+                            data-ng-disabled="">
+                        <option value="" style="display: none">-- Select One --</option>
+                    </select>
+                </div><!-- Drop down for Document Category end -->
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-4 col-md-4 col-lg-4">
+                <label for="dateFrom">Date From</label>
+
+                <div class="input-group" data-provide="">
+                    <input type="text" data-ng-model="Date.DateFrom" class="form-control" id="dateFrom">
+                    <div class="input-group-addon">
+                        <span class="fa fa-calendar"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-4">
+                <label for="dateTo">Date To</label>
+
+                <div class="input-group" data-provide="">
+                    <input type="text" data-ng-model="Date.DateTo" class="form-control" id="dateTo"
+                           ng-change="">
+                    <div class="input-group-addon">
+                        <span class="fa fa-calendar"></span>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div><!-- Filters for Document Type page end -->
+    <div class="box-body table-responsive" data-ng-disabled="">
+        <!-- Data table for Document type -->
+        <div class="box-header">
+            <h3 class="box-title"></h3>
+            <button type="button" id="btnRefresh" data-ng-click="getUserLog()" class="btn btn-flat btn-default pull-right" ng-disabled="loading"><i class="fa fa-search"></i> Search</button>
+            
+        </div>
+        <table st-table="displayedCollection" st-safe-src="userLogs" class="table table-condensed table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+                    <th st-sort="UserFullName">User Name</th>
+                    <th st-sort="UsedIP">Used IP</th>
+                    <th st-sort="ActionUrl">Action Url</th>
+                    <th st-sort="ActionEventTime">Action Event Time</th>
+                    <th st-sort="Status">Status</th>
+                    @*<th>Action</th>*@
+                </tr>
+                <tr>
+                    <th>@*<input st-search="UserFullName" placeholder="" class="input-sm form-control" type="search" />*@</th>
+                    <th><input st-search="UsedIP" placeholder="Used IP" class="input-sm form-control" type="search" /></th>
+                    <th>@*<input st-search="ActionUrl" placeholder="Action Url" class="input-sm form-control" type="search" />*@</th>
+                    <th>@*<input st-search="ActionEventTime" placeholder="Action Event Time" class="input-sm form-control" type="search" />*@</th>
+                    <th>@*<input st-search="Status" placeholder="Status" class="input-sm form-control" type="search" />*@</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="row in displayedCollection">
+                    <td>{{row.UserFullName}}</td>
+                    <td>{{row.UsedIP}}</td>
+                    <td>{{row.ActionUrl}}</td>
+                    <td>{{row.ActionEventTime}}</td>
+                    <td class="col-lg-1 col-md-1 col-sm-1 text-center">
+                        <span ng-attr-class="{{row.Status ==true? 'label label-success' : 'label label-danger' }}">
+                            {{row.Status == true? 'Active':'InActive'}}
+                        </span>
+                    </td>
+                    
+                    @*<td class="col-lg-1 col-md-1 col-sm-1 text-center">
+                        <button type="button" class="btn btn-sm btn-primary btn-flat" data-ng-click="toggleEdit(row)"><i class="fa fa-edit"></i>Edit</button>
+                    </td>*@
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr><td colspan="6" class="text-center"><div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div></td></tr>
+            </tfoot>
+        </table>
+    </div><!-- Data table for Document type end -->
+    <!-- /Display User Table -->
+    <div id="mydiv" data-ng-show="">
+        <div class="overlay">
+            <i class="fa fa-refresh fa-spin"></i>Loading...
+        </div>
+    </div>
+
+
+</div>
+
+<script type="text/javascript">
+
+    // When the document is ready
+    $(document).ready(function () {
+        $('#dateFrom').datepicker({
+            format: "dd/mm/yyyy"
+        });
+    });
+    $(document).ready(function () {
+        $('#dateTo').datepicker({
+            format: "dd/mm/yyyy"
+        });
+    });
+
+    
+</script>
+
+
+<script type="text/javascript">
+    // Controller for User Log page
+    app.controller("userAccessLogCtrl", ["$scope", "$http", function ($scope, $http) {
+
+        $scope.OwnerLevel = { OwnerLevelID: "", LevelName: "" };
+        $scope.Owner = { OwnerID: "", OwnerName: "" };
+        $scope.User = { UserID: "", UserFullName: "" };
+        $scope.Date = { DateFrom: "", DateTo: "" };
+        //$scope.resetUserLog();
+
+        // Variables and Constant
+        
+        $scope.saveModel = [];
+        $scope.userLogs = [];
+        $scope.displayedCollection = [].concat($scope.userLogs);
+        $scope.itemsByPage = 10;
+        $scope.loading = false;
+
+        // Get all owner levels
+        $scope.getOwnerLevels = function () {
+            $http.get("/SecurityModule/UserAccessLog/GetOwnerLevel?id=")
+                .success(function (response) {
+                    $scope.ownerLevels = response.result;
+                    $scope.loading = false;
+                })
+                .error(function () { });
+        };
+        $scope.getOwnerLevels();
+        // Get all owners for the selected owner level on owner level dropdown change
+        $scope.changeOwnerLevel = function (id) {
+
+            $http.get("/SecurityModule/UserAccessLog/GetOwners?id=" + id)
+                .success(function (response) {
+                    $scope.owners = response.result;
+                    $scope.loading = false;
+                })
+                .error(function () { });
+        }
+
+        $scope.changeOwner = function (id) {
+
+            $http.get("/SecurityModule/UserAccessLog/GetUsers?id=" + id)
+                .success(function (response) {
+                    $scope.users = response.result;
+                    $scope.loading = false;
+                })
+                .error(function () { });
+        }
+
+        // Get User Log
+        $scope.getUserLog = function () {
+            $http.get("/SecurityModule/UserAccessLog/GetUserLog", { params: { id: $scope.User.UserID, dateForm: $('#dateFrom').val(), dateTo: $('#dateTo').val() } })
+                .success(function (response) {
+                    $scope.userLogs = response.result;
+                    $scope.displayedCollection = [].concat($scope.userLogs);
+                    $scope.loading = false;
+                })
+                .error(function () { });
+        };
+
+        
+
+        // Add new Document Type
+        $scope.toggleAdd = function (row) {
+
+            $('#addModal').modal('show');
+        };
+
+        // Edit Document Type
+        $scope.toggleEdit = function (row) {
+          
+            $("#addModal").modal("show");
+
+        };
+
+ 
+
+        // Convert current model to save model
+        $scope.convertModel = function () {
+            
+        };
+
+        // Save/Update Document Type
+        $scope.Save = function () {
+            //if () {
+            //    // Update
+            //    $http.post("/SecurityModule/Server/EditServer/", JSON.stringify(convArrToObj($scope.saveModel)))
+            //        .success(function (data) {
+            //            if (data._respStatus.Status === "1") {
+            //                $scope.loading = false;
+            //                $scope.getServers();
+            //                $scope.resetServerInfo();
+            //                $("#addModal").modal("hide");
+            //                toastr.success(data.Message);
+            //            } else {
+            //                $scope.loading = false;
+            //                toastr.error(data.Message);
+            //            }
+            //        })
+            //        .error(function (data) {
+            //            $scope.loading = false;
+            //            toastr.error("Update Failed.");
+            //        });
+            //} else {
+            //    // Save
+            //    $http.post("/SecurityModule/Server/AddServer/", JSON.stringify(convArrToObj($scope.saveModel)))
+            //        .success(function (data) {
+            //            if (data._respStatus.Status === "1") {
+            //                $scope.loading = false;
+            //                $scope.getServers();
+            //                $scope.resetServerInfo();
+            //                //$("#addModal").modal("hide");
+            //                toastr.success(data.Message);
+            //            } else {
+            //                $scope.loading = false;
+            //                toastr.error(data.Message);
+            //            }
+            //        })
+            //        .error(function (data) {
+            //            $scope.loading = false;
+            //            toastr.error("Save Failed.");
+            //        });
+            //}
+        }
+
+        // Refresh Documnet Type Table
+        $scope.toggleRefreshTable = function () {
+            $scope.loading = true;
+            $scope.resetServerInfo();
+            
+        };
+    }]);
+</script>

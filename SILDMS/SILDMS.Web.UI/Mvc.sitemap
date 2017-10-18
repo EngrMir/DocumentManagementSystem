@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<mvcSiteMap xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-4.0"
+            xsi:schemaLocation="http://mvcsitemap.codeplex.com/schemas/MvcSiteMap-File-4.0 MvcSiteMapSchema.xsd">
+
+
+  <mvcSiteMapNode title="DMS" controller="Home" action="Index">
+    
+    <!--Security Module START-->
+    <mvcSiteMapNode title="Login" area="SecurityModule" controller="Account" action="Login"></mvcSiteMapNode>
+    <mvcSiteMapNode title="Dashboard" area="SecurityModule" controller="Account" action="Dashboard"></mvcSiteMapNode>
+       <mvcSiteMapNode title="Role Setup" area="SecurityModule" controller="RoleSetup" action="Index"></mvcSiteMapNode>
+      <mvcSiteMapNode title="User Setup" area="SecurityModule" controller="User" action="Index"></mvcSiteMapNode>
+      <mvcSiteMapNode title="Navigation Menu Setup" area="SecurityModule" controller="NavMenuSetup" action="Index"></mvcSiteMapNode>
+      <mvcSiteMapNode title="Role Wise Menu Permission" area="SecurityModule" controller="RoleMenuPermission" action="Index"></mvcSiteMapNode>
+      <mvcSiteMapNode title="Owner Level Permission" area="SecurityModule" controller="OwnerLevelPermission" action="Index"></mvcSiteMapNode>
+      <mvcSiteMapNode title="Owner Data Level Permission" area="SecurityModule" controller="DataLevelPermission" action="Index"></mvcSiteMapNode>
+      
+      <!--<mvcSiteMapNode title="User Log" area="SecurityModule" controller="RoleSetup" action="Index"></mvcSiteMapNode>
+      <mvcSiteMapNode title="Role Setup" area="SecurityModule" controller="RoleSetup" action="Index"></mvcSiteMapNode>-->
+
+    <!--Security Module END-->
+  
+    
+   <!--Scaning Module START-->
+    <mvcSiteMapNode title="Owner Level" area="DocScanningModule" controller="OwnerLevel" action="Index"></mvcSiteMapNode>
+    <mvcSiteMapNode title="Owner" area="DocScanningModule" controller="Owner" action="Index"></mvcSiteMapNode>
+    <mvcSiteMapNode title="Document Category" area="DocScanningModule" controller="DocCategory" action="Index"></mvcSiteMapNode>
+    <mvcSiteMapNode title="Document Type" area="DocScanningModule" controller="DocType" action="Index"></mvcSiteMapNode>
+    <mvcSiteMapNode title="Document Property" area="DocScanningModule" controller="DocProperty" action="Index"></mvcSiteMapNode>
+    <mvcSiteMapNode title="Document Property Identity" area="DocScanningModule" controller="OwnerProperIdentity" action="Index"></mvcSiteMapNode>
+    <mvcSiteMapNode title="Multiple Document Scanning"  controller="Home" action="Index"></mvcSiteMapNode>
+    <!--Scaning Module END-->
+    
+
+  
+  </mvcSiteMapNode>
+
+</mvcSiteMap>

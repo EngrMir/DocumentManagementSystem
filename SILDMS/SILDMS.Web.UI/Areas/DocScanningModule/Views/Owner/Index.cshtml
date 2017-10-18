@@ -1,0 +1,319 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLteLayout.cshtml";
+}
+<div class="box box-primary box-body" ng-controller="ownersCtrl">
+    <!-- box-header -->
+    <div class="box-header with-border">
+        <i class="fa fa-user"></i>
+        <h3 class="box-title">Owner List</h3>
+        <div class="box-tools pull-right">
+            <button type="button" id="btnRefresh" data-ng-click="toggleRefreshTable(row)" class="btn btn-flat pull-right" ng-disabled="loading"><i class="fa fa-refresh"></i> Refresh</button>
+            <button type="button" id="btnAdd" data-ng-click="toggleAdd(row)" class="btn btn-flat btn-primary pull-right btnSave" ng-disabled="loading"> <i class="fa fa-plus"></i> Add New</button>
+        </div>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body table-responsive" data-ng-disabled="">
+
+        <table st-table="displayedCollection" st-safe-src="owners" class="table table-condensed table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+                    <th st-sort="LevelName">Owner Level</th>
+                    <th st-sort="UDOwnerCode">Owner Code</th>
+                    <th st-sort="OwnerName">Owner Name</th>
+                    <th st-sort="ParentName">Parent Owner</th>
+                    <th st-sort="">Status</th>
+                    <th>Action</th>
+                </tr>
+                <tr>
+                    <th><input st-search="" placeholder="Search By Owner Level" class="input-sm form-control" type="search" /></th>
+                    @*<th><input st-search="" placeholder="Search By UDCode" class="input-sm form-control" type="search" /></th>
+                    <th><input st-search="" placeholder="Search By Name" class="input-sm form-control" type="search" /></th>
+                    <th><input st-search="" placeholder="Search By Parent" class="input-sm form-control" type="search" /></th>
+                    <th><input st-search="" placeholder="Search By Status" class="input-sm form-control" type="search" /></th>*@
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="row in displayedCollection" ng-cloak>
+                    <td>{{row.LevelName}}</td>
+                    <td>{{row.UDOwnerCode}}</td>
+                    <td>{{row.OwnerName}}</td>
+                    <td>{{row.ParentName}}</td>
+                    <td>
+                        <span ng-attr-class="{{row.Status ==true? 'label label-success' : 'label label-danger' }}">
+                            {{row.Status == true? 'Active':'InActive'}}
+                        </span>
+                    </td>
+                    <td class=""><button type="button" class="btn btn-sm btn-primary btn-flat btnEdit" data-ng-click="toggleEdit(row)"><i class="fa fa-edit"></i> Edit</button></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="6" class="text-center"><div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="10"></div></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div><!-- Data Table End -->
+    <!-- Add DocProperty Modal -->
+    <form name="ownerFrm" id="ownerForm" ng-submit="">
+        <div class="bs-example">
+            <div id="addModal" class="modal fade">
+                <!-- Modal HTML -->
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h3 class="modal-title">Owner Form</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <!-- Text Box for Owner Code -->
+                                            <label for="OwnerID">Owner Code</label>
+                                            <input type="text" data-ng-model="ownerModel.OwnerID" class="form-control" id="OwnerID"
+                                                   placeholder="System Generated Owner Code" readonly="readonly" />
+                                        </div><!-- Text Box for Owner Code end -->
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <!-- Drop Down for Owner Level -->
+                                            <label for="OwnerLevel">Owner Level</label>
+                                            <select id="OwnerLevel" name="ownerLevel" class="form-control" ng-model="ownerModel.OwnerLevel" ng-change="ownerLevelChange()"
+                                                    ng-options="ownerLevel as ownerLevel.LevelName for ownerLevel in ownerLevels track by ownerLevel.OwnerLevelID" required>
+                                                <option value="" style="display: none">-- Select Owner's Level --</option>
+                                            </select>
+                                            <div ng-show="ownerFrm.$submitted || ownerFrm.OwnerLevel.$touched">
+                                                <span ng-show="!ownerFrm.ownerLevel.$dirty && ownerFrm.ownerLevel.$pristine" class="label label-danger">Please select an owner level</span>
+                                            </div>
+                                        </div><!-- Drop Down for Owner Level end -->
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <!-- Text Box for User Defined(UD) Owner Code -->
+                                            <label for="UDOwnerCode">UD Owner Code </label>
+                                            <input type="text" data-ng-model="ownerModel.UDOwnerCode" class="form-control" id="UDOwnerCode" placeholder="UD Owner Code" />
+                                        </div><!-- Text Box for User Defined(UD) Owner Code end -->
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <!-- Text Box for Owner Name -->
+                                            <label for="OwnerName">Owner Name </label>
+                                            <input id="OwnerName" name="OwnerName" type="text" data-ng-model="ownerModel.OwnerName"
+                                                   class="form-control" placeholder="Owner Name" required/>
+                                            <div ng-show="ownerFrm.$submitted || ownerFrm.OwnerName.$touched">
+                                                <span ng-show="ownerFrm.OwnerName.$error.required" class="label label-danger">Please enter owner's name</span>
+                                            </div>
+                                        </div><!-- Text Box for Owner Name end -->
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <!-- Text Box for Owner Short Name -->
+                                            <label for="OwnerShortName">Short Name</label>
+                                            <input type="text" data-ng-model="ownerModel.OwnerShortName" class="form-control" id="OwnerShortName" placeholder="Owner Short Name" />
+                                        </div><!-- Text Box for Owner Short Name end -->
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <!-- Drop Down for Parent Owner -->
+                                            <label for="ParentOwner">Parent Owner</label>
+                                            <select id="ParentOwner" class="form-control" ng-model="ownerModel.Parent"
+                                                    ng-options="ownerParent as ownerParent.ParentName for ownerParent in ownerParents track by ownerParent.ParentOwner">
+                                                <option value="">-- Select Owner's Parent --</option>
+
+                                            </select>
+                                        </div><!-- Drop Down for Parent Owner end -->
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <!-- Drop Down for Owner Status -->
+                                            <label for="Status">Status</label>
+                                            <select id="Status" class="form-control" ng-model="ownerModel.Status">
+                                                <option value="" style="display: none">-- None --</option>
+                                                <option value="1">Active</option>
+                                                <option value="0">Inactive</option>
+                                            </select><!-- Drop Down for Owner Status end -->
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="col-sm-12 col-md-12 col-lg-12">
+                                <div class="form-group">
+                                    <button type="submit" id="btnSubmit" ng-click="ownerFrm.$setSubmitted(); ownerFrm.$valid && Save(ownerFrm)" class="btn btn-primary btn-flat " ng-disabled="loading">Save</button>
+                                    <button type="button" id="btnClose" class="btn btn-default btn-flat" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- /.box-body -->
+                </div>
+            </div><!-- Modal HTML end -->
+        </div>
+    </form>
+    <!-- /Add DocProperty Modal -->
+
+    <div id="mydiv" ng-show="loading">
+        <div class="overlay">
+            <i class="fa fa-refresh fa-spin"></i>Loading...
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    // Controller for Owner page
+    app.controller('ownersCtrl', ["$scope", "$http", function ($scope, $http) {
+        // Model for Owner
+        
+        $scope.ownerModelReset = function() {
+            $scope.ownerModel = {
+                OwnerID: "",
+                UDOwnerCode: "",
+                OwnerLevel: { OwnerLevelID: "", LevelName: "" },
+                OwnerName: "",
+                OwnerShortName: "",
+                Parent: { ParentOwner: "", ParentName: "" },
+                Status: ""
+            };
+        }
+        $scope.ownerModelReset();
+       
+        // Model for the data to be saved/updated
+        $scope.owners = [];
+        $scope.displayedCollection = [].concat($scope.owners);
+        $scope.saveModel = [];
+        $scope.itemsByPage = 10;
+        $scope.loading = true;
+
+        $scope.loadTable = function () {
+            $http.get('/DocScanningModule/Owner/GetOwners?ownerId=')
+               .success(function (response) {
+                   $scope.loading = false;
+                   $scope.owners = response.result;
+                   $scope.displayedCollection = [].concat($scope.owners);
+               }).error(function () {
+                   $scope.loading = false;
+               });
+        }
+        
+
+        $scope.loadTable();
+        $http.get('/DocScanningModule/Owner/GetOwnerLevel?id=')
+            .success(function (response) {
+                $scope.loading = false;
+                $scope.ownerLevels = response.result;
+            }).error(function () { });
+
+        $scope.ownerLevelChange = function () {
+            $http.get('/DocScanningModule/Owner/GetParent?id=' + $scope.ownerModel.OwnerLevel.OwnerLevelID)
+                .success(function (response) {
+                    $scope.ownerParents = response.result;
+                }).error(function () { });
+        };
+        
+        // ################# Prepare save data ####################
+        $scope.modelConvert = function () {
+            $scope.saveModel.OwnerID = $scope.ownerModel.OwnerID;
+            $scope.saveModel.UDOwnerCode = $scope.ownerModel.UDOwnerCode;
+            $scope.saveModel.OwnerLevelID = $scope.ownerModel.OwnerLevel.OwnerLevelID;
+            $scope.saveModel.OwnerName = $scope.ownerModel.OwnerName;
+            $scope.saveModel.OwnerShortName = $scope.ownerModel.OwnerShortName;
+            $scope.saveModel.ParentOwner = $scope.ownerModel.Parent.ParentOwner;
+            $scope.saveModel.Status = $scope.ownerModel.Status;
+        };
+
+        // ################# Edit Modal ####################
+        $scope.toggleEdit = function (row) {
+            console.log(row);
+            $scope.ownerFrm.$setPristine();
+            $scope.ownerFrm.$setUntouched();
+            $scope.ownerModel = {
+                OwnerID: row.OwnerID,
+                UDOwnerCode: row.UDOwnerCode,
+                OwnerLevel: { OwnerLevelID: row.OwnerLevelID, LevelName: row.LevelName },
+                OwnerName: row.OwnerName,
+                OwnerShortName: row.OwnerShortName,
+                Parent: { ParentOwner: row.ParentOwner, ParentName: row.ParentName },
+                Status: (row.Status).toString()
+            };
+            $scope.ownerFrm.ownerLevel.$setDirty();
+            $('#addModal').modal('show');
+        };
+
+        //############## Save Modal ########################
+        $scope.toggleAdd = function (row) {
+            $scope.ownerModelReset();
+            $scope.ownerFrm.$setPristine();
+            $scope.ownerFrm.$setUntouched();
+            $scope.ownerModel.Status = "1";
+            $('#addModal').modal('show');
+        };
+
+        $scope.Save = function (x) {
+           // console.log(x);
+            $scope.modelConvert();
+            if ($scope.saveModel.OwnerID) {
+
+                // Update
+                $http.post('/DocScanningModule/Owner/EditOwner/', JSON.stringify(convArrToObj($scope.saveModel))).success(function (data) {
+                    if (data._respStatus.Status === "1") {
+                        $scope.loading = false;
+                        $('#addModal').modal('hide');
+                        $scope.loadTable();
+                        toastr.success(data.Message);
+                    }
+                    else {
+                        $scope.loading = false;
+                        toastr.error(data.Message);
+                    }
+                }).error(function (data) {
+                    $scope.loading = false;
+                    toastr.error('Update Failed.');
+                });
+            }
+            else {
+                // Save
+                $http.post('/DocScanningModule/Owner/AddOwner/', JSON.stringify(convArrToObj($scope.saveModel)))
+                    .success(function (data) {
+                        if (data._respStatus.Status === "1") {
+                            $scope.loading = false;
+                            $scope.loadTable();
+                            $('#addModal').modal('hide');
+
+                            toastr.success(data.Message);
+                        }
+                        else {
+                            $scope.loading = false;
+                            toastr.error(data.Message);
+                        }
+                    }).error(function (data) {
+                        $scope.loading = false;
+                        toastr.error('Saved Failed.');
+                    });
+            }
+        }
+
+        
+     
+
+
+
+        //#################### Set Dropdown ################
+        $scope.toggleRefreshTable = function () {
+            $scope.loading = true;
+            $scope.loadTable();
+        };
+
+     
+
+
+    }]);
+
+</script>

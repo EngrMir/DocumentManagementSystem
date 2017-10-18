@@ -1,0 +1,717 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLteLayout.cshtml";
+}
+
+<style>
+    #filedrag {
+        /*display: none;*/
+        font-weight: bold;
+        text-align: center;
+        padding: 1em 0;
+        margin: 1em 0;
+        color: #555;
+        border: 2px dashed #555;
+        border-radius: 7px;
+        cursor: default;
+    }
+
+        #filedrag.hover {
+            color: #f00;
+            border-color: #f00;
+            border-style: solid;
+            box-shadow: inset 0 3px 4px;
+        }
+</style>
+<script>
+    $(document).ready(function () {
+        UploadFile.AddEventListenerForDragAndDrop();
+        UploadFile.AddEventListenerForFileSelect();
+    });
+
+    function UploadFile() { }
+
+    // file drag hover
+    UploadFile.FileDragHover = function (e) {
+        e.stopPropagation();
+        e.preventDefault();
+        e.target.className = (e.type == "dragover" ? "hover" : "");
+    }
+
+    // file selection
+    UploadFile.FileSelectHandler = function (e) {
+        // cancel event and hover styling
+        UploadFile.FileDragHover(e);
+
+        //if from drag and drop then reset file select
+        if (e.dataTransfer != undefined &&
+            e.dataTransfer.files != undefined) {
+            UploadFile.ResetFileSelect();
+        }
+
+        // fetch FileList object
+        var files = e.target.files || e.dataTransfer.files;
+
+        if (files != undefined && files.length > 0) {
+            UploadFile.UploadFileToServer(files[0]);
+        }
+    }
+    //Adds Event Listeners for drag drop div
+    UploadFile.AddEventListenerForDragAndDrop = function () {
+        var fileDrag = $("#filedrag");
+
+        // call initialization file
+        if (window.File && window.FileList && window.FileReader) {
+            // is XHR2 available?
+            var xhr = new XMLHttpRequest();
+            if (xhr.upload) {
+
+                // file drop
+                // fileDrag[0].addEventListener("ondragstart", UploadFile.FileDragHover, false);
+                // fileDrag[0].addEventListener("ondragenter", UploadFile.FileDragHover, false);
+                // fileDrag[0].addEventListener("ondragover", UploadFile.FileDragHover, false);
+                // fileDrag[0].addEventListener("ondragleave", UploadFile.FileDragHover, false);
+                // fileDrag[0].addEventListener("drop", UploadFile.FileSelectHandler, false);
+
+                //Works like this too!!!!
+                fileDrag[0].ondragstart = UploadFile.FileDragHover;
+                fileDrag[0].ondragenter = UploadFile.FileDragHover;
+                fileDrag[0].ondragover = UploadFile.FileDragHover;
+                fileDrag[0].ondragleave = UploadFile.FileDragHover;
+                fileDrag[0].ondrop = UploadFile.FileSelectHandler;
+
+            }
+        }
+        else {
+            fileDrag.innerHTML = '<p>File Drag and Drop not Supported </p>';
+        }
+    }
+
+    UploadFile.AddEventListenerForFileSelect = function () {
+        var fileselect = $("#fileselect");
+        // file select
+        fileselect[0].addEventListener("change", UploadFile.FileSelectHandler, false);
+    }
+
+    //Resets File Select
+    UploadFile.ResetFileSelect = function () {
+        $("#fileselect").replaceWith('<input type="file" id="fileselect" name="fileselect[]" class="form-control" />');
+        UploadFile.AddEventListenerForFileSelect();
+    }
+
+    //--------- Upload Functions ------- //
+    UploadFile.UploadFileToServer = function (file) {
+        var formdata = new FormData();
+        formdata.append(file.name, file);
+        $.ajax({
+            url: '/DocScanningModule/DocDistribution/UploadHandler',
+            type: 'POST',
+            data: formdata,
+            contentType: false,
+            processData: false,
+            async: true,
+            success: function (data) {
+                //alert(data);
+                if (data !== "1") {
+                    $("#fileName").text(data);
+                }
+                else {
+                    toastr.info("N.B: Please input valid excel file.");
+                    $("#fileName").text("");
+                }
+                   
+            },
+            error: function (error) {
+                toastr.error('Invalid Data stracture');
+            }
+        });
+    }
+</script>
+
+
+
+
+
+<div class="box box-primary box-body" ng-controller="OwnerProperIdentityCtrl">
+
+    <div class="box-header with-border">
+        <i class="fa  fa-table"></i>
+        <h3 class="box-title">Document Distribution</h3>
+    </div>
+
+    <div class="box-body">
+        <div class="row">
+            <div class="col-sm-2 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label>Owner Level</label>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-4">
+                <div class="form-group">
+                    <select class="form-control" ng-model="docPropIdentityModel.OwnerLevel" required="required" ng-change="loadOwner()"
+                            ng-options="ownerLevel as ownerLevel.LevelName for ownerLevel in ownerLevels
+                        track by ownerLevel.OwnerLevelID">
+                        <option value="">--Select--</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-sm-2 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label>Owner</label>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-4">
+                <div class="form-group">
+                    <select class="form-control" ng-model="docPropIdentityModel.Owner" required="required" ng-change="loadCategory()"
+                            data-ng-options="owner as owner.OwnerName for owner in ownersForSpecificOwnerLevel track by owner.OwnerID"
+                            data-ng-disabled="!docPropIdentityModel.OwnerLevel">
+                        <option value="">--Select--</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label>Document Category</label>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-4">
+                <div class="form-group">
+                    <select class="form-control" data-ng-model="docPropIdentityModel.DocCategory" required="required" ng-change="loadType()"
+                            data-ng-options="docCategory as docCategory.DocCategoryName for docCategory in
+                         docCategoriesForSpecificOwner track by docCategory.DocCategoryID"
+                            data-ng-disabled="!docPropIdentityModel.Owner">
+                        <option value="">--Select--</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-sm-2 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label>Document Type</label>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-4">
+                <div class="form-group">
+                    <select class="form-control" data-ng-model="docPropIdentityModel.DocType" required="required" ng-change="loadPropert()"
+                            data-ng-options="docType as docType.DocTypeName for docType in
+                         docTypeForSpecificDocCategory track by docType.DocTypeID"
+                            data-ng-disabled="!docPropIdentityModel.DocCategory">
+                        <option value="">--Select--</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-2 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label>Documents in Type</label>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-4">
+                <select class="form-control" data-ng-model="docPropIdentityModel.DocProperty" required="required" 
+                        data-ng-options="docProperty as docProperty.DocPropertyName for docProperty in
+                         docPropertyForSpecificDocType track by docProperty.DocPropertyID"
+                        data-ng-disabled="!docPropIdentityModel.DocType">
+                    <option value="">--Select--</option>
+                </select>
+            </div>
+
+            <div class="col-sm-2 col-md-2 col-lg-2">
+                <label>Search By</label>
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-4">
+                <select data-ng-model="docPropIdentityModel.SearchBy" class="form-control" required="required" data-ng-disabled="!docPropIdentityModel.DocProperty">
+                    <option value="" selected="selected">--Select--</option>
+                    <option value="1">Required Attribute</option>
+                    <option value="0">Optional Attribute</option>
+                </select>
+            </div>
+        </div>
+        <br/>
+
+        <div class="row">
+            <div class="col-sm-2 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label>Distribution Of</label>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-4">
+                <select class="form-control" data-ng-model="docPropIdentityModel.DidtributionOf" required="required" ng-change="loadPropertyIdentify(docPropIdentityModel.DidtributionOf)">
+                    <option style="display:none" value="">-- Select --</option>
+                    <option value="Original">Original</option>
+                    <option value="Version">Version</option>
+                </select>
+            </div>
+
+            <div class="col-sm-2 col-md-2 col-lg-2">
+                <label>Remarks</label>
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-4">
+                <input type="text" data-ng-model="docPropIdentityModel.Remarks" maxlength="256" class="form-control" />
+            </div>
+        </div>
+        <br/>
+
+        <div class="row">
+            <table st-table="GridDisplayCollection" st-safe-src="docPropIdentityGridData"
+                   class="table table-condensed table-bordered table-striped table-hover">
+                <thead>
+                <tr>
+                    <th st-sort="DocPropIdentifyName">Identificaiton Attribute</th>
+                    <th st-sort="MetaValue">Attribute Value</th>
+                    <th st-sort="FileServerURL" class="hidden">FileServerURL</th>
+                    <th st-sort="">Action</th>
+                </tr>
+                <tr>
+                    <th>
+
+                    </th>
+                    <th>
+                        <input st-search="MetaValue" placeholder="Search Value" class="input-sm form-control" type="search"/>
+                    </th>
+                    <th>
+
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="row in GridDisplayCollection">
+                    <td class="hidden">{{row.DocMetaID}}</td>
+                    <td class="col-lg-3 col-md-3 col-sm-3">{{row.DocPropIdentifyName}}</td>
+                    <td class="col-lg-5 col-md-5 col-sm-5">{{row.MetaValue}}</td>
+                    <td class="hidden">{{row.FileServerURL}}</td>
+                    <td class="col-lg-4 col-md-4 col-sm-4 text-center">
+                        <button type="button" class="btn btn-sm btn-info btn-flat" data-ng-click="LoadImage(row)" style="display: inline-block;"><i class="fa fa-hand-o-down"></i> Select</button>
+                        <button type="button" class="btn btn-sm btn-success btn-flat" data-ng-click="ShowDetailView(row)" style="display: inline-block;"><i class="fa fa-list"></i> Detail View</button>
+                        @*<button type="button" class="btn btn-sm btn-primary btn-flat" data-ng-click="toggleEdit(row)" style="display: inline-block;"><i class="fa fa-edit"></i> Edit</button>*@
+                    </td>
+                </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="6" class="text-center">
+                            <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="10"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div class="row">
+            <label> Your Document (Quick View) </label>
+            <div id="dwtQuickViewer" class="box-body"></div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <form id="uploadform" class="form-horizontal" role="form" onsubmit="return false;">
+                    <fieldset>
+                        <legend>Load .xls File to Distribute Meta Value:</legend>
+                        <div class="form-group">
+                            <div class="col-sm-6">
+                                <input type="file" id="fileselect" style="margin-top: 10px;" name="fileselect[]" class="form-control" />
+                            </div>
+                            <div class="col-sm-6">
+                                <div id="filedrag" style="margin-top: 10px;"> <span id="fileName">Drop Files Here</span></div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="box-footer with-border">
+        <div class="row">
+            <div class="col-lg-12 col-md-12 col-sm-12">
+                <button type="button" id="btnSave" class="btn btn-lg btn-primary btn-flat pull-right" data-ng-disabled="!btnDistribute" data-ng-click="Save()">Distribute</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="bs-example">
+        <!-- Modal HTML -->
+        <div id="DetailViewModal" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" ng-click="ResetModel()" aria-hidden="true">x</button>
+                        <h4 class="modal-title">Document Detail View</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <h4><label>Thumbnail:</label></h4>
+                            </div>
+                            <div class="col-lg-10">
+                                <button class="btn btn-flat btn-sm btn-default" data-ng-click="ZoomIn()"> Zoom In</button>
+                                <button class="btn btn-flat btn-sm btn-default" data-ng-click="ZoomOut()"> Zoom Out</button>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-2">
+                                <div id="dwtVerticalThumbnil" class="box-body"></div>
+                            </div>
+                            <div class="col-lg-10">
+                                <div id="dwtLargeViewer" class="box-body"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="col-sm-12 col-md-12 col-lg-12">
+                            <div class="form-group">
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="mydiv" data-ng-show="loading">
+        <div class="overlay">
+            <div class="loder">
+                <img src="~/Content/AdminLTE/img/cube.gif" /> <span class="text-bold">Loading...</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript" src="~/Resources/dynamsoft.webtwain.intellisense.js"></script>
+<script type="text/javascript" src="~/Resources/dynamsoft.webtwain.initiate.js"></script>
+<script type="text/javascript" src="~/Resources/dynamsoft.webtwain.config.js"></script>
+
+<script type="text/javascript">
+
+    app.controller('OwnerProperIdentityCtrl', function($scope, $http) {
+
+        $scope.docPropIdentityGridData2 = [];
+        $scope.btnDistribute = false;
+        Dynamsoft.WebTwainEnv.RegisterEvent('OnWebTwainReady', Dynamsoft_OnReady);
+
+        var DWObject;
+        var DWObjectLargeViewer;
+        var DWObjectQuickViewer;
+        var zoomFactor = .5;
+
+        function Dynamsoft_OnReady() {
+            DWObject = Dynamsoft.WebTwainEnv.GetWebTwain('dwtVerticalThumbnil');
+            DWObjectQuickViewer = Dynamsoft.WebTwainEnv.GetWebTwain('dwtQuickViewer');
+            DWObjectLargeViewer = Dynamsoft.WebTwainEnv.GetWebTwain('dwtLargeViewer');
+
+            DWObjectQuickViewer.SetViewMode(1, 1);
+
+            DWObjectLargeViewer.SetViewMode(-1, -1);
+            DWObjectLargeViewer.MaxImagesInBuffer = 1;
+
+            DWObject.SetViewMode(-1, 4);
+            DWObject.FitWindowType = 0;
+            DWObject.SelectionImageBorderColor = 0x691254;
+            DWObject.ShowPageNumber = true;
+            DWObject.IfAppendImage = true;
+
+            DWObject.RegisterEvent('OnMouseClick', $scope.updateLargeViewer);
+
+        };
+
+        $scope.ZoomIn = function() {
+            DWObjectLargeViewer.Zoom = zoomFactor * 1.2;
+            zoomFactor = zoomFactor * 1.2;
+        };
+
+        $scope.ZoomOut = function() {
+            DWObjectLargeViewer.Zoom = zoomFactor / 1.2;
+            zoomFactor = zoomFactor / 1.2;
+        };
+
+        $scope.LoadImage = function (tableRow, e) {
+            $scope.btnDistribute = true;
+            $scope.docPropIdentityGridData2 = tableRow;
+            DWObjectQuickViewer.IfShowFileDialog = false;
+            DWObjectQuickViewer.RemoveAllImages();
+
+            DWObjectQuickViewer.FTPPort = tableRow.ServerPort;
+            DWObjectQuickViewer.FTPUserName = tableRow.FtpUserName;
+            DWObjectQuickViewer.FTPPassword = tableRow.FtpPassword;
+
+            DWObjectQuickViewer.FTPDownload(tableRow.ServerIP, (tableRow.FileServerURL + "//" + tableRow.DocumentID + ".pdf"));
+           
+        };
+
+        $scope.ShowDetailView = function(tableRow, e) {
+            DWObject.IfShowFileDialog = false;
+            DWObject.RemoveAllImages();
+
+            DWObject.FTPPort = tableRow.ServerPort;
+            DWObject.FTPUserName = tableRow.FtpUserName;
+            DWObject.FTPPassword = tableRow.FtpPassword;
+            DWObject.FTPDownload(tableRow.ServerIP, (tableRow.FileServerURL + "//" + tableRow.DocumentID + ".pdf"));
+            $('#DetailViewModal').modal('show');
+        };
+
+        $scope.updateLargeViewer = function() {
+            DWObject.CopyToClipboard(DWObject.CurrentImageIndexInBuffer);
+            DWObjectLargeViewer.LoadDibFromClipboard();
+        };
+
+        $scope.docPropIdentityModel = {
+            OwnerLevel: { OwnerLevelID: "", LevelName: "" },
+            Owner: { OwnerID: "", OwnerName: "" },
+            DocCategory: { DocCategoryID: "", DocCategoryName: "" },
+            DocType: { DocTypeID: "", DocTypeName: "" },
+            DocProperty: { DocPropertyID: "", DocPropertyName: "" },
+            DocMetaID: "",
+            DocPropIdentifyID: "",
+            MetaValue: "",
+            Remarks: "",
+            IdentificationAttribute: "",
+            AttributeValue: "",
+            SearchBy: "",
+            DidtributionOf: "",
+            DocVersionID: ""
+
+        };
+
+        $scope.itemsByPage = 10;
+        $scope.loading = true;
+
+        // To get all the active owner level to bind to the dropdown
+        $http.get('/DocScanningModule/OwnerProperIdentity/GetOwnerLevel?_OwnerLevelID=')
+            .success(function(response) {
+                $scope.ownerLevels = response.result;
+                $scope.docPropIdentityModel.OwnerLevel = "";
+                $scope.loading = false;
+            })
+            .error(function() {
+                $scope.loading = false;
+            });
+
+        $scope.loadOwner = function() {
+
+            $scope.docPropIdentityModel.Owner = "";
+            $scope.docPropIdentityModel.DocCategory = "";
+            $scope.docPropIdentityModel.DocType = "";
+            $scope.docPropIdentityModel.DocProperty = "";
+            $scope.docPropertyForSpecificDocType = "";
+            $scope.docPropIdentityGridData = [];
+            $http.post('/DocScanningModule/OwnerProperIdentity/GetOwnerForSpecificOwnerLevel',
+                { _OwnerLevelID: $scope.docPropIdentityModel.OwnerLevel.OwnerLevelID })
+                .success(function(response) {
+                    $scope.ownersForSpecificOwnerLevel = response.result;
+                    $scope.loading = false;
+                }).error(function() {
+                    $scope.loading = false;
+                });
+        };
+
+        $scope.loadCategory = function() {
+            $scope.docPropIdentityModel.DocCategory = "";
+            $scope.docPropIdentityModel.DocType = "";
+            $scope.docPropIdentityModel.DocProperty = "";
+            $scope.docPropertyForSpecificDocType = "";
+            $scope.docPropIdentityGridData = [];
+            $http.post('/DocScanningModule/OwnerProperIdentity/GetDocumentCategoriesForSpecificOwner',
+                { _OwnerID: $scope.docPropIdentityModel.Owner.OwnerID })
+                .success(function(response) {
+                    $scope.docCategoriesForSpecificOwner = response.result;
+                    $scope.loading = false;
+                }).error(function() {
+                    $scope.loading = false;
+                });
+
+        };
+
+        $scope.loadType = function() {
+
+            $scope.docPropIdentityModel.DocType = "";
+            $scope.docPropIdentityModel.DocProperty = "";
+            $scope.docPropertyForSpecificDocType = "";
+            $scope.docPropIdentityGridData = [];
+            $http.post('/DocScanningModule/OwnerProperIdentity/GetDocumentTypeForSpecificDocCategory',
+                {
+                    _DocCategoryID: $scope.docPropIdentityModel.DocCategory.DocCategoryID,
+                    _OwnerID: $scope.docPropIdentityModel.Owner.OwnerID
+                })
+                .success(function(response) {
+                    $scope.docTypeForSpecificDocCategory = response.result;
+                    $scope.loading = false;
+                }).error(function() {
+                    $scope.loading = false;
+                });
+        }
+
+
+        $scope.loadPropert = function() {
+
+            $scope.docPropIdentityModel.DocProperty = "";
+            $scope.docPropertyForSpecificDocType = "";
+            $scope.docPropIdentityGridData = [];
+            //$scope.docPropIdentityGridData = [];
+            $http.post('/DocScanningModule/MultiDocScan/GetDocumentProperty',
+                {
+                    _DocCategoryID: $scope.docPropIdentityModel.DocCategory.DocCategoryID,
+                    _OwnerID: $scope.docPropIdentityModel.Owner.OwnerID,
+                    _DocTypeID: $scope.docPropIdentityModel.DocType.DocTypeID
+                })
+                .success(function(response) {
+                    $scope.docPropertyForSpecificDocType = response.result;
+                    $scope.loading = false;
+                    //$scope.BindDataToGrid();
+                }).error(function() {
+                    $scope.loading = false;
+                });
+
+        }
+
+        $scope.loadPropertyIdentify = function(newVal) {
+
+            $scope.BindDataToGrid(newVal);
+        }
+
+        $scope.BindDataToGrid = function(newVal) {
+
+            if (newVal === "Original") {
+
+                $http.post('/DocScanningModule/OriginalDocSearching/GetDocPropIdentityForSelectedDocTypes',
+                    {
+                        _DocCategoryID: $scope.docPropIdentityModel.DocCategory.DocCategoryID,
+                        _OwnerID: $scope.docPropIdentityModel.Owner.OwnerID,
+                        _DocTypeID: $scope.docPropIdentityModel.DocType.DocTypeID,
+                        _DocPropertyID: $scope.docPropIdentityModel.DocProperty.DocPropertyID,
+                        _SearchBy: $scope.docPropIdentityModel.SearchBy
+                    })
+                    .success(function(response) {
+                        $scope.docPropIdentityGridData = response;
+                        $scope.GridDisplayCollection = response;
+                        $scope.loading = false;
+                    }).error(function() {
+                        $scope.loading = false;
+                    });
+
+            } else if (newVal === "Version") {
+
+                $http.post('/DocScanningModule/VersionDocSearching/GetVersionDocBySearchParam',
+                    {
+                        _DocCategoryID: $scope.docPropIdentityModel.DocCategory.DocCategoryID,
+                        _OwnerID: $scope.docPropIdentityModel.Owner.OwnerID,
+                        _DocTypeID: $scope.docPropIdentityModel.DocType.DocTypeID,
+                        _DocPropertyID: $scope.docPropIdentityModel.DocProperty.DocPropertyID,
+                        _SearchBy: $scope.docPropIdentityModel.SearchBy
+                    })
+                    .success(function(response) {
+                        $scope.docPropIdentityGridData = response.result;
+                        $scope.GridDisplayCollection = response.result;
+                        $scope.loading = false;
+                    }).error(function() {
+                        $scope.loading = false;
+                    });
+
+            }
+
+        };
+
+        $scope.ResetModel = function() {
+        };
+
+        //$scope.toggleEdit = function (tableRow) {
+
+        //    $scope.docPropIdentityModel.DocMetaID = tableRow.DocMetaID;
+        //    $scope.docPropIdentityModel.IdentificationAttribute = tableRow.DocPropIdentifyName;
+        //    $scope.docPropIdentityModel.AttributeValue = (tableRow.MetaValue).toString();
+        //    $('#addModal').modal('show');
+        //};
+
+
+        $scope.Save = function() {
+            if ($("#fileName").text() === "Drop Files Here") {
+                toastr.error("Please upload an excel file.");
+            }
+            $scope.loading = true;
+
+            $http.post('/DocScanningModule/DocDistribution/AddDocumentInfo',
+                {
+                    modelDocumentsInfo: $scope.docPropIdentityModel,
+                    selectedPropId: $scope.docPropIdentityModel.DocProperty.DocPropertyID,
+                    docMetaValues: $scope.docPropIdentityGridData2
+                })
+                .success(function(response) {
+                    $scope.loading = false;
+                    if (response.Message === "No column name match with property name. Please upload valid excel file.") {
+                        toastr.error(response.Message);
+                        $scope.btnDistribute = true;
+                    }
+                    else if (response.Message == null) {
+                        $scope.btnDistribute = true;
+                        toastr.error("Error Occured.");
+                    }
+                    else if (response.Message === "Saved Successfully.") {
+                        $scope.btnDistribute = false;
+                        $scope.docPropIdentityModel = [];
+                        $scope.docPropIdentityGridData = [];
+                        $scope.GridDisplayCollection = [];
+                        toastr.success(response.Message);
+                    }
+                    
+                })
+                .error(function() {
+                    $scope.loading = false;
+                    toastr.error("Failed to Save Meta Data.");
+                });
+        };
+
+        $scope.toggleRefreshTable = function(row) {
+            //    $scope.loading = true;
+            $scope.loading = false;
+        };
+
+
+    });
+
+    $scope.reset = function() {
+        
+    };
+    app.directive('editInPlace', function() {
+        return {
+            restrict: 'E',
+            scope: { value: '=' },
+            template: '<input ng-model="value"></input>',
+            link: function($scope, element, attrs) {
+                // Let's get a reference to the input element, as we'll want to reference it.
+                var inputElement = angular.element(element.children()[1]);
+
+                // This directive should have a set class so we can style it.
+                element.addClass('edit-in-place');
+
+                // Initially, we're not editing.
+                $scope.editing = false;
+
+                // ng-click handler to activate edit-in-place
+                $scope.edit = function() {
+                    $scope.editing = true;
+
+                    // We control display through a class on the directive itself. See the CSS.
+                    element.addClass('active');
+
+                    // And we must focus the element.
+                    // `angular.element()` provides a chainable array, like jQuery so to access a native DOM function,
+                    // we have to reference the first element in the array.
+                    inputElement[0].focus();
+                };
+
+                // When we leave the input, we're done editing.
+                inputElement.prop('onblur', function () {
+                    $scope.editing = false;
+                    element.removeClass('active');
+                });
+            }
+        };
+    });
+
+</script>

@@ -1,0 +1,300 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLteLayout.cshtml";
+}
+
+<div class="box box-primary box-body" ng-controller="menuCtrl" data-ng-init="init()">
+    <!-- box-header -->
+    <div class="box-header">
+        <h3 class="box-title">Menu List</h3>
+        <button type="button" id="btnRefresh" data-ng-click="toggleRefreshTable(row)" class="btn btn-flat pull-right" ng-disabled="loading"><i class="fa fa-refresh"></i> Refresh</button>
+        <button type="button" id="btnAdd" data-ng-click="toggleAdd(row)" class="btn btn-flat btn-primary pull-right" ng-disabled="loading"> <i class="fa fa-plus"></i> Add New</button>
+     
+    </div>
+    <!-- /.box-header -->
+    <!-- Display Menu Table -->
+    <div class="box-body table-responsive">
+        <table st-table="displayedCollection" st-safe-src="getAllMenu" class="table table-condensed table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+                    <th st-sort="MenuTitle">Menu Head</th>
+                    <th st-sort="MenuParentTitle">Menu Parent</th>
+                    <th st-sort="MenuUrl"> Url</th>                   
+                    <th st-sort="MenuStatus">Status</th>
+                    <th>Action</th>
+                </tr>
+                <tr>
+                    <th>
+                        <input st-search="MenuTitle" placeholder="Search for MenuTitle" class="input-sm form-control" type="search" />
+                    </th>
+                    <th colspan="5">
+                        <input st-search placeholder="Global Search" class="input-sm form-control" type="search" />
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="row in displayedCollection">
+
+                    <td>{{row.MenuTitle | uppercase}}</td>
+                    <td>{{row.MenuParentTitle}}</td>
+                    <td>{{row.MenuUrl}}</td>                 
+                    <td>{{row.MenuStatus == true? 'Active':'InActive'}}</td>
+                    <td>
+                        <a ng-href="#" ng-rel="" data-ng-click="toggleEdit(row)">Edit</a> |
+                        <a ng-href="#" ng-rel="" data-toggle="confirmation" data-popout="true" data-ng-click="toggleDelete(row)">Delete</a>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="6" class="text-center">
+                        <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+    <!-- /Display Menu Table -->
+
+    <!-- Add Menu Modal -->
+    <form name="name" id="name" ng-submit="Save()">
+        <div class="bs-example">
+            <!-- Modal HTML -->
+            <div id="addModal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h3 class="modal-title">Menu Form</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label>Menu Head</label>
+                                            <input type="hidden" data-ng-model="row.MenuId" class="form-control" id="MenuId" placeholder="Menu Id" />
+                                            <input id="MenuTitle" type="text" class="form-control" placeholder="Menu Title" ng-model="row.MenuTitle" ng-maxlength="150" validation-field-required="true" required />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label>Url</label>
+                                            <input type="text" data-ng-model="row.MenuUrl" required class="form-control" id="MenuUrl" name="MenuUrl" placeholder="/Url" maxlength="350" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label>Parent</label>
+                                            <select id="ddParentMenu" name="ddParentMenu" class="form-control" data-ng-model="row.modMenuParent" data-ng-options="c.MenuTitle for c in getAllMenu track by c.MenuId" data-ng-disabled="!getAllMenu" data-ng-change="getSelectedMenu()">
+                                                <option value="">-- None --</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label>Icon</label>
+                                            <input type="text" data-ng-model="row.MenuIcon" required class="form-control" id="MenuIcon" placeholder="Menu Icon" ng-maxlength="50" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label>Menu Order</label>
+                                            <input type="number" data-ng-model="row.MenuOrder" class="form-control" id="MenuOrder" placeholder="Menu Order"  />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label>Status</label> 
+                                            <select id="ddStatus" class="form-control" required="required" data-ng-model="row.modMenuStatus" data-ng-options="o.DisplayStatus for o in options track by o.MenuStatus" required data-ng-change="getIsActive()"></select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- /.box-body -->
+                        </div>
+                        <div class="modal-footer">
+                            <div class="col-sm-12 col-md-12 col-lg-12">
+                                <div class="form-group">
+                                    <button type="submit" id="btnSubmit" class="btn btn-primary" ng-disabled="loading">Save</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- /Add Menu Modal -->
+
+    <!-- Delete Menu Modal -->
+    <div id="deleteModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 class="modal-title">Delete Confirmation</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label>Are you sure? </label>
+                            <p> You want to delete this record.</p>
+                        </div>
+                    </div><!-- /.box-body -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="yes" class="btn btn-danger" ng-disabled="loading" data-ng-click="deleteConfirm()">Yes</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Delete Menu Modal -->
+
+    <div id="mydiv" data-ng-show="loading">
+        <div class="overlay">
+            <i class="fa fa-refresh fa-spin"></i>Loading...
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+   // var app = angular.module('dmsApp', ['smart-table']);
+    app.controller('menuCtrl', function ($scope, $http) {
+        $scope.itemsByPage = 10;
+        $scope.loading = true;
+        $scope.getAllMenu = [];  // base collection
+        $scope.selectedMenu = [];
+        $scope.displayedCollection = [].concat($scope.getAllMenu);  // displayed collection
+        $scope.options = [{ DisplayStatus: "Active", MenuStatus: 1 }, { DisplayStatus: "InActive", MenuStatus: 0 }];
+        $scope.MenuStatus = "";
+        $scope.MenuParentId = "";
+
+        //################ Get Data And Bind Table ########
+        $scope.init = function () {
+            $http.get('/SecurityModule/Menu/GetMenu?menuId=').success(function (mnu) {
+                $scope.getAllMenu = mnu.result;
+                $scope.displayedCollection = [].concat($scope.getAllMenu);
+                $scope.loading = false;
+            }).error(function () {
+                 $scope.loading = false;
+             });
+        };
+
+        //############## Save Modal ########################
+        $scope.toggleAdd = function (row) {
+            $scope.row = [];
+            $('#addModal').modal('show');
+        };
+
+        $scope.Save = function () {
+            $scope.loading = true;
+            $scope.selectedMenu = this.row;
+            if (this.row.MenuId) {
+                // Update
+                $scope.selectedMenu.MenuParentId = $scope.MenuParentId;
+                $scope.selectedMenu.MenuStatus = $scope.MenuStatus;
+                $http.post('/SecurityModule/Menu/EditMenu', JSON.stringify(convArrToObj($scope.selectedMenu))).success(function (data) {
+                    $scope.init();
+                    $('#addModal').modal('hide');
+                    $scope.loading = false;
+                    toastr.success(data);
+                }).error(function (data) {
+                    $scope.loading = false;
+                    toastr.error('Update Faild.');
+                });
+            }
+            else {
+                // Save
+                $scope.selectedMenu.MenuParentId = $scope.MenuParentId;//$scope.selectedMenu.modMenuParent.MenuId;
+                $scope.selectedMenu.MenuStatus = $scope.MenuStatus;//$scope.selectedMenu.modMenuStatus.MenuStatus;
+                // $scope.loading = true;
+                $http.post('/SecurityModule/Menu/SetMenu/', JSON.stringify(convArrToObj($scope.selectedMenu))).success(function (data) {
+                    $scope.init();
+                    $scope.loading = false;
+                    $('#addModal').modal('hide');
+                    toastr.success(data);
+                }).error(function (data) {
+                    $scope.loading = false;
+                    toastr.error('Saved Faild.');
+                });
+            }
+        }
+
+        // ################# Edit Modal ####################
+        $scope.toggleEdit = function (row) {
+            $scope.row = row;            
+            $scope.MenuId = $scope.row.MenuId;
+            $scope.MenuTitle = $scope.row.MenuTitle;
+            $scope.MenuUrl = $scope.row.MenuUrl;
+            $scope.MenuIcon = $scope.row.MenuIcon;
+            $scope.MenuOrder = $scope.row.MenuOrder;
+            $scope.MenuParentId = $scope.row.MenuParentId;
+            $scope.MenuStatus = $scope.row.MenuStatus;
+            //$scope.row.modMenuParent = $scope.getAllMenu[$scope.row.MenuId];
+            //$scope.row.modMenuStatus = $scope.options[$scope.row.MenuStatus];
+            
+            // ########### If needed call ajax to Bind like DD
+            //var id = $scope.row.MenuID;
+            //var url='/SecurityModule/Menu/GetMenu?userId='+id;
+            //$http({
+            //    method: 'GET',
+            //    url: url,
+            //}).success(function (data, status, headers, config) {
+            //   // Bind Data Here
+            //}).error(function (data, status, headers, config) {
+            //    $scope.message = 'Unexpected Error.';
+            //});
+            $("#ddParentMenu").val($scope.row.MenuParentId);
+            $("#ddStatus").val($scope.row.MenuStatus);
+            $('#addModal').modal('show');
+        };
+
+        //#################### Delete Action ###############
+        $scope.deleteConfirm = function () {
+            var postData = JSON.stringify(convArrToObj($scope.row));
+            $scope.loading = true;
+            $http.post('/SecurityModule/Menu/DeleteMenu', postData).success(function (data) {
+                $scope.init();
+                $scope.loading = false;
+                $('#deleteModal').modal('hide');
+                toastr.success(data);
+            }).error(function (data) {
+                $scope.loading = false;
+                toastr.error(data);
+            });
+        };
+
+        $scope.toggleDelete = function (row) {
+            $scope.row = row;
+            $('#deleteModal').modal('show');
+        };
+
+        //#################### Set Dropdown ################
+        $scope.getIsActive = function () {   
+            $scope.isActive = $scope.row.modMenuStatus;
+            $scope.MenuStatus = $scope.isActive.MenuStatus;
+        }
+
+        $scope.getSelectedMenu = function () {
+            $scope.selMenu = $scope.row.modMenuParent;
+            $scope.MenuParentId =$scope.selMenu==null?0: $scope.selMenu.MenuId;
+        };
+
+        $scope.toggleRefreshTable = function () {
+            $scope.loading = true;
+            $scope.init();
+        };
+
+    });
+
+</script>
+
+
+
+

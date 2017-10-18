@@ -1,0 +1,392 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLteLayout.cshtml";
+}
+
+<div class="box box-primary box-body" ng-controller="menuCtrl">
+    <!-- box-header -->
+    <div class="box-header with-border">
+        <i class="fa fa-tags"></i>
+        <h3 class="box-title">Menu List</h3>
+        <div class="box-tools pull-right">
+          
+            @*<button class="btn btn-box-tool  pull-right" data-widget="collapse" data-toggle="tooltip" title="" data-original-title="Collapse"><i class="fa fa-minus"></i></button>*@
+            @*<button class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="" data-original-title="Remove"><i class="fa fa-times"></i></button>*@
+            <button type="button" id="btnRefresh" data-ng-click="toggleRefreshTable(row)" class="btn btn-flat pull-right" ng-disabled="loading"><i class="fa fa-refresh"></i> Refresh</button>
+            <button type="button" id="btnAdd" data-ng-click="toggleAdd(row)" class="btn btnSave btn-flat btn-primary pull-right" ng-disabled="loading"> <i class="fa fa-plus"></i> Add New</button>
+        </div>
+    </div>
+    <!-- /.box-header -->
+    <!-- Display Menu Table -->
+    <div class="box-body">
+        @*<div class="row">
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <div class="form-group">
+                        <!-- Drop down for Owner Level -->
+                        <label for="OwnerLevel">Owner Level</label>
+                        <select class="form-control" ng-model="vmMenuDetails.OwnerLevel" ng-options="ownerLevel as ownerLevel.LevelName for ownerLevel in ownerLevels track by ownerLevel.OwnerLevelID" ng-change="ddOwnerLevelChange()">
+                            <option value="">-- Select One --</option>
+                        </select>
+                    </div><!-- Drop down for Owner Level end -->
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <div class="form-group">
+                        <!-- Drop down for Owner -->
+                        <label for="Owner">Owner</label>
+                        <select class="form-control" ng-model="vmMenuDetails.Owner" data-ng-options="owner as owner.OwnerName for owner in ownersForSpecificOwnerLevel track by owner.OwnerID" ng-change="ddOwnerChange()"
+                                data-ng-disabled="!vmMenuDetails.OwnerLevel" required="required">
+                            <option value="">-- Select One --</option>
+                        </select>
+                    </div><!-- Drop down for Owner end -->
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                   
+                </div>
+            </div>*@
+
+        <div class="row">
+           
+            <table st-table="displayedCollection" st-safe-src="getAllMenu" class="table table-condensed table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th st-sort="MenuTitle">Menu Title</th>
+                        <th st-sort="MenuParentTitle">Menu Parent</th>
+                        <th st-sort="MenuUrl"> Url</th>
+                        <th st-sort="Status">Status</th>
+                        <th>Action</th>
+                    </tr>
+                    <tr>
+                        <th>
+                            <input st-search="MenuTitle" placeholder="Search for MenuTitle" class="input-sm form-control" type="search" />
+                        </th>
+                        <th colspan="5">
+                            <input st-search placeholder="Global Search" class="input-sm form-control" type="search" />
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="row in displayedCollection">
+
+                        <td>{{row.MenuTitle | uppercase}}</td>
+                        <td>{{row.MenuParentTitle}}</td>
+                        <td>{{row.MenuUrl}}</td>
+                        <td class=" col-lg-1 col-md-1 col-sm-1 text-center">
+                            <span ng-attr-class="{{row.Status ==true? 'label label-success' : 'label label-danger' }}">
+                                {{row.Status == true? 'Active':'InActive'}}
+                            </span>
+                        </td>
+                        <td class="col-lg-1 col-md-1 col-sm-1 text-center">
+                            <button type="button" class="btn btnEdit btn-sm btn-primary btn-flat" data-ng-click="toggleEdit(row)"><i class="fa fa-edit"></i> Edit</button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="6" class="text-center">
+                            <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+
+        </div>
+    </div>
+
+    <!-- /Display Menu Table -->
+    <!-- Add Menu Modal -->
+    <form name="name" id="name" ng-submit="Save()">
+        <div class="bs-example">
+            <!-- Modal HTML -->
+            <div id="addModal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h3 class="modal-title">Menu Form</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="box-body">
+                                @*<div class="row">
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <!-- Drop down for Owner Level -->
+                                            <label for="OwnerLevel">Owner Level</label>
+                                            <select class="form-control" ng-model="vmMenuDetails.OwnerLevel" ng-options="ownerLevel as ownerLevel.LevelName for ownerLevel in ownerLevels track by ownerLevel.OwnerLevelID" ng-change="ddOwnerLevelChange()">
+                                                <option value="">-- Select One --</option>
+                                            </select>
+                                        </div><!-- Drop down for Owner Level end -->
+                                    </div>
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <!-- Drop down for Owner -->
+                                            <label for="Owner">Owner</label>
+                                            <select class="form-control" ng-model="vmMenuDetails.Owner" data-ng-options="owner as owner.OwnerName for owner in ownersForSpecificOwnerLevel track by owner.OwnerID" ng-change="ddOwnerChange()"
+                                                    data-ng-disabled="!vmMenuDetails.OwnerLevel" required="required">
+                                                <option value="">-- Select One --</option>
+                                            </select>
+                                        </div><!-- Drop down for Owner end -->
+                                    </div>
+                                </div>*@
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label>Menu Code</label>
+                                            <div class="row">
+                                                <div class="col-sm-6 col-md-6 col-lg-6">
+                                                    <input type="text" readonly="readonly" data-ng-model="vmMenuDetails.MenuID" class="form-control" id="MenuID" placeholder="Menu Id" />
+                                                </div>
+                                                <div class="col-sm-6 col-md-6 col-lg-6">
+                                                    <input id="MenuTitle" type="text" class="form-control" placeholder="Menu Title" ng-model="vmMenuDetails.MenuTitle" ng-maxlength="150" required="required" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label>Parent</label>
+                                            <select id="ddParentMenu" class="form-control" data-ng-model="vmMenuDetails.ParentMenu" data-ng-options="menu as menu.MenuTitle for menu in getAllMenu track by menu.MenuID" data-ng-disabled="!getAllMenu" data-ng-change="getSelectedMenu()">
+                                                <option value="">-- None --</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label>Url</label>
+                                            <input type="text" data-ng-model="vmMenuDetails.MenuUrl" required class="form-control" id="MenuUrl" name="MenuUrl" placeholder="/Url" maxlength="350" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label>Icon</label>
+                                            <input type="text" data-ng-model="vmMenuDetails.MenuIcon" required class="form-control" id="MenuIcon" placeholder="Menu Icon" ng-maxlength="50" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label>Menu Ordering</label>
+                                            <input type="number" data-ng-model="vmMenuDetails.MenuOrder" class="form-control" id="MenuOrder" placeholder="Menu Order" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label>Total User Allowed</label>
+                                            <input type="number" data-ng-model="vmMenuDetails.TotalUserAllowed" class="form-control" id="MenuOrder" placeholder="0" />
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label>Concurrent User Allowed</label>
+                                            <input type="number" data-ng-model="vmMenuDetails.ConcurrentUser" class="form-control" id="MenuOrder" placeholder="0" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+
+                                            <label>Status</label>
+                                            <select id="ddStatus" data-ng-model="vmMenuDetails.Status" class="form-control">
+                                                @*<option value="">-- None --</option>*@
+                                                <option value="1">Active</option>
+                                                <option value="0">Inactive</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- /.box-body -->
+                        </div>
+                        <div class="modal-footer">
+                            <div class="col-sm-12 col-md-12 col-lg-12">
+                                <div class="form-group">
+                                    <button type="submit" id="btnSubmit" class="btn btn-primary" ng-disabled="loading">Save</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- /Add Menu Modal -->
+
+    <div id="mydiv" data-ng-show="loading">
+        <div class="overlay">
+            <i class="fa fa-refresh fa-spin"></i>Loading...
+        </div>
+    </div>
+
+</div>
+
+<script type="text/javascript">
+    // var app = angular.module('dmsApp', ['smart-table']);
+    app.controller('menuCtrl', function ($scope, $http) {
+        $scope.itemsByPage = 10;
+        $scope.loading = true;
+        $scope.getAllMenu = [];  // base collection
+        $scope.selectedMenu = [];
+        $scope.displayedCollection = [].concat($scope.getAllMenu);  // displayed collection
+        //$scope.options = [{ DisplayStatus: "Active", Status: 1 }, { DisplayStatus: "InActive", Status: 0 }];
+        $scope.Status = "";
+        $scope.ParentMenuID = "";
+
+        //################ Get Data And Bind Table ########
+        $scope.vmMenuDetails =
+       {
+           Owner: { OwnerID: "", OwnerName: "" },
+           MenuID: "",
+           MenuTitle: "",
+           ParentMenu: { MenuID: "", MenuTitle: "" },
+           ParentMenuID: "",
+           MenuUrl: "",
+           MenuIcon: "",
+           MenuOrder: "",
+           TotalUserAllowed: "",
+           ConcurrentUser: "",
+           UserLevel: "0",
+           Status: ""
+       };
+      
+   
+        //$http.get('/DocScanningModule/OwnerProperIdentity/GetOwnerLevel?_OwnerLevelID=')
+        //   .success(function (response) {
+        //       $scope.ownerLevels = response.result;
+        //       $scope.loading = false;
+        //   })
+        //   .error(function () {
+        //       $scope.loading = false;
+        //   });
+
+        //$scope.ddOwnerLevelChange = function () {
+        //    if ($scope.vmMenuDetails.OwnerLevel) {
+        //        $http.post('/DocScanningModule/OwnerProperIdentity/GetOwnerForSpecificOwnerLevel', { _OwnerLevelID: $scope.vmMenuDetails.OwnerLevel.OwnerLevelID })
+        //            .success(function (response) {
+        //                $scope.ownersForSpecificOwnerLevel = response.result;
+        //                $scope.loading = false;
+        //            }).error(function () {
+        //                $scope.loading = false;
+        //            });
+             
+        //    }
+        //    else {
+        //        $scope.vmMenuDetails.Owner = [];
+        //    }
+        //};
+
+        //$scope.ddOwnerChange = function () {
+        //    $scope.LoadMenuTable();
+        //};
+        $scope.LoadMenuTable = function () {
+            $http.get('/SecurityModule/Menu/GetMenu').success(function (mnu) {
+                $scope.getAllMenu = mnu.result;
+                $scope.displayedCollection = [].concat($scope.getAllMenu);
+                $scope.loading = false;
+            }).error(function () {
+                $scope.loading = false;
+            });
+        };
+        $scope.LoadMenuTable();
+        //############## Save Modal ########################
+        $scope.toggleAdd = function (row) {
+            $scope.vmMenuDetails.MenuID = "";
+            $scope.vmMenuDetails.MenuTitle = "";
+            $scope.vmMenuDetails.MenuUrl = "";
+            $scope.vmMenuDetails.MenuIcon = "";
+            $scope.vmMenuDetails.MenuOrder = "";
+
+            $('#addModal').modal('show');
+        };
+
+        $scope.Save = function () {
+            $scope.loading = true;
+            //$scope.selectedMenu = this.row;
+            if (this.vmMenuDetails.MenuID) {
+                // Update
+                //$scope.selectedMenu.ParentMenuID = $scope.ParentMenuID;
+                //$scope.selectedMenu.Status = $scope.Status;
+                $http.post('/SecurityModule/Menu/EditMenu', JSON.stringify(convArrToObj($scope.vmMenuDetails))).success(function (data) {
+                    $scope.vmMenuDetails.MenuID = "";
+                    $scope.LoadMenuTable();
+                    $('#addModal').modal('hide');
+                    $scope.loading = false;
+                    toastr.success(data);
+                }).error(function (data) {
+                    $scope.loading = false;
+                    toastr.error('Update Faild.');
+                });
+            }
+            else {
+                // Save
+                // $scope.loading = true;
+                $http.post('/SecurityModule/Menu/SetMenu/', JSON.stringify(convArrToObj($scope.vmMenuDetails))).success(function (data) {
+                    $scope.LoadMenuTable();
+                    $scope.loading = false;
+                    $('#addModal').modal('hide');
+                    toastr.success(data.Message);
+                }).error(function (data) {
+                    $scope.loading = false;
+                    toastr.error('Saved Faild.');
+                });
+            }
+        }
+
+        // ################# Edit Modal ####################
+        $scope.toggleEdit = function (row) {
+            $scope.row = row;
+            $scope.vmMenuDetails.MenuID = $scope.row.MenuID;
+            $scope.vmMenuDetails.MenuTitle = $scope.row.MenuTitle;
+            $scope.vmMenuDetails.MenuUrl = $scope.row.MenuUrl;
+            $scope.vmMenuDetails.MenuIcon = $scope.row.MenuIcon;
+            $scope.vmMenuDetails.MenuOrder = $scope.row.MenuOrder;
+            $scope.vmMenuDetails.ParentMenu.MenuID = $scope.row.ParentMenuID;
+            $scope.vmMenuDetails.Status = (row.Status).toString();
+            //  $scope.vmMenuDetails.ParentMenu.ParentMenuID = $scope.row.ParentMenuID;
+            //  $scope.vmMenuDetails.Status = $scope.row.Status;
+            //$scope.vmMenuDetails.ParentMenuID = $scope.getAllMenu[$scope.vmMenuDetails.MenuID];
+            //$scope.vmMenuDetails.modMenuStatus = $scope.options[$scope.vmMenuDetails.Status];
+
+            // ########### If needed call ajax to Bind like DD
+            //var id = $scope.vmMenuDetails.MenuID;
+            //var url='/SecurityModule/Menu/GetMenu?userId='+id;
+            //$http({
+            //    method: 'GET',
+            //    url: url,
+            //}).success(function (data, status, headers, config) {
+            //   // Bind Data Here
+            //}).error(function (data, status, headers, config) {
+            //    $scope.message = 'Unexpected Error.';
+            //});
+            $("#ddParentMenu").val($scope.vmMenuDetails.MenuID);
+            $("#ddStatus").val($scope.vmMenuDetails.Status);
+            $('#addModal').modal('show');
+        };
+
+
+        //#################### Set Dropdown ################
+        $scope.getIsActive = function () {
+            $scope.isActive = $scope.vmMenuDetails.modMenuStatus;
+            $scope.Status = $scope.isActive.Status;
+        }
+
+        $scope.getSelectedMenu = function () {
+            $scope.selMenu = $scope.vmMenuDetails.ParentMenuID;
+            $scope.ParentMenuID = $scope.selMenu == null ? 0 : $scope.selMenu.MenuID;
+        };
+
+        $scope.toggleRefreshTable = function () {
+            $scope.loading = false;
+
+        };
+
+    });
+
+</script>
+
+
+
+

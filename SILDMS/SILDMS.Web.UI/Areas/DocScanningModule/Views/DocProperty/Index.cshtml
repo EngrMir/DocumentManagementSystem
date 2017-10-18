@@ -1,0 +1,647 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLteLayout.cshtml";
+}
+
+<div class="box box-primary box-body" ng-controller="ownerCtrl">
+    <!-- box-header -->
+    <div class="box-header with-border">
+        <i class="fa fa-list-alt"></i>
+        <h3 class="box-title">Documents List</h3>
+        <div class="box-tools pull-right">
+            <button type="button" id="btnRefresh" data-ng-click="toggleRefreshTable(row)" class="btn btn-flat pull-right" data-ng-disabled="!vmDocProperty.DocType"><i class="fa fa-refresh"></i> Refresh</button>
+            <button type="button" id="btnAdd" data-ng-click="toggleAdd(row)" class="btn btnSave btn-flat btn-primary pull-right" data-ng-disabled="!vmDocProperty.DocType"> <i class="fa fa-plus"></i> Add New</button>
+        </div>
+    </div>
+    <div class="box-body">
+        <div class="row">
+            <div class="col-sm-2 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label for="OwnerLevel">Owner Level</label>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-4">
+                <div class="form-group">
+                    <select class="form-control" ng-model="vmDocProperty.OwnerLevel" ng-options="ownerLevel as ownerLevel.LevelName for ownerLevel in ownerLevels track by ownerLevel.OwnerLevelID" ng-change="ddOwnerLevelChange()">
+                        <option value="">-- Select One --</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-2 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label for="Owner">Owner</label>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-4">
+                <div class="form-group">
+                    <select class="form-control" ng-model="vmDocProperty.Owner" data-ng-options="owner as owner.OwnerName for owner in ownersForSpecificOwnerLevel track by owner.OwnerID" ng-change="ddOwnerChange()"
+                            data-ng-disabled="!vmDocProperty.OwnerLevel">
+                        <option value="">-- Select One --</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-sm-2 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label>Document Category</label>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-4">
+                <div class="form-group">
+                    <select class="form-control" data-ng-model="vmDocProperty.DocCategory" data-ng-options="docCategory as docCategory.DocCategoryName for docCategory in docCategoriesForSpecificOwner track by docCategory.DocCategoryID"
+                            data-ng-disabled="!vmDocProperty.Owner" ng-change="ddChategoryChange()">
+                        <option value="">-- Select One --</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-2 col-md-2 col-lg-2">
+                <div class="form-group">
+                    <label>Document Type</label>
+                </div>
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-4">
+                <div class="form-group">
+                    <select id="" name="" class="form-control" data-ng-model="vmDocProperty.DocType" data-ng-options="docType as docType.DocTypeName for docType in docTypeForSpecificDocCategory track by docType.DocTypeID" ng-change="ddTypeChange()"
+                            data-ng-disabled="!vmDocProperty.DocCategory">
+                        <option value="">-- Select One --</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="table-responsive">
+        <table st-table="displayedCollection" st-safe-src="getAllDocProperty" class="table table-condensed table-bordered table-striped table-hover">
+            <thead>
+            <tr>
+                <th st-sort="DocPropertyID">DocumentID</th>
+                <th st-sort="DocPropertyName">Document Title</th>
+                <th st-sort="UDDocPropertyCode">UD Code</th>
+                <th st-sort="DocClassification">SerialNo</th>
+                <th st-sort="Remarks">Remarks</th>
+                <th st-sort="Status">Status</th>
+                <th>Action</th>
+            </tr>
+                <tr>
+                    <th></th>
+                    <th>
+                        <input st-search="DocPropertyName" placeholder="Property Name" class="input-sm form-control" type="search" data-ng-disabled="!vmDocProperty.DocType" />
+                    </th>
+                    <th></th>                
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="row in displayedCollection">
+                    <td class="col-lg-1 col-md-1 col-sm-1">{{row.DocPropertyID}}</td>
+                    <td class="col-lg-4 col-md-4 col-sm-4">{{row.DocPropertyName | uppercase}}</td>
+                    <td class="col-lg-1 col-md-1 col-sm-1">{{row.UDDocPropertyCode  | uppercase}}</td>
+                 
+                    <td class="col-lg-1 col-md-1 col-sm-1">{{row.SerialNo}}</td>
+                    <td class="col-lg-3 col-md-3 col-sm-3">{{row.Remarks}}</td>
+                    <td class="col-lg-1 col-md-1 col-sm-1 text-center">
+                        <span ng-attr-class="{{row.Status ==true? 'label label-success' : 'label label-danger' }}">
+                            {{row.Status == true? 'Active':'InActive'}}
+                        </span> 
+                    </td>
+                    <td class="col-lg-1 col-md-1 col-sm-1 text-center">
+                        <button type="button" class="btn btnEdit btn-sm btn-primary btn-flat" data-ng-click="toggleEdit(row)"><i class="fa fa-edit"></i> Edit</button>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="7" class="text-center">
+                        <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="10"></div>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <!-- /Display DocProperty Table -->
+    <!-- Add DocProperty Modal -->
+    <form name="docPropFrm" id="docPropFrm" ng-submit="">
+        <div class="bs-example">
+            <!-- Modal HTML -->
+            <div id="addModal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h3 class="modal-title">Document Property Form</h3>
+                        </div>
+
+                        <div class="modal-body">
+                            <div class="box-body">
+                                <div class="row">
+
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label for="ownerLevel">Owner Level</label>
+                                            <select id="ownerLevel" name="ownerLevel" class="form-control" ng-model="vmDocProperty.OwnerLevel"
+                                                    ng-options="ownerLevel as ownerLevel.LevelName for ownerLevel in ownerLevels track by ownerLevel.OwnerLevelID"
+                                                    ng-change="ddOwnerLevelChange()" required>
+                                                <option value="">-- Select One --</option>
+                                            </select>
+                                            <div ng-show="docPropFrm.$submitted || docPropFrm.ownerLevel.$touched">
+                                                <span ng-show="!docPropFrm.ownerLevel.$dirty && docPropFrm.ownerLevel.$pristine" class="label label-danger">Please select an owner level.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label>Owner</label>
+                                            <select id="owner" name="owner" class="form-control" ng-model="vmDocProperty.Owner" data-ng-options="owner as owner.OwnerName for owner in ownersForSpecificOwnerLevel track by owner.OwnerID"
+                                                    ng-change="ddOwnerChange()" data-ng-disabled="!vmDocProperty.OwnerLevel" required>
+                                                <option value="">-- Select One --</option>
+                                            </select>
+                                            <div ng-show="docPropFrm.$submitted || docPropFrm.owner.$touched">
+                                                <span ng-show="!docPropFrm.owner.$dirty && docPropFrm.owner.$pristine" class="label label-danger">Please select an owner.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label>Document Category </label>
+                                            <select id="docCategory" name="docCategory" class="form-control" data-ng-model="vmDocProperty.DocCategory"
+                                                    data-ng-options="docCategory as docCategory.DocCategoryName for docCategory in docCategoriesForSpecificOwner track by docCategory.DocCategoryID"
+                                                    data-ng-disabled="!vmDocProperty.Owner" ng-change="ddChategoryChange()" required>
+                                                <option value="">-- Select One --</option>
+                                            </select>
+                                            <div ng-show="docPropFrm.$submitted || docPropFrm.docCategory.$touched">
+                                                <span ng-show="!docPropFrm.docCategory.$dirty && docPropFrm.docCategory.$pristine" class="label label-danger">Please select a document category.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label>Document Type </label>
+                                            <select id="docType" name="docType" class="form-control" data-ng-model="vmDocProperty.DocType"
+                                                    data-ng-options="docType as docType.DocTypeName for docType in docTypeForSpecificDocCategory track by docType.DocTypeID"
+                                                    data-ng-disabled="!vmDocProperty.DocCategory" ng-change="ddTypeChange()" required>
+                                                <option value="">-- Select One --</option>
+                                            </select>
+                                            <div ng-show="docPropFrm.$submitted || docPropFrm.docType.$touched">
+                                                <span ng-show="!docPropFrm.docType.$dirty && docPropFrm.docType.$pristine"
+                                                      class="label label-danger">Please select a document type.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label>Document Property Code</label>
+                                            <input type="text" readonly data-ng-model="vmDocProperty.DocPropertyID" class="form-control" id="DocPropertyID"
+                                                   placeholder="System Generated Document Property Code" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label>UD Property Code</label>
+                                            <input type="text" maxlength="250" data-ng-model="vmDocProperty.UDDocPropertyCode" class="form-control"
+                                                   id="UDDocPropertyCode" placeholder="User Defined Property Code" ng-maxlength="50" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-12 col-lg-12">
+                                        <div class="form-group">
+                                            <label>Document Property Name</label>
+                                            <input type="text" id="DocPropertyName" name="DocPropertyName" data-ng-model="vmDocProperty.DocPropertyName"
+                                                   class="form-control" placeholder="Document Property Name" ng-maxlength="128" required/>
+                                            <div ng-show="docPropFrm.$submitted || docPropFrm.DocPropertyName.$touched">
+                                                <span ng-show="docPropFrm.DocPropertyName.$error.required" class="label label-danger">Please enter documnet property name</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label>Remarks</label>
+                                            <input type="text" maxlength="550" data-ng-model="vmDocProperty.Remarks" 
+                                                   class="form-control" id="Remarks" placeholder="User Remarks" />
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label>Ordering</label>
+                                            <input type="number" data-ng-model="vmDocProperty.SerialNo" class="form-control" id="SerialNo"
+                                                   placeholder="0" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label>Classification</label>
+                                            <select class="form-control" id="ddDocClassification" data-ng-model="vmDocProperty.DocClassification"
+                                                    ng-maxlength="250">
+                                                <option value="Bellow">Bellow </option>
+                                                <option value="All">All </option>
+                                                <option value="Above">Above </option>
+                                                <option value="Self">Self </option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label>Status</label>
+                                            <select data-ng-model="vmDocProperty.Status" class="form-control">
+                                                @*<option value="">-- None --</option>*@
+                                                <option value="1">Active</option>
+                                                <option value="0">Inactive</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- /.box-body -->
+                        </div>
+                        <div class="modal-footer">
+                            <div class="col-sm-12 col-md-12 col-lg-12">
+                                <div class="form-group">
+                                    <button type="submit" id="btnSubmit" class="btn btn-primary btn-flat"
+                                            ng-click="docPropFrm.$setSubmitted(); docPropFrm.$valid && Save()" ng-disabled="loading">
+                                        Save
+                                    </button>
+                                    <button type="button" id="btnClose" class="btn btn-default btn-flat" data-dismiss="modal" ng-click="ResetModel()">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- /Add DocProperty Modal -->
+
+
+    <div id="mydiv" data-ng-show="loading">
+        <div class="overlay">
+            <i class="fa fa-refresh fa-spin"></i>Loading...
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    app.controller('ownerCtrl', function ($scope, $http) {
+        $scope.loading = true;
+        //$scope.tblDataPropertyShow = false;
+        $scope.itemsByPage = 10;
+        $scope.getAllDocProperty = [];  // base collection
+        $scope.selectedDocProperty = [];
+        $scope.displayedCollection = [].concat($scope.getAllDocProperty);  // displayed collection
+        //$scope.options = [{ DisplayStatus: "Active", Status: 1 }, { DisplayStatus: "InActive", Status: 0 }];
+        //$scope.modStatus = $scope.options[0];
+        $scope.modLevelAccess = "";
+        $scope.vmDocProperty =
+        {
+            DocPropertyID: "",
+            OwnerLevelID: "",
+            OwnerID: "",
+            DocCategoryID: "",
+            DocTypeID:"",
+            DocType: { DocTypeID: "", DocTypeName: "" },
+            DocCategory: { DocCategoryID: "", DocCategoryName: "" },
+            OwnerLevel: { OwnerLevelID: "", LevelName: "" },
+            Owner: { OwnerID: "", OwnerName: "" },           
+            UDDocPropertyCode: "",
+            DocPropertyName: "",
+            Remarks: "",
+            DocClassification: "",
+            Status: ""
+        };
+        
+        //################ Bind Dropdown ###################
+        // To get all the active owner level to bind to the dropdown
+        $http.get('/DocScanningModule/OwnerProperIdentity/GetOwnerLevel?_OwnerLevelID=')
+            .success(function (response) {
+                $scope.ownerLevels = response.result;
+                $scope.loading = false;
+            })
+            .error(function () {
+                $scope.loading = false;
+            });
+
+        $scope.ddOwnerLevelChange = function () {
+            if ($scope.vmDocProperty.OwnerLevel) {
+                $http.post('/DocScanningModule/OwnerProperIdentity/GetOwnerForSpecificOwnerLevel', { _OwnerLevelID: $scope.vmDocProperty.OwnerLevel.OwnerLevelID })
+                    .success(function (response) {
+                        $scope.ownersForSpecificOwnerLevel = response.result;
+                        $scope.loading = false;
+                    }).error(function () {
+                        $scope.loading = false;
+                    });
+            }
+            else {
+                $scope.vmDocProperty.Owner = [];
+                $scope.vmDocProperty.DocCategory = [];
+                $scope.vmDocProperty.DocType = [];
+                $scope.getAllDocProperty = [];
+                $scope.displayedCollection = [].concat($scope.getAllDocProperty);
+            }
+        };
+
+        $scope.ddOwnerChange = function () {
+            if ($scope.vmDocProperty.Owner) {
+                $http.post('/DocScanningModule/OwnerProperIdentity/GetDocumentCategoriesForSpecificOwner',
+                    { _OwnerID: $scope.vmDocProperty.Owner.OwnerID })
+                    .success(function (response) {
+                        $scope.docCategoriesForSpecificOwner = response.result;
+                        //$scope.vmDocProperty.DocCategory.DocCategoryID = $scope.docCategoriesForSpecificOwner[0];
+                        $scope.loading = false;
+                    }).error(function () {
+                        $scope.loading = false;
+                    });
+            }
+            else {
+                $scope.vmDocProperty.DocCategory = [];
+                $scope.vmDocProperty.DocType = [];
+                $scope.getAllDocProperty = [];
+                $scope.displayedCollection = [].concat($scope.getAllDocProperty);
+            }
+        }
+
+        $scope.ddChategoryChange = function () {
+            if ($scope.vmDocProperty.DocCategory) {
+                $http.post('/DocScanningModule/OwnerProperIdentity/GetDocumentTypeForSpecificDocCategory',
+                    {
+                        _DocCategoryID: $scope.vmDocProperty.DocCategory.DocCategoryID,
+                        _OwnerID: $scope.vmDocProperty.Owner.OwnerID
+                    })
+                    .success(function (response) {
+                        $scope.docTypeForSpecificDocCategory = response.result;
+
+                    }).error(function () {
+                        $scope.loading = false;
+                    });
+            }
+            else {
+                $scope.vmDocProperty.DocType = [];
+                $scope.getAllDocProperty = [];
+                $scope.displayedCollection = [].concat($scope.getAllDocProperty);
+            }
+        }
+
+        $scope.ddTypeChange = function (newVal) {
+            if ($scope.vmDocProperty.DocType) {
+                $scope.loadDocPropertyTable();
+            }
+            else {
+                $scope.getAllDocProperty = [];
+                $scope.displayedCollection = [].concat($scope.getAllDocProperty);
+            }
+        }
+        // to bind owner dropdown against owner level dropdown change of value
+        ////$scope.$watch('vmDocProperty.OwnerLevel', function (newVal) {
+        ////    if ($scope.vmDocProperty.OwnerLevel) {
+        ////        $http.post('/DocScanningModule/OwnerProperIdentity/GetOwnerForSpecificOwnerLevel', { _OwnerLevelID: $scope.vmDocProperty.OwnerLevel.OwnerLevelID })
+        ////            .success(function (response) {
+        ////                $scope.ownersForSpecificOwnerLevel = response.result;
+        ////                $scope.loading = false;
+        ////            }).error(function () {
+        ////                $scope.loading = false;
+        ////            });
+        ////    }
+        ////    else {
+        ////        $scope.vmDocProperty.Owner = [];
+        ////        $scope.vmDocProperty.DocCategory=[];
+        ////        $scope.vmDocProperty.DocType = [];
+        ////        $scope.getAllDocProperty = [];
+        ////        $scope.displayedCollection = [].concat($scope.getAllDocProperty);
+        ////    }
+        ////});
+
+        ////// to bind Doc Category dropdown against owner dropdown change of value
+        ////$scope.$watch('vmDocProperty.Owner', function (newVal) {
+        ////    if ($scope.vmDocProperty.Owner) {
+        ////        $http.post('/DocScanningModule/OwnerProperIdentity/GetDocumentCategoriesForSpecificOwner',
+        ////            { _OwnerID: $scope.vmDocProperty.Owner.OwnerID })
+        ////            .success(function (response) {
+        ////                $scope.docCategoriesForSpecificOwner = response.result;
+        ////                //$scope.vmDocProperty.DocCategory.DocCategoryID = $scope.docCategoriesForSpecificOwner[0];
+        ////                $scope.loading = false;
+        ////            }).error(function () {
+        ////                $scope.loading = false;
+        ////            });
+        ////    }
+        ////    else {
+        ////        $scope.vmDocProperty.DocCategory = [];
+        ////        $scope.vmDocProperty.DocType = [];
+        ////        $scope.getAllDocProperty = [];
+        ////        $scope.displayedCollection = [].concat($scope.getAllDocProperty);
+        ////    }
+        ////});
+
+        // to bind Doc type dropdown against doc category dropdown change of value
+        ////$scope.$watch('vmDocProperty.DocCategory', function (newVal) {
+        ////    if ($scope.vmDocProperty.DocCategory) {
+        ////        $http.post('/DocScanningModule/OwnerProperIdentity/GetDocumentTypeForSpecificDocCategory',
+        ////            {
+        ////                _DocCategoryID: $scope.vmDocProperty.DocCategory.DocCategoryID,
+        ////                _OwnerID: $scope.vmDocProperty.Owner.OwnerID
+        ////            })
+        ////            .success(function (response) {
+        ////                $scope.docTypeForSpecificDocCategory = response.result;
+
+        ////            }).error(function () {
+        ////                $scope.loading = false;
+        ////            });
+        ////    }
+        ////    else {
+        ////        $scope.vmDocProperty.DocType = [];
+        ////        $scope.getAllDocProperty = [];
+        ////        $scope.displayedCollection = [].concat($scope.getAllDocProperty);
+        ////    }
+        ////});
+
+        //$scope.$watch('vmDocProperty.DocType', function (newVal) {
+        //    if (newVal !=null) {               
+        //        $scope.loadDocPropertyTable();
+        //    }
+        //    else {
+        //        $scope.getAllDocProperty = [];
+        //        $scope.displayedCollection = [].concat($scope.getAllDocProperty);
+        //    }
+        //});
+
+        $scope.loadDocPropertyTable = function () {
+            if ($scope.vmDocProperty.DocType.DocTypeID != "")
+            {
+                var url = '/DocScanningModule/DocProperty/GetDocProperty?DocCategoryID=' + $scope.vmDocProperty.DocCategory.DocCategoryID + ' &OwnerID=' + $scope.vmDocProperty.Owner.OwnerID + ' &DocTypeID=' + $scope.vmDocProperty.DocType.DocTypeID + '';
+                $http.get(url).success(function (response) {
+                    $scope.getAllDocProperty = response.result;
+                    $scope.displayedCollection = [].concat($scope.getAllDocProperty);
+                    $scope.loading = false;
+                   // $scope.modLevelAccess = response.result[0].DocClassification;
+
+                }).error(function () {
+                    $scope.loading = false;
+                    toastr.error('Data Loading Faild.');
+                });
+            }                      
+        }
+
+        //############## Save Modal ########################
+        $scope.toggleAdd = function (row) {  
+
+            $scope.vmDocProperty.DocPropertyID = "";
+            $scope.vmDocProperty.OwnerLevelID =[];
+            $scope.vmDocProperty.OwnerID =[];
+            $scope.vmDocProperty.DocCategoryID = [];
+            $scope.vmDocProperty.DocTypeID =[];
+            $scope.vmDocProperty.UDDocPropertyCode = "";
+            $scope.vmDocProperty.DocPropertyName = "";
+            $scope.vmDocProperty.Remarks = "";
+            $scope.vmDocProperty.Status = "1";
+            $scope.docPropFrm.$setPristine();
+            $scope.docPropFrm.$setUntouched();
+            if ($scope.vmDocProperty.Owner.OwnerID !== "") {
+                $scope.docPropFrm.owner.$setDirty();
+            }
+            if ($scope.vmDocProperty.OwnerLevel.OwnerLevelID !== "") {
+                $scope.docPropFrm.ownerLevel.$setDirty();
+            }
+            if ($scope.vmDocProperty.DocCategory.DocCategoryID !== "") {
+                $scope.docPropFrm.docCategory.$setDirty();
+                
+            }
+            if ($scope.vmDocProperty.DocType.DocTypeID !== "") {
+                $scope.docPropFrm.docType.$setDirty();
+            }
+            $('#addModal').modal('show');
+        };
+
+        $scope.Save = function () {
+               
+
+            $scope.vmDocProperty.OwnerLevelID = $scope.vmDocProperty.OwnerLevel.OwnerLevelID;
+            $scope.vmDocProperty.OwnerID = $scope.vmDocProperty.Owner.OwnerID;
+            $scope.vmDocProperty.DocCategoryID = $scope.vmDocProperty.DocCategory.DocCategoryID;
+            $scope.vmDocProperty.DocTypeID = $scope.vmDocProperty.DocType.DocTypeID;
+
+            $scope.loading = true;
+            if ($scope.vmDocProperty.DocPropertyID) {
+                //// Update
+                $http.post('/DocScanningModule/DocProperty/EditDocProperty/', JSON.stringify(convArrToObj($scope.vmDocProperty))).success(function (data) {
+                    if (data.respStatus.Status === "1") {
+                        $scope.loadDocPropertyTable();
+                        $scope.loading = false;
+                        $('#addModal').modal('hide');
+                        toastr.success(data.Message);
+                    }
+                    else {
+                        $scope.loading = false;
+                        toastr.error(data.Message);
+                    }
+                }).error(function (data) {
+                    $scope.loading = false;
+                    toastr.error('Update Faild.');
+                });
+            }
+            else {
+                // Save
+                $http.post('/DocScanningModule/DocProperty/AddDocProperty/', JSON.stringify(convArrToObj($scope.vmDocProperty)))
+                   .success(function (data) {
+                       if (data.respStatus.Status === "1") {                         
+                           $scope.displayedCollection = [].concat($scope.selectedDocProperty);
+                           $scope.loadDocPropertyTable();
+                           $scope.loading = false;                         
+                           $('#addModal').modal('hide');
+                           toastr.success(data.Message);
+                       }
+                       else {
+                           $scope.loading = false;
+                           toastr.error(data.Message);
+                       }
+                   }).error(function (data) {
+                       $scope.loading = false;
+                       toastr.error('Saved Faild.');
+                   });
+            }
+
+        }
+
+        // ################# Edit Modal ####################
+        $scope.toggleEdit = function (row) {
+            $scope.vmDocProperty.DocPropertyID = row.DocPropertyID;
+            $scope.vmDocProperty.OwnerLevelID = row.OwnerLevelID;
+            $scope.vmDocProperty.OwnerID = row.OwnerID;
+            $scope.vmDocProperty.DocCategoryID = row.DocCategoryID;
+            $scope.vmDocProperty.DocTypeID = row.DocTypeID;
+            $scope.vmDocProperty.UDDocPropertyCode = row.UDDocPropertyCode;
+            $scope.vmDocProperty.DocPropertyName = row.DocPropertyName;
+            $scope.vmDocProperty.Remarks = row.Remarks;
+            $scope.vmDocProperty.SerialNo = row.SerialNo;
+            $scope.vmDocProperty.DocClassification = row.DocClassification;
+            $scope.vmDocProperty.SerialNo = row.SerialNo;
+            $scope.vmDocProperty.Status = (row.Status).toString();
+            $scope.docPropFrm.$setPristine();
+            $scope.docPropFrm.$setUntouched();
+            $scope.docPropFrm.owner.$setDirty();
+            $scope.docPropFrm.ownerLevel.$setDirty();
+            $scope.docPropFrm.docCategory.$setDirty(); 
+            $scope.docPropFrm.docType.$setDirty();
+            $('#addModal').modal('show');
+        };
+        $scope.ResetModel = function () {
+            //$scope.vmDocProperty = [];
+        };
+
+        //#################### Delete Action ###############
+        $scope.deleteConfirm = function () {
+            var postData = JSON.stringify(convArrToObj($scope.vmDocProperty));
+            $scope.loading = true;
+            $http.post('/DocScanningModule/DocProperty/DeleteDocProperty', postData).success(function (data) {
+                if (data.respStatus.Status === "1") {
+                    //$scope.init();
+                    var index = $scope.displayedCollection.indexOf($scope.vmDocProperty);
+                    if (index !== -1) {
+                        $scope.displayedCollection.splice(index, 1);
+                    }
+                    $scope.loading = false;
+                    $('#deleteModal').modal('hide');
+                    toastr.success(data.Message);
+                }
+                else {
+                    $scope.loading = false;
+                    toastr.error(data.Message);
+                }
+
+            }).error(function (data) {
+                $scope.loading = false;
+                toastr.error(data);
+            });
+
+        };
+
+        //$scope.toggleDelete = function (row) {
+        //    $scope.model = row;
+        //    $('#deleteModal').modal('show');
+        //};
+
+        //#################### Set Dropdown ################
+        $scope.toggleRefreshTable = function () {
+            $scope.loading = true;
+            $scope.loadDocPropertyTable();
+        };
+
+    });
+
+</script>
+
+
+

@@ -1,0 +1,220 @@
+﻿@{
+    ViewBag.Title = "User Level";
+    Layout = "~/Views/Shared/_AdminLteLayout.cshtml";
+}
+
+<div class="box box-primary box-body" ng-controller="userLevelCtrl">
+
+    <div class="box-body table-responsive" data-ng-disabled="">
+        <!-- Data Table start -->
+        <div class="box-header">
+            <h3 class="box-title">User Level List</h3>
+            <button type="button" id="btnRefresh" data-ng-click="toggleRefreshTable(row)" class="btn btn-flat pull-right" ng-disabled="loading"><i class="fa fa-refresh"></i> Refresh</button>
+            <button type="button" id="btnAdd" data-ng-click="toggleAdd(row)" class="btn btn-flat btn-primary pull-right" ng-disabled="loading"> <i class="fa fa-plus"></i> Add New</button>
+        </div>
+        <table st-table="userLevels" st-safe-src="userLevels" class="table table-condensed table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+                    <th st-sort="UserLevel">User Level</th>
+                    <th st-sort="UserLevelName">Level Name</th>
+                    <th st-sort="UserLevelSL">Level SL</th>
+                    <th st-sort="UserLevelType">Level Type</th>
+                    <th st-sort="Status">Status</th>
+                    <th>Action</th>
+                </tr>
+                <tr>
+                    <th><input st-search="" placeholder="User Level" class="input-sm form-control" type="search" /></th>
+                    <th><input st-search="UDDocCategoryCode" placeholder="Level Name" class="input-sm form-control" type="search" /></th>
+                    <th><input st-search="DocCategoryName" placeholder="Level SL" class="input-sm form-control" type="search" /></th>
+                    <th><input st-search="DocCategoryName" placeholder="Level Type" class="input-sm form-control" type="search" /></th>
+                    <th><input st-search="Status" placeholder="Status" class="input-sm form-control" type="search" /></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="row in usrLvls" ng-cloak>
+                    <td>{{row.UserLevel}}</td>
+                    <td>{{row.UserLevelName}}</td>
+                    <td>{{row.UserLevelSL}}</td>
+                    <td>{{row.UserLevelType}}</td>
+                    <td>{{row.Status == '1'? 'Active':'Inactive'}}</td>
+                    <td><a ng-href="#" ng-rel="" data-ng-click="toggleEdit(row)">Edit</a></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="5" class="text-center"><div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="4"></div></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div><!-- Data Table End -->
+    <form name="name" id="name" ng-submit="Save()">
+        <!-- Add User Level Modal start -->
+        <div class="bs-example">
+            <div id="addModal" class="modal fade">
+                <!-- Modal HTML start-->
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h3 class="modal-title">User Level Entry Form</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="box-body">
+                                <div class="row">
+                                    <!-- First Row -->
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <!-- Drop Down for User Level -->
+                                            <label for="UserLevel">User Level</label>
+                                            @*<select id="UserLevel" class="form-control" ng-model="userLevel.UserLevel">
+                                                <option value="" style="display: none">-- Select User Level --</option>
+                                                <option value="1">1</option>
+                                                <option value="2">2</option>
+                                                <option value="3">3</option>
+                                                <option value="4">4</option>
+                                                <option value="5">5</option>
+                                                <option value="6">6</option>
+                                                <option value="7">7</option>
+                                            </select>*@
+                                            <input type="text" data-ng-model="usrLvl.UserLevel" class="form-control" id="UserLevel"
+                                                   placeholder="User Level" />
+                                        </div><!-- Drop Down for User Level end -->
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <!-- Text Box for Level Name -->
+                                            <label for="UserLevelName">Level Name</label>
+                                            <input type="text" data-ng-model="usrLvl.UserLevelName" class="form-control" id="UserLevelName"
+                                                   placeholder="User Level Name" />
+                                        </div><!-- Text Box for Level end -->
+                                    </div>
+                                </div><!-- First Row end-->
+                                <div class="row">
+                                    <!-- Second Row -->
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <!-- Text Box for Level SL -->
+                                            <label for="UserLevelSL">Level SL.</label>
+                                            <input type="text" data-ng-model="usrLvl.UserLevelSL" class="form-control" id="UserLevelSL"
+                                                   placeholder="User Level SL" />
+                                        </div><!-- Text Box for Level SL end -->
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <!-- Text Box for User Level Type -->
+                                            <label for="UserLevelType">Level Type</label>
+                                            <input type="text" data-ng-model="usrLvl.UserLevelType" class="form-control" id="UserLevelType"
+                                                   placeholder="User Level Type" />
+                                        </div><!-- Text Box for User Level Type end-->
+                                    </div>
+                                </div><!-- Second Row End-->
+                                <div class="row">
+                                    <!-- Third Row -->
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <!-- Drop Down for Document Category Status -->
+                                            <label for="Status">Status</label>
+                                            <select id="Status" class="form-control" ng-model="usrLvl.Status">
+                                                <option value="" style="display: none">-- None --</option>
+                                                <option value="1">Active</option>
+                                                <option value="0">Inactive</option>
+                                            </select>
+                                        </div><!-- Drop Down for Document Category Status end -->
+                                    </div>
+                                </div><!-- Third Row end-->
+
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="col-sm-12 col-md-12 col-lg-12">
+                                <div class="form-group">
+                                    <button type="submit" id="btnSubmit" class="btn btn-primary" ng-disabled="loading">Save</button>
+                                    <button type="button" id="btnClose" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- /.box-body -->
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- /Add DocProperty Modal -->
+    <div id="mydiv" data-ng-show="loading">
+        <div class="overlay">
+            <i class="fa fa-refresh fa-spin"></i>Loading...
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    // Controller for User Level Page
+    app.controller('userLevelCtrl', ["$scope", "$http", function ($scope, $http) {
+        // Model for User Level
+        $scope.usrLvl = {
+            ID: "", UserLevel: "", UserLevelName: "", UserLevelSL: "", UserLevelType: "", Status: ""
+        };
+        //$scope.userLevels = [];
+        // Model for the data to be saved/updated
+        $scope.saveModel = [];
+        $scope.itemsByPage = 10;
+        $scope.loading = true;
+
+        // Get all user levels
+        $scope.GetLvls = function (){
+            $http.get('/SecurityModule/UserLevel/GetUserLevel', { params: { userLevel: '', levelType: "" } })
+        .success(function (response) {
+                    
+            $scope.usrLvls = response.result;
+                    
+            $scope.loading = false;
+                })
+        .error(function () { })};
+
+        $scope.GetLvls();
+        // Add new User Level
+        $scope.toggleAdd = function () {
+            $scope.usrLvl.ID = ""; $scope.usrLvl.UserLevel = ""; $scope.usrLvl.UserLevelName = "";
+            $scope.usrLvl.UserLevelSL = ""; $scope.usrLvl.UserLevelType = ""; $scope.usrLvl.Status = ""; $('#addModal').modal('show');
+        };
+        // Edit User Level
+        $scope.toggleEdit = function (row) {
+            $scope.usrLvl.ID = row.ID; $scope.usrLvl.UserLevel = (row.UserLevel).toString();
+            $scope.usrLvl.UserLevelName = row.UserLevelName; $scope.usrLvl.UserLevelSL = row.UserLevelSL;
+            $scope.usrLvl.UserLevelType = row.UserLevelType; $scope.usrLvl.Status = (row.Status).toString(); $('#addModal').modal('show');
+        };
+        // Convert current model to save model
+        $scope.modelConvert = function () {
+            $scope.saveModel.ID = $scope.usrLvl.ID; $scope.saveModel.UserLevel = $scope.usrLvl.UserLevel;
+            $scope.saveModel.UserLevelName = $scope.usrLvl.UserLevelName; $scope.saveModel.UserLevelSL = $scope.usrLvl.UserLevelSL;
+            $scope.saveModel.UserLevelType = $scope.usrLvl.UserLevelType; $scope.saveModel.Status = $scope.usrLvl.Status;
+        };
+        // Save/Update User Level
+        $scope.Save = function () {
+            $scope.loading = true; $scope.modelConvert();
+            if ($scope.saveModel.ID) {
+                // Update
+                //console.log($scope.saveModel);
+                $http.post('/SecurityModule/UserLevel/EditUserLevel/', JSON.stringify(convArrToObj($scope.saveModel)))
+                    .success(function (data) {
+                        console.log(data._respStatus);
+                        //if (data._respStatus.Status === 1) {
+                        //    $scope.loading = false; $('#addModal').modal('hide'); $scope.GetLevels(); toastr.success(data.Message);
+                        //} else { scope.loading = false; toastr.error(data.Message); }
+                    })
+                    .error(function (data) { $scope.loading = false; toastr.error('Update Failed.'); });
+            } else {
+                // Save
+                $http.post('/SecurityModule/UserLevel/AddUserLevel/', JSON.stringify(convArrToObj($scope.saveModel)))
+                    .success(function (data) {
+                        if (data._respStatus.Status === 1) {
+                            $scope.loading = false; $('#addModal').modal('hide'); toastr.success(data.Message); $scope.GetLevels();
+                        } else { $scope.loading = false; toastr.error(data.Message); }
+                    })
+                    .error(function (data) { $scope.loading = false; toastr.error('Save Failed.'); });
+            }
+        }
+        // Refresh Documnet Category Table
+        $scope.toggleRefreshTable = function () { $scope.loading = true; $scope.GetLevels()};
+    }]);
+</script>

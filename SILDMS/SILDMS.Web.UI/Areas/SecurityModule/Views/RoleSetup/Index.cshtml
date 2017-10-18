@@ -1,0 +1,405 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLteLayout.cshtml";
+}
+
+<div class="box box-primary box-body" ng-controller="RoleSetupCtrl">
+
+    <!-- box-header -->
+    <div class="box-header with-border">
+        <i class="fa fa-user"></i>
+        <h3 class="box-title">Role List</h3>
+        <div class="box-tools pull-right">
+            <button type="button" id="btnRefresh" data-ng-click="toggleRefreshTable(row)" class="btn btn-flat pull-right" ng-disabled="loading"><i class="fa fa-refresh"></i> Refresh</button>
+            <button type="button" id="btnAdd" data-ng-click="toggleAdd(row)" class="btn btnSave btn-flat btn-primary pull-right" ng-disabled="loading"> <i class="fa fa-plus"></i> Add New</button>
+        </div>
+    </div>
+    <!-- /.box-header -->
+    <div class="box-body">
+        <div class="row">
+            <div class="col-lg-2">
+                <label for="OwnerLevel">Owner Level</label>
+
+            </div>
+            <div class="col-lg-4">
+                <select class="form-control" ng-model="roleSetupModel.OwnerLevel"
+                        ng-options="ownerLevel as ownerLevel.LevelName for ownerLevel in ownerLevels
+                        track by ownerLevel.OwnerLevelID">
+                    <option value="" style="display: none;">--Select--</option>
+                </select>
+            </div>
+
+            <div class="col-lg-2">
+                <label>Owner</label>
+            </div>
+            <div class="col-lg-4">
+                <select class="form-control" ng-model="roleSetupModel.Owner"
+                        data-ng-options="owner as owner.OwnerName for owner in ownersForSpecificOwnerLevel track by owner.OwnerID"
+                        data-ng-disabled="!roleSetupModel.OwnerLevel">
+                    <option value="" style="display: none;">--Select--</option>
+                </select>
+            </div>
+
+        </div>
+        <div class="row">
+            <table st-table="GridDisplayCollection" st-safe-src="roleSetupGridData" class="table table-condensed table-bordered table-striped table-hover">
+                <thead>
+                    <tr>
+                        @*<th st-sort="ID">ID</th>*@
+                        <th st-sort="RoleTitle">Role Name</th>
+                        <th st-sort="RoleType">Role Type</th>
+                        <th st-sort="RoleDescription">Role Description</th>
+                        <th st-sort="Status">Status</th>
+                        <th>Action</th>
+                    </tr>
+                    <tr>
+                        <th>
+                            <input st-search="RoleTitle"
+                                   placeholder="Name" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="RoleType" placeholder="Type" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="RoleDescription"
+                                   placeholder="Description" class="input-sm form-control" type="search" />
+                        </th>
+                        <th>
+                            <input st-search="Status" placeholder="Status" class="input-sm form-control" type="search" />
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="row in GridDisplayCollection">
+
+                        <td class="hidden">{{row.RoleID}}</td>
+                        <td>{{row.RoleTitle}}</td>
+                        <td>{{row.RoleType}}</td>
+                        <td>{{row.RoleDescription}}</td>
+                        <td class="col-lg-1 col-md-1 col-sm-1 text-center">
+                            <span ng-attr-class="{{row.Status ==true? 'label label-success' : 'label label-danger' }}">
+                                {{row.Status == true? 'Active':'InActive'}}
+                            </span>
+                        </td>
+                        <td class="col-lg-1 col-md-1 col-sm-1 text-center">
+                            <button type="button" class="btn btnEdit btn-sm btn-primary btn-flat" data-ng-click="toggleEdit(row)"><i class="fa fa-edit"></i> Edit</button>
+                        </td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="9" class="text-center">
+                            <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="10"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+
+    </div>
+    
+   
+    <!-- Add Menu Modal -->
+    <form id="roleFrm" name="roleFrm">
+        <div class="bs-example">
+            <!-- Modal HTML -->
+            <div id="addModal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" ng-click="ResetModel()" aria-hidden="true">x</button>
+                            <h3 class="modal-title">Role Setup</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="box-body">
+
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label>Owner Level</label>
+                                            <select name="ownerLevel" class="form-control" ng-model="roleSetupModel.OwnerLevel"
+                                                    ng-options="ownerLevel as ownerLevel.LevelName for ownerLevel in ownerLevels
+                                                    track by ownerLevel.OwnerLevelID" required>
+                                                <option value="" style="display: none;">--Select--</option>
+                                            </select>
+                                            <div ng-show="roleFrm.$submitted || roleFrm.ownerLevel.$touched">
+                                                <span ng-show="!roleFrm.ownerLevel.$dirty && roleFrm.ownerLevel.$pristine"
+                                                      class="label label-danger">Please select an owner level.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label>Role Type</label>
+                                            <select name="role" data-ng-model="roleSetupModel.RoleType"
+                                                    class="form-control" required>
+                                                <option value="" style="display: none;">--Select--</option>
+                                                <option value="Supreme">Supreme</option>
+                                                <option value="Admin">Admin</option>
+                                                <option value="General">General</option>
+                                            </select>
+                                            <div ng-show="roleFrm.$submitted || roleFrm.role.$touched">
+                                                <span ng-show="!roleFrm.role.$dirty && roleFrm.role.$pristine"
+                                                      class="label label-danger">Please select a role.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label>Owner</label>
+                                            <select name="owner" class="form-control" ng-model="roleSetupModel.Owner"
+                                                    data-ng-options="owner as owner.OwnerName for owner in ownersForSpecificOwnerLevel track by owner.OwnerID"
+                                                    data-ng-disabled="!roleSetupModel.OwnerLevel" required>
+                                                <option value="" style="display: none;">--Select--</option>
+                                            </select>
+                                            <div ng-show="roleFrm.$submitted || roleFrm.owner.$touched">
+                                                <span ng-show="!roleFrm.owner.$dirty && roleFrm.owner.$pristine"
+                                                      class="label label-danger">Please select an owner.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label>Role Description</label>
+
+                                            <input type="text" class="form-control" placeholder="Role Description"
+                                                   ng-model="roleSetupModel.RoleDescription" ng-maxlength="50" />
+                                        </div>
+                                    </div>
+
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+
+                                        <div class="form-group">
+                                            <label>Role Title</label>
+                                            <input name="roleTitle" type="text" data-ng-model="roleSetupModel.RoleTitle"
+                                                   class="form-control" placeholder="Role Title" ng-maxlength="128" required/>
+                                            <div ng-show="roleFrm.$submitted || roleFrm.roleTitle.$touched">
+                                                <span ng-show="roleFrm.roleTitle.$error.required" class="label label-danger">Please enter role title.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="col-sm-6 col-md-6 col-lg-6">
+                                        <div class="form-group">
+                                            <label>Active Status</label>
+                                            <select data-ng-model="roleSetupModel.Status"
+                                                    class="form-control">
+                                                <option value="" style="display: none;">--Select--</option>
+                                                <option value="1">Active</option>
+                                                <option value="0">Inactive</option>
+                                            </select>
+                                        </div>
+                                    </div>
+
+
+                                </div>
+
+                            </div><!-- /.box-body -->
+                        </div>
+                        <div class="modal-footer">
+                            <div class="col-sm-12 col-md-12 col-lg-12">
+                                <div class="form-group">
+                                    <button type="button" data-ng-click="roleFrm.$setSubmitted();roleFrm.$valid && Save(roleFrm.$valid )" class="btn btn-primary" ng-disabled="loading">Save</button>
+                                    <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="ResetModel()">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- /Add Menu Modal -->
+
+    <div id="mydiv" data-ng-show="loading">
+        <div class="overlay">
+            <div class="loder">
+                <img src="~/Content/AdminLTE/img/cube.gif" /> <span class="text-bold">Loading...</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+    app.controller('RoleSetupCtrl', function ($scope, $http) {
+
+        $scope.roleSetupModel = {
+            OwnerLevel: { OwnerLevelID: "", LevelName: "" },
+            Owner: { OwnerID: "", OwnerName: "" },
+            RoleID: "",
+            RoleTitle: "",
+            RoleType: "",
+            RoleDescription: "",
+            UserLevel: "",
+            Status: ""
+        };
+        $scope.roleSetupGridData = [];  // base collection
+        $scope.GridDisplayCollection = [].concat($scope.roleSetupGridData);  // displayed collection
+
+        $scope.itemsByPage = 10;
+        $scope.loading = true;
+
+        // To get all the active owner level to bind to the dropdown
+        $http.get('/DocScanningModule/OwnerProperIdentity/GetOwnerLevel?_OwnerLevelID=')
+            .success(function (response) {
+                $scope.ownerLevels = response.result;
+                $scope.roleSetupModel.OwnerLevel.OwnerLevelID = "";
+                $scope.roleSetupModel.OwnerLevel.LevelName = "";
+                $scope.loading = false;
+            })
+            .error(function () {
+                $scope.loading = false;
+            });
+
+        // to bind owner dropdown against owner level dropdown change of value
+        $scope.$watch('roleSetupModel.OwnerLevel', function (newVal) {
+            if (newVal) {
+                $scope.roleSetupModel.Owner.OwnerID = "";
+                $scope.roleSetupModel.Owner.OwnerName = "";
+                $scope.roleSetupGridData = "";
+                $http.post('/DocScanningModule/OwnerProperIdentity/GetOwnerForSpecificOwnerLevel',
+                    { _OwnerLevelID: $scope.roleSetupModel.OwnerLevel.OwnerLevelID })
+                    .success(function (response) {
+                        $scope.ownersForSpecificOwnerLevel = response.result;
+                        $scope.loading = false;
+                    }).error(function () {
+                        $scope.loading = false;
+                    });
+            }
+        });
+
+        //---------------------------------------------
+        var BindDataToGrid = function () {
+            $http.post('/SecurityModule/RoleSetup/GetRole',
+                {
+                    _OwnerID: $scope.roleSetupModel.Owner.OwnerID
+                })
+                .success(function (response) {
+                    $scope.roleSetupGridData = response.result;
+                    $scope.GridDisplayCollection = [].concat($scope.roleSetupGridData);
+
+                    //$scope.roleSetupGridData = response.result;
+                    $scope.loading = false;
+                }).error(function () {
+                    $scope.loading = false;
+                });
+        };
+
+        $scope.$watch('roleSetupModel.Owner', function (newVal) {
+            if (newVal) {
+                BindDataToGrid();
+            };
+        });
+
+
+
+        //############## Save Modal ########################
+        $scope.toggleAdd = function (model) {
+            $scope.ResetModel();
+            $scope.roleSetupModel.Status = "1";
+            $scope.roleFrm.$setPristine();
+            $scope.roleFrm.$setUntouched();
+            if ($scope.roleSetupModel.Owner.OwnerID !== "") {
+                $scope.roleFrm.owner.$setDirty();
+                $scope.roleFrm.owner.$setValidity("", true);
+            }
+            if ($scope.roleSetupModel.OwnerLevel.OwnerLevelID !== "") {
+                $scope.roleFrm.ownerLevel.$setDirty();
+                $scope.roleFrm.ownerLevel.$setValidity("", true);
+            }
+            $('#addModal').modal('show');
+        };
+
+        $scope.Save = function () {
+            //console.log(x);
+            $scope.loading = true;
+
+            if ($scope.roleSetupModel.RoleID === "") {
+                 //Save
+                $scope.loading = true;
+                $http.post('/SecurityModule/RoleSetup/AddRole', JSON.stringify($scope.roleSetupModel))
+                    .success(function (response) {
+                        $scope.loading = false;
+                        $('#addModal').modal('hide');
+                        BindDataToGrid();
+                        toastr.success(response.Message);
+                    }).error(function (response) {
+                        $scope.loading = false;
+                        toastr.error('Fail to Save.');
+                    });
+
+            }
+            else {
+                $http.post('/SecurityModule/RoleSetup/EditRole',
+                    JSON.stringify(convArrToObj($scope.roleSetupModel)))
+                    .success(function (response) {
+                        $('#addModal').modal('hide');
+                        $scope.loading = false;
+                        toastr.success(response.Message);
+                        BindDataToGrid();
+                    })
+                    .error(function (data) {
+                        $scope.loading = false;
+                        toastr.error('Failed to Update.');
+                    });
+
+            }
+        }
+
+        
+        $scope.toggleEdit = function (tableRow) {
+
+            $scope.roleSetupModel.RoleID = tableRow.RoleID;
+            $scope.roleSetupModel.RoleTitle = tableRow.RoleTitle;
+            $scope.roleSetupModel.RoleType = (tableRow.RoleType).toString();
+            $scope.roleSetupModel.RoleDescription = tableRow.RoleDescription;
+            $scope.roleSetupModel.UserLevel = tableRow.UserLevel;
+            $scope.roleSetupModel.Status = (tableRow.Status).toString();
+
+            $scope.roleFrm.$setUntouched();
+            if ($scope.roleSetupModel.Owner.OwnerID !== "") {
+                $scope.roleFrm.owner.$setDirty();
+                $scope.roleFrm.owner.$setValidity("", true);
+            }
+            if ($scope.roleSetupModel.OwnerLevel.OwnerLevelID !== "") {
+                $scope.roleFrm.ownerLevel.$setDirty();
+                $scope.roleFrm.ownerLevel.$setValidity("", true);
+            }
+            if ($scope.roleSetupModel.RoleType !== "") {
+                $scope.roleFrm.role.$setDirty();
+                $scope.roleFrm.role.$setValidity("", true);
+            }
+            $('#addModal').modal('show');
+        };
+
+        $scope.ResetModel = function () {
+            $scope.roleSetupModel.RoleID = "";
+            $scope.roleSetupModel.RoleTitle = "";
+            $scope.roleSetupModel.RoleType = "";
+            $scope.roleSetupModel.RoleDescription = "";
+            $scope.roleSetupModel.UserLevel = "";
+            $scope.roleSetupModel.Status = "";
+        };
+        
+
+        $scope.toggleRefreshTable = function () {
+            $scope.loading = true;
+            BindDataToGrid();
+            $scope.loading = false;
+        };
+
+    });
+
+</script>

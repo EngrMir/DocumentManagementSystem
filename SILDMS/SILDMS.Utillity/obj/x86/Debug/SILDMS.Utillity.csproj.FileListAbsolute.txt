@@ -1,0 +1,10 @@
+E:\DMS_Final\SILDMS\SILDMS.Utillity\bin\x86\Debug\SILDMS.Utillity.dll
+E:\DMS_Final\SILDMS\SILDMS.Utillity\bin\x86\Debug\SILDMS.Utillity.pdb
+E:\DMS_Final\SILDMS\SILDMS.Utillity\obj\x86\Debug\SILDMS.Utillity.dll
+E:\DMS_Final\SILDMS\SILDMS.Utillity\obj\x86\Debug\SILDMS.Utillity.pdb
+E:\DMS_Final\SILDMS\SILDMS.Utillity\obj\x86\Debug\SILDMS.Utillity.csprojResolveAssemblyReference.cache
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.Utillity\bin\x86\Debug\SILDMS.Utillity.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.Utillity\bin\x86\Debug\SILDMS.Utillity.pdb
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.Utillity\obj\x86\Debug\SILDMS.Utillity.csprojResolveAssemblyReference.cache
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.Utillity\obj\x86\Debug\SILDMS.Utillity.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.Utillity\obj\x86\Debug\SILDMS.Utillity.pdb

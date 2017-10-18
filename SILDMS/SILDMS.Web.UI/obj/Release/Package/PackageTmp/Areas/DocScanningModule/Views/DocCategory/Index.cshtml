@@ -1,0 +1,357 @@
+﻿@{
+    Layout = "~/Views/Shared/_AdminLteLayout.cshtml";
+}
+<div class="box box-primary box-body" ng-controller="docCategoryCtrl">
+    <!-- box-header -->
+    <div class="box-header with-border">
+        <i class="fa fa-list"></i>
+        <h3 class="box-title">Document Category List</h3>
+        <button type="button" id="btnRefresh" data-ng-click="toggleRefreshTable(row)" class="btn btn-flat pull-right" ng-disabled="loading"><i class="fa fa-refresh"></i> Refresh</button>
+        <button type="button" id="btnAdd" data-ng-click="toggleAdd(row)" class="btn btn-flat btn-primary pull-right btnSave" ng-disabled="loading"> <i class="fa fa-plus"></i> Add New</button>
+    </div>
+    <!-- /.box-header -->
+
+    <div class="box-body">
+        <!-- Filters for Documnet Category Seclection -->
+        <div class="row">
+            <div class="col-sm-4 col-md-4 col-lg-4">
+                <div class="form-group">
+                    <!-- Drop down for Owner Level -->
+                    <label for="OwnerLevel">Owner Level</label>
+                    <select id="OwnerLevel" class="form-control" ng-model="DocCategory.OwnerLevel" ng-change="changeOwnerLevel()"
+                            ng-options="ownerLevel as ownerLevel.LevelName for ownerLevel in ownerLevels track by ownerLevel.OwnerLevelID">
+                        <option value="" style="display: none">-- Select One --</option>
+                    </select>
+                </div><!-- Drop down for Owner Level end -->
+            </div>
+            <div class="col-sm-4 col-md-4 col-lg-4">
+                <div class="form-group">
+                    <!-- Drop down for Owner -->
+                    <label for="Owner">Owner</label>
+                    <select id="Owner" class="form-control" ng-model="DocCategory.Owner" ng-change="changeOwner()"
+                            data-ng-options="owner as owner.OwnerName for owner in owners track by owner.OwnerID" data-ng-disabled="">
+                        <option value="" style="display: none">-- Select One --</option>
+                    </select>
+                </div><!-- Drop down for Owner end -->
+            </div>
+        </div>
+    </div><!-- Filters for Documnet Category Seclection End -->
+    <div class="box-body table-responsive" data-ng-disabled="">
+       
+        <table st-table="displayedCollection" st-safe-src="docCategories" class="table table-condensed table-bordered table-striped table-hover">
+            <thead>
+                <tr>
+                    <th st-sort="DocCategoryName">Category Name</th>
+                    <th st-sort="DocCategorySL">Category SL.</th>
+                    <th st-sort="UDDocCategoryCode">Category Code</th>
+
+                    <th st-sort="Status">Status</th>
+                    <th>Action</th>
+                </tr>
+                <tr>
+                    <th>
+                        <input st-search="DocCategoryName" placeholder="Category Name" class="input-sm form-control" type="search" />
+                    </th>
+                    <th></th>
+                    <th></th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr ng-repeat="row in displayedCollection">
+                    <td class="col-lg-6 col-md-6 col-sm-6">{{row.DocCategoryName}}</td>
+                    <td class="col-lg-2 col-md-2 col-sm-2 text-center">{{row.DocCategorySL}}</td>
+                    <td class="col-lg-2 col-md-2 col-sm-2 text-center">{{row.UDDocCategoryCode}}</td>
+                    <td class="col-lg-2 col-md-2 col-sm-2 text-center">
+                        <span ng-attr-class="{{row.Status ==true? 'label label-success' : 'label label-danger' }}">
+                            {{row.Status == true? 'Active':'InActive'}}
+                        </span>
+                    </td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-primary btn-flat" data-ng-click="toggleEdit(row)"><i class="fa fa-edit"></i> Edit</button>
+                    </td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="6" class="text-center"><div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="7"></div></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div><!-- Data Table End -->
+    <form name="docCatFrm" id="docCatFrm" ng-submit="">
+        <!-- Add DocProperty Modal start -->
+        <div class="bs-example">
+            <div id="addModal" class="modal fade">
+                <!-- Modal HTML start-->
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h3 class="modal-title">Document Category Entry Form</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="box-body">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <!-- Drop down for Owner Level -->
+                                            <label for="AddOwnerLevel">Owner Level</label>
+                                            <select id="AddOwnerLevel" name="ownerLevel" class="form-control" ng-model="DocCategory.OwnerLevel"
+                                                    ng-change="changeOwnerLevel()" ng-options="ownerLevel as ownerLevel.LevelName for
+                                                    ownerLevel in ownerLevels track by ownerLevel.OwnerLevelID" required>
+                                                <option value="" style="display: none">-- Select One --</option>
+                                            </select>
+                                            <div ng-show="docCatFrm.$submitted || docCatFrm.ownerLevel.$touched">
+                                                <span ng-show="!docCatFrm.ownerLevel.$dirty && docCatFrm.ownerLevel.$pristine" class="label label-danger">Please select an owner level.</span>
+                                            </div>
+                                        </div><!-- Drop down for Owner Level end-->
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <!-- Drop down for Owner -->
+                                            <label for="AddOwner">Owner</label>
+                                            <select id="AddOwner" name="owner" class="form-control" ng-model="DocCategory.Owner" ng-change="changeOwner()"
+                                                    data-ng-options="owner as owner.OwnerName for owner in owners track by owner.OwnerID" required>
+                                                <option value="" style="display: none">-- Select One --</option>
+                                            </select><!-- Drop down for Owner end -->
+                                            <div ng-show="docCatFrm.$submitted || docCatFrm.owner.$touched">
+                                                <span ng-show="!docCatFrm.owner.$dirty && docCatFrm.owner.$pristine" class="label label-danger">Please select an owner.</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <!-- Text Box for Document Category code -->
+                                            <label for="DocCategoryID">Document Category Code</label>
+                                            <input id="DocCategoryID" type="text" data-ng-model="DocCategory.DocCategoryID" class="form-control"
+                                                   placeholder="System Generated Document Category Code" readonly="readonly" />
+                                        </div><!-- Text Box for Document Category code end -->
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <!-- Text Box for Document Category SL -->
+                                            <label for="DocCategorySL">Document Category SL.</label>
+                                            <input id="DocCategorySL" type="text" data-ng-model="DocCategory.DocCategorySL" class="form-control"
+                                                   placeholder="Document Category SL" />
+                                        </div><!-- Text Box for Document Category SL end -->
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <!-- Text Box for User Defined(UD) Document Category Code -->
+                                            <label for="UDDocCategoryCode">UD Document Category Code</label>
+                                            <input type="text" data-ng-model="DocCategory.UDDocCategoryCode" class="form-control"
+                                                   id="UDDocCategoryCode" placeholder="User Defined Document Category Code" />
+                                        </div><!-- Text Box for User Defined(UD) Document Category Code end -->
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <!-- Text Box for Document Category Name -->
+                                            <label for="DocCategoryName">Document Category Name</label>
+                                            <input id="DocCategoryName" name="docName" class="form-control" type="text"
+                                                   data-ng-model="DocCategory.DocCategoryName" placeholder="Document Category Name" required/>
+                                            <div ng-show="docCatFrm.$submitted || docCatFrm.docName.$touched">
+                                                <span ng-show="docCatFrm.docName.$error.required" class="label label-danger">Please enter documnet's name</span>
+                                            </div>
+                                        </div><!-- Text Box for Document Category Name end -->
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-6">
+                                        <div class="form-group">
+                                            <!-- Drop Down for Document Category Status -->
+                                            <label for="Status">Status</label>
+                                            <select id="Status" class="form-control" ng-model="DocCategory.Status">
+                                                <option value="1" selected="selected">Active</option>
+                                                <option value="0">Inactive</option>
+                                            </select>
+                                        </div><!-- Drop Down for Document Category Status end -->
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-6"></div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <div class="col-sm-12 col-md-12 col-lg-12">
+                                <div class="form-group">
+                                    <button type="button" id="btnSubmit" class="btn btn-primary btn-flat btnEdit" 
+                                            ng-click="docCatFrm.$setSubmitted(); docCatFrm.$valid && Save()" ng-disabled="loading">
+                                        Save
+                                    </button>
+                                    <button type="button" id="btnClose" class="btn btn-default btn-flat" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div><!-- /.box-body -->
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- /Add DocProperty Modal -->
+    <div id="mydiv" data-ng-show="loading">
+        <div class="overlay">
+            <div class="loder">
+                <img src="~/Content/AdminLTE/img/cube.gif" /> <span class="text-bold">Loading...</span>
+            </div>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    // Controller for Document Category Page
+    app.controller('docCategoryCtrl', ["$scope", "$http", function ($scope, $http) {
+
+        // Model for Document Category
+        $scope.resetDocCategory = function () {
+            $scope.DocCategory = {
+                DocCategoryID: "",
+                OwnerLevel: { OwnerLevelID: "", LevelName: "" },
+                Owner: { OwnerID: "", OwnerName: "" },
+                DocCategorySL: "",
+                UDDocCategoryCode: "",
+                DocCategoryName: "",
+                Status: ""
+            };
+        };
+
+        // Model for the data to be saved/updated
+        $scope.resetDocCategory();
+        $scope.docCategories = [];
+        $scope.displayedCollection = [].concat($scope.docCategories);
+        $scope.saveModel = [];
+        $scope.itemsByPage = 10;
+        $scope.loading = true;
+        
+        // Get all owner levels
+        $http.get('/DocScanningModule/DocCategory/GetOwnerLevel?id=')
+            .success(function(response) {
+                $scope.ownerLevels = response.result;
+                $scope.loading = false;
+            })
+            .error(function () { });
+
+        // Get all owners for the selected owner level on owner level dropdown change
+        $scope.changeOwnerLevel = function () {
+            $scope.owners = [];
+            $http.get('/DocScanningModule/DocCategory/GetOwners?id=' + $scope.DocCategory.OwnerLevel.OwnerLevelID)
+                .success(function (response) {
+                    $scope.owners = response.result;
+                    $scope.docCategories = [];
+                    
+                })
+                .error(function () { });
+        }
+
+        // Get all document categories for the selected owner on owner drop down change
+        $scope.changeOwner = function () {
+            $http.get('/DocScanningModule/DocCategory/GetDocCategoryForOwner?id=' + $scope.DocCategory.Owner.OwnerID)
+                .success(function (response) {
+                    $scope.docCategories = [];
+                    $scope.docCategories = response.result;
+                    $scope.displayedCollection = [].concat($scope.docCategories);
+                    $scope.loading = false;
+                })
+                .error(function () { });
+        };
+
+        // Add new Document Category
+        $scope.toggleAdd = function () {
+            //$scope.resetDocCategory();
+            $scope.DocCategory.DocCategoryID = "";
+            $scope.DocCategory.DocCategorySL = "";
+            $scope.DocCategory.UDDocCategoryCode = "";
+            $scope.DocCategory.DocCategoryName = "";
+            $scope.DocCategory.Status = "1";
+            $scope.docCatFrm.$setPristine();
+            $scope.docCatFrm.$setUntouched();
+            if ($scope.DocCategory.Owner.OwnerID !== "") {
+                $scope.docCatFrm.owner.$setDirty();
+            }
+            if ($scope.DocCategory.OwnerLevel.OwnerLevelID !== "") {
+                $scope.docCatFrm.ownerLevel.$setDirty();
+            }
+            $('#addModal').modal('show');
+        };
+
+        // Edit Document Category
+        $scope.toggleEdit = function (row) {
+            $scope.DocCategory.DocCategoryID = row.DocCategoryID;
+            $scope.DocCategory.DocCategorySL = row.DocCategorySL;
+            $scope.DocCategory.UDDocCategoryCode = row.UDDocCategoryCode;
+            $scope.DocCategory.DocCategoryName = row.DocCategoryName;
+            $scope.DocCategory.Status = (row.Status).toString();
+            $scope.docCatFrm.$setPristine();
+            $scope.docCatFrm.$setUntouched(); 
+            $scope.docCatFrm.ownerLevel.$setDirty();
+            $scope.docCatFrm.owner.$setDirty();
+            //$scope.docCatFrm.owner.$setDirty();
+            $('#addModal').modal('show');
+        };
+
+        // Convert current model to save model
+        $scope.modelConvert = function () {
+            $scope.saveModel.DocCategoryID = $scope.DocCategory.DocCategoryID;
+            $scope.saveModel.OwnerID = $scope.DocCategory.Owner.OwnerID;
+            $scope.saveModel.DocCategorySL = $scope.DocCategory.DocCategorySL;
+            $scope.saveModel.UDDocCategoryCode = $scope.DocCategory.UDDocCategoryCode;
+            $scope.saveModel.DocCategoryName = $scope.DocCategory.DocCategoryName;
+            $scope.saveModel.Status = $scope.DocCategory.Status;
+        };
+
+        // Save/Update Document Category
+        $scope.Save = function () {
+            //console.log("Ok");
+            $scope.loading = true; $scope.modelConvert();
+            if ($scope.DocCategory.DocCategoryID) {
+                // Update
+                $http.post('/DocScanningModule/DocCategory/EditDocCategory/', JSON.stringify(convArrToObj($scope.saveModel)))
+                    .success(function (data) {
+                        if (data._respStatus.Status === "1") {
+                            $scope.loading = false;
+                            $('#addModal').modal('hide');
+                            $scope.changeOwner();
+                            toastr.success(data.Message);
+                        } else {
+                            scope.loading = false;
+                            toastr.error(data.Message);
+                        }
+                    })
+                    .error(function (data) { $scope.loading = false; toastr.error('Update Failed.'); });
+            } else {
+                // Save
+                $http.post('/DocScanningModule/DocCategory/AddDocCategory/', JSON.stringify(convArrToObj($scope.saveModel)))
+                    .success(function (data) {
+                        if (data._respStatus.Status === "1") {
+                            $scope.loading = false;
+                            $scope.changeOwner();
+                            $('#addModal').modal('hide');
+                            toastr.success(data.Message);
+                        } else {
+                            $scope.loading = false;
+                            toastr.error(data.Message);
+                        }
+                    })
+                    .error(function(data) {
+                        $scope.loading = false;
+                        toastr.error('Saved Failed.');
+                    });
+            }
+        }
+           
+        //Close Modal window
+        //$scope.CloseWnd = function () {
+        //    $scope.resetDocCategory();
+        //    $('#addModal').modal('hide');
+        //};
+
+
+        // Refresh Documnet Category Table
+        $scope.toggleRefreshTable = function() {
+            $scope.loading = true;
+            $scope.changeOwner();
+        };
+    }]);
+</script>

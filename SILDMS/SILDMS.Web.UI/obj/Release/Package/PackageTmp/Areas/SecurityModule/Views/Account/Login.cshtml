@@ -1,0 +1,150 @@
+﻿@{
+    Layout = "";
+}
+
+<!DOCTYPE html>
+<html >
+<head>
+    <meta charset="UTF-8">
+    <title>E-DMS | Log in</title>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    <!-- Bootstrap 3.3.4 -->
+    <link href="~/Content/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <!-- Font Awesome Icons -->
+    <!-- Theme style -->
+    <link href="~/Content/AdminLTE/AdminLTE.min.css" rel="stylesheet" />
+    <!-- iCheck -->
+    <script src="~/Scripts/jquery-2.1.4.min.js"></script>
+    <script src="~/Scripts/angular.min.js"></script>
+    <script src="~/Content/plugin/toaster/toastr.js"></script>
+    <link href="~/Content/plugin/toaster/toastr.css" rel="stylesheet" />
+    <style>
+        .login-page {
+            background-image: url("/Content/AdminLTE/img/login.jpg");
+        }
+
+        .loder {
+            position: absolute;
+            top: -340%;
+            left: -150%;
+            color: #000;
+            font-size: 30px;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10;
+            background-color: rgba(0, 0, 0, 0.5); /*dim the background*/
+        }
+
+    </style>
+    <link href="~/Content/css/animate.css" rel="stylesheet" />
+</head>
+<body class="login-page" data-ng-app="myApp" data-ng-controller="myCtrl">
+    <div class="login-box">
+        <form name="name" id="name" data-ng-submit="sendPost()">
+            <div class="box">
+                <div class="box-header with-border">
+                    <h3 class="box-title text-center">E-DMS LOGIN</h3>
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                                <div class="login-box-body">
+                <p class="login-box-msg">@*Please input your email and password to start your session*@</p>
+                <div class="form-group has-feedback">
+                    <input id="username" type="text" class="form-control" placeholder="User Name" data-ng-model="userName" required />
+                    <span class="glyphicon glyphicon-user form-control-feedback"></span>
+                </div>
+                <div class="form-group has-feedback">
+                    <input id="password" type="password" class="form-control" placeholder="Password" data-ng-model="password" required />
+                    <span class="glyphicon glyphicon-lock form-control-feedback"></span>
+
+                </div>
+                                    <div class="row form-group">
+                                        <div class="col-xs-8">
+
+                                            <div class="checkbox">
+                                                @*<label>
+                                <input type="checkbox" data-ng-model="$scope.remember"> Remember Me
+                            </label>*@
+
+                                            </div>
+                                        </div><!-- /.col -->
+                                        <div class="col-xs-4">
+                                            <button type="submit" class="btn btn-primary btn-block btn-flat" data-ng-disabled="loading" ng-click="Login()">Sign In</button>
+
+                                            <div id="mydiv" data-ng-show="loading">
+                                                <div class="overlay">
+                                                    <div class="loder">
+                                                        <img src="~/Content/AdminLTE/img/cube.gif"/> <span class="text-bold">Loading...</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div><!-- /.col -->
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <span class="center-block bg-red" id="conf"></span>
+                                        </div>
+                                    </div>
+                @*<a href="#">I forgot my password</a><br>*@
+                @*<a href="register.html" class="text-center">Register a new membership</a>*@
+            </div><!-- /.row -->
+                </div><!-- ./box-body -->
+                <div class="box-footer">
+                    <div class="row">
+                        <div class="col-sm-12 col-xs-12">
+                            <img class="responsive-md pull-right" src="~/Content/AdminLTE/img/sil_logo.png" />
+                        
+                        </div><!-- /.col -->           
+                    </div><!-- /.row -->
+                </div><!-- /.box-footer -->
+            </div>
+        </form>
+        <!-- /.login-box-body -->
+    </div><!-- /.login-box -->
+
+
+    <!-- jQuery 2.1.4 -->
+<script>
+    $('#name').addClass('animated slideInRight');
+    $('input:text, input:password').addClass('animated bounceInLeft');
+    //$('#yourElement').one('webkitAnimationEnd mozAnimationEnd MSAnimationEnd oanimationend animationend', $('input:text, input:password').animateCss('bounce'));
+
+    var app = angular.module('myApp', []);
+    app.controller('myCtrl', function ($scope, $http) {
+        $scope.userName = "";
+        $scope.password = "";
+        $scope.remember = "";
+
+        $scope.Login = function () {
+            if ($scope.userName !== "" && $scope.password !== "")
+            {
+                $scope.loading = true;
+                $http.post('/SecurityModule/Account/SetAuthorization', { user: $scope.userName, password: $scope.password, isRemeber: $scope.remember })
+                    .success(function (data) {
+                        if (data === 'E401') {
+                            $("#conf").text("  Please input valid UserID or Password.");
+                            $scope.loading = false;
+                            return;
+                        }
+                        if (data !== "" || data != null) {
+                            window.location = data;
+                        }
+                        else {
+                            window.location = "/SecurityModule/Account/Login";
+                        }
+                    }).error(function () {
+                        $scope.loading = false;
+                    });
+            }
+        }
+    });
+
+</script>
+</body>
+
+</html>

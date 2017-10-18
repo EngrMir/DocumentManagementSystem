@@ -1,0 +1,30 @@
+E:\DMS_Final\SILDMS\SILDMS.DataAccessInterface\bin\x86\Debug\SILDMS.DataAccessInterface.dll
+E:\DMS_Final\SILDMS\SILDMS.DataAccessInterface\bin\x86\Debug\SILDMS.DataAccessInterface.pdb
+E:\DMS_Final\SILDMS\SILDMS.DataAccessInterface\bin\x86\Debug\Microsoft.Web.Infrastructure.dll
+E:\DMS_Final\SILDMS\SILDMS.DataAccessInterface\bin\x86\Debug\Ninject.dll
+E:\DMS_Final\SILDMS\SILDMS.DataAccessInterface\bin\x86\Debug\Ninject.Web.Common.dll
+E:\DMS_Final\SILDMS\SILDMS.DataAccessInterface\bin\x86\Debug\Ninject.Web.Mvc.dll
+E:\DMS_Final\SILDMS\SILDMS.DataAccessInterface\bin\x86\Debug\SILDMS.Model.dll
+E:\DMS_Final\SILDMS\SILDMS.DataAccessInterface\bin\x86\Debug\WebActivatorEx.dll
+E:\DMS_Final\SILDMS\SILDMS.DataAccessInterface\bin\x86\Debug\SILDMS.Model.pdb
+E:\DMS_Final\SILDMS\SILDMS.DataAccessInterface\bin\x86\Debug\Ninject.xml
+E:\DMS_Final\SILDMS\SILDMS.DataAccessInterface\bin\x86\Debug\Ninject.Web.Common.xml
+E:\DMS_Final\SILDMS\SILDMS.DataAccessInterface\bin\x86\Debug\Ninject.Web.Mvc.xml
+E:\DMS_Final\SILDMS\SILDMS.DataAccessInterface\obj\x86\Debug\SILDMS.DataAccessInterface.csprojResolveAssemblyReference.cache
+E:\DMS_Final\SILDMS\SILDMS.DataAccessInterface\obj\x86\Debug\SILDMS.DataAccessInterface.dll
+E:\DMS_Final\SILDMS\SILDMS.DataAccessInterface\obj\x86\Debug\SILDMS.DataAccessInterface.pdb
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccessInterface\bin\x86\Debug\SILDMS.DataAccessInterface.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccessInterface\bin\x86\Debug\SILDMS.DataAccessInterface.pdb
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccessInterface\bin\x86\Debug\Microsoft.Web.Infrastructure.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccessInterface\bin\x86\Debug\Ninject.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccessInterface\bin\x86\Debug\Ninject.Web.Common.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccessInterface\bin\x86\Debug\Ninject.Web.Mvc.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccessInterface\bin\x86\Debug\SILDMS.Model.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccessInterface\bin\x86\Debug\WebActivatorEx.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccessInterface\bin\x86\Debug\SILDMS.Model.pdb
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccessInterface\bin\x86\Debug\Ninject.xml
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccessInterface\bin\x86\Debug\Ninject.Web.Common.xml
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccessInterface\bin\x86\Debug\Ninject.Web.Mvc.xml
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccessInterface\obj\x86\Debug\SILDMS.DataAccessInterface.csprojResolveAssemblyReference.cache
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccessInterface\obj\x86\Debug\SILDMS.DataAccessInterface.dll
+D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.DataAccessInterface\obj\x86\Debug\SILDMS.DataAccessInterface.pdb

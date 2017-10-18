@@ -1,0 +1,140 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{5569B047-32E4-45E1-BF66-64C242B30302}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>SILDMS.DataAccessInterface</RootNamespace>
+    <AssemblyName>SILDMS.DataAccessInterface</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <SccProjectName>SAK</SccProjectName>
+    <SccLocalPath>SAK</SccLocalPath>
+    <SccAuxPath>SAK</SccAuxPath>
+    <SccProvider>SAK</SccProvider>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\x86\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <OutputPath>bin\x86\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ninject, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.3.2.2.0\lib\net45-full\Ninject.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ninject.Web.Common, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.Web.Common.3.2.3.0\lib\net45-full\Ninject.Web.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Ninject.Web.Mvc, Version=3.2.0.0, Culture=neutral, PublicKeyToken=c7192dc5380945e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Ninject.MVC5.3.2.1.0\lib\net45-full\Ninject.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebActivatorEx.2.0.6\lib\net40\WebActivatorEx.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DashboardDataService\IDashboardDataService.cs" />
+    <Compile Include="DataLevelPermission\IDataLevelPermissionDataService.cs" />
+    <Compile Include="DefaultValueSetup\IDefaultValueSetupDataService.cs" />
+    <Compile Include="Departments\IDepartmentDataService.cs" />
+    <Compile Include="DocDestroy\IDocDestroyDataService.cs" />
+    <Compile Include="DocDistribution\IDocDistributionDataService.cs" />
+    <Compile Include="DocSharing\IDocSharingDataService.cs" />
+    <Compile Include="DocumentCategory\IDocCategoryDataService.cs" />
+    <Compile Include="DocumentType\IDocTypeDataService.cs" />
+    <Compile Include="DocDestroyPolicy\IDocDestroyPolicyDataService.cs" />
+    <Compile Include="Menu\IMenuDataService.cs" />
+    <Compile Include="MultiDocScan\IMultiDocScanDataService.cs" />
+    <Compile Include="NavigationMenuOperation\INavMenuOprtDataService.cs" />
+    <Compile Include="NavigationMenuSetup\INavMenuSetupDataService.cs" />
+    <Compile Include="NavMenuOptSetup\INavMenuOptSetupDataService.cs" />
+    <Compile Include="OriginalDocSearching\IOriginalDocSearchingDataService.cs" />
+    <Compile Include="OwnerLevelPermission\IOwnerLevelPermissionDataService.cs" />
+    <Compile Include="OwnerLevel\IOwnerLevelDataService.cs" />
+    <Compile Include="OwnerProperIdentity\IOwnerProperIdentityDataService.cs" />
+    <Compile Include="DocProperty\IDocPropertyDataService.cs" />
+    <Compile Include="Owner\IOwnerDataService.cs" />
+    <Compile Include="PreDefinedCode\IPreDefinedCodeDataService.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RoleMenuPermission\IRoleMenuPermissionDataService.cs" />
+    <Compile Include="RoleSetup\IRoleSetupDataService.cs" />
+    <Compile Include="Roles\IRoleDataService.cs" />
+    <Compile Include="Server\IServerDataService.cs" />
+    <Compile Include="UserAccessLog\IUserAccessLogDataService.cs" />
+    <Compile Include="UserLevel\IUserLevelDataService.cs" />
+    <Compile Include="Users\IUserDataService.cs" />
+    <Compile Include="VersionDocSearching\IVersionDocSearchingDataService.cs" />
+    <Compile Include="VersioningOfOriginalDoc\IVersioningOfOriginalDocDataService.cs" />
+    <Compile Include="VersioningVersionedDoc\IVersioningVersionedDocDataService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\SILDMS.Model\SILDMS.Model.csproj">
+      <Project>{af7e3cfa-5a7f-4adf-b198-435a84352034}</Project>
+      <Name>SILDMS.Model</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Start\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

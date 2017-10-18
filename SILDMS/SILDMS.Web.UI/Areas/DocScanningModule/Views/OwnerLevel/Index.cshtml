@@ -1,0 +1,347 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_AdminLteLayout.cshtml";
+}
+<div class="box box-primary box-body" ng-controller="ownerCtrl" data-ng-init="init()">
+    <!-- box-header -->
+    <div class="box-header with-border">
+        <i class="fa fa-user"></i>
+        <h3 class="box-title">Owner Level List</h3>
+        <div class="box-tools pull-right">          
+            <button type="button" id="btnRefresh" data-ng-click="toggleRefreshTable(row)" class="btn btn-flat pull-right" ng-disabled="loading"><i class="fa fa-refresh"></i> Refresh</button>
+            <button type="button" id="btnAdd" data-ng-click="toggleAdd(row)" class="btnSave btn btn-flat btn-primary pull-right" ng-disabled="loading"> <i class="fa fa-plus"></i> Add New</button>
+        </div>
+    </div>
+    <!-- /.box-header -->
+    <!-- Display OwnerLevel Table -->
+    <div class="box-body table-responsive">
+        <table st-table="displayedCollection" st-safe-src="getAllOwnerLevel" class="pnlView table table-condensed table-bordered table-striped table-hover">
+           <thead>
+            <tr>
+                <th st-sort="LevelName">Level Name</th>
+                <th st-sort="OwnerLevelID">Level Code</th>                   
+                <th st-sort="LevelAccess">Access Level</th>
+                <th st-sort="Status">Status</th>
+                <th>Action</th>
+            </tr>
+            <tr>
+                <th>
+                    <input st-search="LevelName" placeholder="Owner Level" class="input-sm form-control" type="search" alt="Search" />
+                </th>
+                <th>
+                       
+                </th>
+                <th>                     
+                </th>
+                <th>
+                       
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+              <tbody>
+                  <tr ng-repeat="row in displayedCollection">
+                    <td>{{row.LevelName | uppercase}}</td>
+                    <td class="col-lg-2 col-md-2 col-sm-2">{{row.OwnerLevelID | uppercase}}</td>                  
+                    <td>{{row.LevelAccess | uppercase}}</td>
+                    <td class="col-lg-2 col-md-2 col-sm-2 text-center">
+                        <span ng-attr-class="{{row.Status ==true? 'label label-success' : 'label label-danger' }}">
+                            {{row.Status == true? 'Active':'InActive'}}
+                        </span>
+                    </td>
+                    <td class="col-lg-1 col-md-1 col-sm-1 text-center">
+                        <button type="button" class="btnEdit btn btn-sm btn-primary btn-flat" data-ng-click="toggleEdit(row)"><i class="fa fa-edit"></i> Edit</button>
+                    </td>
+                </tr>
+             </tbody>
+           <tfoot>
+            <tr>
+                <td colspan="6" class="text-center">
+                    <div st-pagination="" st-items-by-page="itemsByPage" st-displayed-pages="10"></div>
+                </td>
+            </tr>
+           </tfoot>
+        </table>
+    </div>
+    <!-- /Display OwnerLevel Table -->
+    <!-- Add OwnerLevel Modal -->
+    <form name="ownerLevel" id="ownerLevel" ng-submit="submit()">
+        <div class="bs-example">
+            <!-- Modal HTML -->
+            <div id="addModal" class="modal fade">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                            <h3 class="modal-title">Owner Level Form</h3>
+                        </div>
+                        <div class="modal-body">
+                            <div class="box-body">
+                                <div class="row">
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-12 col-lg-12">
+                                        <div class="form-group">
+                                            <label>Owner Level Code</label>
+                                            <input type="text" readonly data-ng-model="vmOwnerLevel.OwnerLevelID" class="form-control" 
+                                                   id="OwnerLevelID" placeholder="System Generated Owner Level Code" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-12 col-lg-12">
+                                        <div class="form-group">
+                                            <label>Owner Level Name</label>
+                                            <input type="text" id="LevelName" name="lvlName" class="form-control" maxlength="250"
+                                                   data-ng-model="vmOwnerLevel.LevelName" placeholder="Owner Level Name" required />
+                                            <div ng-show="ownerLevel.$submitted || ownerLevel.lvlName.$touched">
+                                                <span ng-show="ownerLevel.lvlName.$error.required" class="label label-danger">Please enter owner level name</span>
+                                                @*<span ng-show="ownerLevel.uEmail.$error.email">This is not a valid email.</span>*@
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-12 col-lg-12">
+                                        <div class="form-group">
+                                            <label>Owner Level SL</label>
+                                            <input type="text" data-ng-model="vmOwnerLevel.LevelSL" class="form-control" id="LevelSL" name="LevelSL" placeholder="Owner Level SL" ng-maxlength="128" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-12 col-lg-12">
+                                        <div class="form-group">
+                                            <label>Access Level</label>
+                                            <input name="accessLevel" class="form-control" type="number" value="" data-ng-model="vmOwnerLevel.LevelAccess" required/>
+                                            <div ng-show="ownerLevel.$submitted || ownerLevel.accessLevel.$touched">
+                                                <span ng-show="ownerLevel.accessLevel.$error.required" class="label label-danger">Please enter access level</span>
+                                                @*<span ng-show="ownerLevel.uEmail.$error.email">This is not a valid email.</span>*@
+                                            </div>
+                                            @*<select class="form-control" id="ddAccessLevel" data-ng-model="vmOwnerLevel.LevelAccess" ng-maxlength="250" required="required">
+                                                    <option value="Bellow">Bellow </option>
+                                                    <option value="All">All </option>
+                                                    <option value="Above">Above </option>
+                                                    <option value="Self">Self </option>
+                                                </select>*@
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-sm-12 col-md-12 col-lg-12">
+                                        <div class="form-group">
+                                            <label>Status</label>
+                                            <select data-ng-model="vmOwnerLevel.Status" class="form-control">
+                                                <option value="">-- None --</option>
+                                                <option value="1">Active</option>
+                                                <option value="0">Inactive</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div><!-- /.box-body -->
+                        </div>
+                        <div class="modal-footer">
+                            <div class="col-sm-12 col-md-12 col-lg-12">
+                                <div class="form-group">
+                                    <button type="submit" id="btnSubmit" class="btn btn-flat btn-primary" ng-click="ownerLevel.$setSubmitted(); ownerLevel.$valid && Save()" ng-disabled="loading">Save</button>
+                                    <button type="button" id="btnClose" class="btn btn-flat btn-default" data-dismiss="modal" ng-click="ResetModel()">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    <!-- /Add OwnerLevel Modal -->
+    <!-- Delete OwnerLevel Modal -->
+    <div id="deleteModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 class="modal-title">Delete Confirmation</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="box-body">
+                        <div class="form-group">
+                            <label>Are you sure? </label>
+                            <p> You want to delete this record.</p>
+                        </div>
+                    </div><!-- /.box-body -->
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="yes" class="btn btn-danger" ng-disabled="loading" data-ng-click="deleteConfirm()">Yes</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /Delete OwnerLevel Modal -->
+
+    <div id="mydiv" data-ng-show="loading">
+        <div class="overlay">  
+            <div class="loder">
+                <img src="~/Content/AdminLTE/img/cube.gif" /> <span class="text-bold">Loading...</span>
+            </div>            
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    
+    app.controller('ownerCtrl', function ($scope, $http) {
+        $scope.loading = true;
+
+        $scope.itemsByPage = 10;
+        $scope.loading = true;
+        $scope.getAllOwnerLevel = [];  // base collection
+        $scope.selectedOwnerLevel = [];
+        $scope.displayedCollection = [].concat($scope.getAllOwnerLevel);  // displayed collection
+      
+        $scope.modLevelAccess = "";
+
+        $scope.vmOwnerLevel = {
+            OwnerLevelID: "",
+            LevelName: "",
+            LevelSL: "",
+            LevelAccess: "",
+            Status: ""
+        };
+        $scope.submit = function () {
+            //alert($scope.att1);
+            //alert($scope.att2);
+        };
+     
+        //################ Get Data And Binds Table ########
+        $scope.init = function () {         
+            $http.get('/DocScanningModule/OwnerLevel/GetOwnerLevel?ownerLevelId=').success(function (response) {
+                $scope.getAllOwnerLevel = response.result;
+                $scope.displayedCollection = [].concat($scope.getAllOwnerLevel);
+                applySecurity();
+                $scope.loading = false;             
+            }).error(function () {
+                $scope.loading = false;
+                toastr.error('Data Loading Faild.');
+            });
+        };
+
+        //############## Save Modal ########################
+        $scope.toggleAdd = function (row) {
+            $scope.vmOwnerLevel = [];
+            $scope.vmOwnerLevel.Status = "1";
+            $scope.ownerLevel.$setPristine();
+            $scope.ownerLevel.$setUntouched();
+            $('#addModal').modal('show');
+        };
+
+        $scope.Save = function () {
+            //console.log("ok");
+            $scope.loading = true;
+            $scope.selectedOwnerLevel = this.vmOwnerLevel;
+            if (this.vmOwnerLevel.OwnerLevelID) {
+                // Update               
+                $http.post('/DocScanningModule/OwnerLevel/EditOwnerLevel', JSON.stringify(convArrToObj($scope.selectedOwnerLevel)))
+                    .success(function (data) {
+                        if (data.respStatus.Status === "1") {
+                            $scope.loading = false;
+                            $scope.init();
+                            $('#addModal').modal('hide');
+                            toastr.success(data.Message);
+                        }
+                        else {
+                            $scope.loading = false;
+                            toastr.error(data.Message);
+                        }
+                    }).error(function (data) {
+                        $scope.loading = false;
+                        toastr.error('Update Faild.');
+                    });
+            }
+            else {
+                // Save
+                $http.post('/DocScanningModule/OwnerLevel/AddOwnerLevel/', JSON.stringify(convArrToObj($scope.selectedOwnerLevel)))
+                    .success(function (data) {
+                        if (data.respStatus.Status === "1") {
+                            $scope.init();
+                            //$scope.displayedCollection = [].concat($scope.selectedOwnerLevel);
+                            $scope.loading = false;
+                            $('#addModal').modal('hide');
+                            toastr.success(data.Message);
+                        }
+                        else {
+                            $scope.loading = false;
+                            toastr.error(data.Message);
+                        }
+                    }).error(function (data) {
+                        $scope.loading = false;
+                        toastr.error('Saved Faild.');
+                    });
+            }
+        }
+
+        // ################# Edit Modal ####################
+        $scope.toggleEdit = function (row) {
+            $scope.vmOwnerLevel.OwnerLevelID = row.OwnerLevelID;
+            $scope.vmOwnerLevel.LevelName = row.LevelName;
+            $scope.vmOwnerLevel.LevelSL = row.LevelSL;
+            $scope.vmOwnerLevel.LevelAccess = (row.LevelAccess-0);
+            $scope.vmOwnerLevel.Status = row.Status;
+            $('#addModal').modal('show');
+        };
+        $scope.ResetModel = function () {
+            $scope.vmOwnerLevel = [];
+        };
+        //#################### Delete Action ###############
+        $scope.deleteConfirm = function () {
+            var postData = JSON.stringify(convArrToObj($scope.vmOwnerLevel));
+            $scope.loading = true;
+            $http.post('/DocScanningModule/OwnerLevel/DeleteOwnerLevel', postData).success(function (data) {
+                if (data.respStatus.Status === "1")
+                {
+                    //$scope.init();
+                    var index = $scope.displayedCollection.indexOf($scope.vmOwnerLevel);
+                    if (index !== -1) {
+                        $scope.displayedCollection.splice(index, 1);
+                    }
+                    $scope.loading = false;
+                    $('#deleteModal').modal('hide');
+                    toastr.success(data.Message);
+                }
+                else {
+                    $scope.loading = false;
+                    toastr.error(data.Message);
+                }
+              
+            }).error(function (data) {
+                $scope.loading = false;
+                toastr.error(data);
+            });
+           
+        };
+
+        $scope.toggleDelete = function (row) {
+            $scope.vmOwnerLevel = row;
+            $('#deleteModal').modal('show');
+        };
+
+        //#################### Set Dropdown ################
+        $scope.toggleRefreshTable = function () {
+            $scope.loading = true;
+            $scope.init();
+        };
+
+
+        
+    });
+
+</script>
+
+
+
+
+
+

@@ -1,0 +1,136 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2013
+VisualStudioVersion = 12.0.21005.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SILDMS.WEB", "SILDMS.WEB", "{61DE24C5-CAD0-4EC0-A159-C18786A07400}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SILDMS.Web.UI", "SILDMS.Web.UI\SILDMS.Web.UI.csproj", "{F9BEB38B-4047-41BD-9292-75D40C1AA593}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SILDMS.InfraStructure", "SILDMS.InfraStructure\SILDMS.InfraStructure.csproj", "{2620E35D-3C88-44B7-95BE-E41CEEC5382F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SILDMS.Model", "SILDMS.Model\SILDMS.Model.csproj", "{AF7E3CFA-5A7F-4ADF-B198-435A84352034}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SILDMS.Service", "SILDMS.Service\SILDMS.Service.csproj", "{6B39620B-DCC8-44F7-BEFE-BA2DFF520205}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SILDMS.DATA", "SILDMS.DATA", "{68D1E879-BA1F-4BDA-A723-F27195C802CA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SILDMS.DataAccess", "SILDMS.DataAccess\SILDMS.DataAccess.csproj", "{9613E6D2-2F28-4AE0-90DE-A0A13EFDD0F7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SILDMS.DataAccessInterface", "SILDMS.DataAccessInterface\SILDMS.DataAccessInterface.csproj", "{5569B047-32E4-45E1-BF66-64C242B30302}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SILDMS.CORE", "SILDMS.CORE", "{0A8D7217-FC32-4EE2-A061-9716926E4726}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SILDMS.Utillity", "SILDMS.Utillity\SILDMS.Utillity.csproj", "{32311138-7534-4454-AC9D-BCA87BD37CDF}"
+EndProject
+Global
+	GlobalSection(TeamFoundationVersionControl) = preSolution
+		SccNumberOfProjects = 8
+		SccEnterpriseProvider = {4CA58AB2-18FA-4F8D-95D4-32DDF27D184C}
+		SccTeamFoundationServer = http://martin-sil:8080/tfs/defaultcollection
+		SccLocalPath0 = .
+		SccProjectUniqueName1 = SILDMS.DataAccess\\SILDMS.DataAccess.csproj
+		SccProjectTopLevelParentUniqueName1 = SILDMS.sln
+		SccProjectName1 = SILDMS.DataAccess
+		SccLocalPath1 = SILDMS.DataAccess
+		SccProjectUniqueName2 = SILDMS.DataAccessInterface\\SILDMS.DataAccessInterface.csproj
+		SccProjectTopLevelParentUniqueName2 = SILDMS.sln
+		SccProjectName2 = SILDMS.DataAccessInterface
+		SccLocalPath2 = SILDMS.DataAccessInterface
+		SccProjectUniqueName3 = SILDMS.InfraStructure\\SILDMS.InfraStructure.csproj
+		SccProjectTopLevelParentUniqueName3 = SILDMS.sln
+		SccProjectName3 = SILDMS.InfraStructure
+		SccLocalPath3 = SILDMS.InfraStructure
+		SccProjectUniqueName4 = SILDMS.Model\\SILDMS.Model.csproj
+		SccProjectName4 = SILDMS.Model
+		SccLocalPath4 = SILDMS.Model
+		SccProjectUniqueName5 = SILDMS.Service\\SILDMS.Service.csproj
+		SccProjectName5 = SILDMS.Service
+		SccLocalPath5 = SILDMS.Service
+		SccProjectUniqueName6 = SILDMS.Utillity\\SILDMS.Utillity.csproj
+		SccProjectTopLevelParentUniqueName6 = SILDMS.sln
+		SccProjectName6 = SILDMS.Utillity
+		SccLocalPath6 = SILDMS.Utillity
+		SccProjectUniqueName7 = SILDMS.Web.UI\\SILDMS.Web.UI.csproj
+		SccProjectTopLevelParentUniqueName7 = SILDMS.sln
+		SccProjectName7 = SILDMS.Web.UI
+		SccLocalPath7 = SILDMS.Web.UI
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|x86 = Release|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F9BEB38B-4047-41BD-9292-75D40C1AA593}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9BEB38B-4047-41BD-9292-75D40C1AA593}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9BEB38B-4047-41BD-9292-75D40C1AA593}.Debug|x86.ActiveCfg = Debug|x86
+		{F9BEB38B-4047-41BD-9292-75D40C1AA593}.Debug|x86.Build.0 = Debug|x86
+		{F9BEB38B-4047-41BD-9292-75D40C1AA593}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9BEB38B-4047-41BD-9292-75D40C1AA593}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9BEB38B-4047-41BD-9292-75D40C1AA593}.Release|x86.ActiveCfg = Release|x86
+		{F9BEB38B-4047-41BD-9292-75D40C1AA593}.Release|x86.Build.0 = Release|x86
+		{2620E35D-3C88-44B7-95BE-E41CEEC5382F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2620E35D-3C88-44B7-95BE-E41CEEC5382F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2620E35D-3C88-44B7-95BE-E41CEEC5382F}.Debug|x86.ActiveCfg = Debug|x86
+		{2620E35D-3C88-44B7-95BE-E41CEEC5382F}.Debug|x86.Build.0 = Debug|x86
+		{2620E35D-3C88-44B7-95BE-E41CEEC5382F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2620E35D-3C88-44B7-95BE-E41CEEC5382F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2620E35D-3C88-44B7-95BE-E41CEEC5382F}.Release|x86.ActiveCfg = Release|x86
+		{2620E35D-3C88-44B7-95BE-E41CEEC5382F}.Release|x86.Build.0 = Release|x86
+		{AF7E3CFA-5A7F-4ADF-B198-435A84352034}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF7E3CFA-5A7F-4ADF-B198-435A84352034}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF7E3CFA-5A7F-4ADF-B198-435A84352034}.Debug|x86.ActiveCfg = Debug|x86
+		{AF7E3CFA-5A7F-4ADF-B198-435A84352034}.Debug|x86.Build.0 = Debug|x86
+		{AF7E3CFA-5A7F-4ADF-B198-435A84352034}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF7E3CFA-5A7F-4ADF-B198-435A84352034}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF7E3CFA-5A7F-4ADF-B198-435A84352034}.Release|x86.ActiveCfg = Release|x86
+		{AF7E3CFA-5A7F-4ADF-B198-435A84352034}.Release|x86.Build.0 = Release|x86
+		{6B39620B-DCC8-44F7-BEFE-BA2DFF520205}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6B39620B-DCC8-44F7-BEFE-BA2DFF520205}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6B39620B-DCC8-44F7-BEFE-BA2DFF520205}.Debug|x86.ActiveCfg = Debug|x86
+		{6B39620B-DCC8-44F7-BEFE-BA2DFF520205}.Debug|x86.Build.0 = Debug|x86
+		{6B39620B-DCC8-44F7-BEFE-BA2DFF520205}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6B39620B-DCC8-44F7-BEFE-BA2DFF520205}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6B39620B-DCC8-44F7-BEFE-BA2DFF520205}.Release|x86.ActiveCfg = Release|x86
+		{6B39620B-DCC8-44F7-BEFE-BA2DFF520205}.Release|x86.Build.0 = Release|x86
+		{9613E6D2-2F28-4AE0-90DE-A0A13EFDD0F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9613E6D2-2F28-4AE0-90DE-A0A13EFDD0F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9613E6D2-2F28-4AE0-90DE-A0A13EFDD0F7}.Debug|x86.ActiveCfg = Debug|x86
+		{9613E6D2-2F28-4AE0-90DE-A0A13EFDD0F7}.Debug|x86.Build.0 = Debug|x86
+		{9613E6D2-2F28-4AE0-90DE-A0A13EFDD0F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9613E6D2-2F28-4AE0-90DE-A0A13EFDD0F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9613E6D2-2F28-4AE0-90DE-A0A13EFDD0F7}.Release|x86.ActiveCfg = Release|x86
+		{9613E6D2-2F28-4AE0-90DE-A0A13EFDD0F7}.Release|x86.Build.0 = Release|x86
+		{5569B047-32E4-45E1-BF66-64C242B30302}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5569B047-32E4-45E1-BF66-64C242B30302}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5569B047-32E4-45E1-BF66-64C242B30302}.Debug|x86.ActiveCfg = Debug|x86
+		{5569B047-32E4-45E1-BF66-64C242B30302}.Debug|x86.Build.0 = Debug|x86
+		{5569B047-32E4-45E1-BF66-64C242B30302}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5569B047-32E4-45E1-BF66-64C242B30302}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5569B047-32E4-45E1-BF66-64C242B30302}.Release|x86.ActiveCfg = Release|x86
+		{5569B047-32E4-45E1-BF66-64C242B30302}.Release|x86.Build.0 = Release|x86
+		{32311138-7534-4454-AC9D-BCA87BD37CDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{32311138-7534-4454-AC9D-BCA87BD37CDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{32311138-7534-4454-AC9D-BCA87BD37CDF}.Debug|x86.ActiveCfg = Debug|x86
+		{32311138-7534-4454-AC9D-BCA87BD37CDF}.Debug|x86.Build.0 = Debug|x86
+		{32311138-7534-4454-AC9D-BCA87BD37CDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{32311138-7534-4454-AC9D-BCA87BD37CDF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{32311138-7534-4454-AC9D-BCA87BD37CDF}.Release|x86.ActiveCfg = Release|x86
+		{32311138-7534-4454-AC9D-BCA87BD37CDF}.Release|x86.Build.0 = Release|x86
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F9BEB38B-4047-41BD-9292-75D40C1AA593} = {61DE24C5-CAD0-4EC0-A159-C18786A07400}
+		{2620E35D-3C88-44B7-95BE-E41CEEC5382F} = {0A8D7217-FC32-4EE2-A061-9716926E4726}
+		{32311138-7534-4454-AC9D-BCA87BD37CDF} = {0A8D7217-FC32-4EE2-A061-9716926E4726}
+		{9613E6D2-2F28-4AE0-90DE-A0A13EFDD0F7} = {68D1E879-BA1F-4BDA-A723-F27195C802CA}
+		{5569B047-32E4-45E1-BF66-64C242B30302} = {68D1E879-BA1F-4BDA-A723-F27195C802CA}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		EnterpriseLibraryConfigurationToolBinariesPathV6 = packages\EnterpriseLibrary.Common.6.0.1304.0\lib\NET45;packages\EnterpriseLibrary.Data.6.0.1304.0\lib\NET45
+	EndGlobalSection
+EndGlobal

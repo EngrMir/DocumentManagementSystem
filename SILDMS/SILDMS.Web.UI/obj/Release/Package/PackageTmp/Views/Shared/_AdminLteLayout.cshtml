@@ -1,0 +1,67 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title SIL-DMS</title>
+    <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
+    @Styles.Render("~/bundles/css")
+    <link href="~/Content/css/font-awesome.min.css" rel="stylesheet" />
+    @Scripts.Render("~/bundles/preScript")
+</head>
+<body class="skin-blue" ng-app="dmsApp">
+    <div class="wrapper">
+        @Html.Partial("_AdminLteTopMenu")  
+        @Html.Partial("_AdminLteLeftMenu")   
+        <div class="content-wrapper">
+              <section class="content-header">             
+                <ol class="breadcrumb">
+                    <li><a href="#"><i class="fa fa-dashboard"></i> <small> @Html.MvcSiteMap().SiteMapPath() </small> </a></li>
+                </ol>
+            </section>
+            <section class="content">
+                @RenderBody()
+            </section>
+        </div>
+        <footer class="main-footer">
+            <div class="pull-right hidden-xs">        
+                <a target="_blank" href="http://www.e-home2u.com/">
+                    <img class="image" src="~/Content/AdminLTE/img/sil_logo.png"/>
+                </a>
+            </div>
+            <strong>Copyright &copy; 2016</strong> All Rights Reserved By - <i>Square Informatix Ltd.</i>
+        </footer>
+    </div>
+    @Scripts.Render("~/bundles/postScript")
+    @RenderSection("scripts", required: false)
+
+    <script>
+        var classes = ["animated fadeIn", "animated fadeInDown", "animated fadeInLeft", "animated fadeInUp", "animated fadeInRight"];
+        var randomnumber = Math.floor(Math.random() * classes.length);   
+        $('table').addClass(classes[randomnumber]);
+        $('.form-control').addClass(classes[randomnumber]);
+        jQuery('input:invalid').css('background-color', 'rgb(255, 233, 233)');
+
+
+        $.ajax({
+            url: "/SecurityModule/Account/GetActionPermission?url=" + window.location.pathname,
+            cache: true,
+            success: function (data) {
+                if (data != "") {
+                    $(".pnlView").hide();
+                    $(".btnSave").hide();
+                    $(".btnEdit").hide();
+                    var strs = data.split("|")
+                    for (var i = 0; i < strs.length - 1; i++) {
+                        if (strs[i] != null) {
+                            $("." + strs[i]).show();
+                        }
+                    }
+                }
+            }
+        });
+   </script>
+
+</body>
+
+</html>

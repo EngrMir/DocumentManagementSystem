@@ -1,0 +1,294 @@
+﻿@{
+
+    Layout = "~/Views/Shared/_AdminLteLayout.cshtml";
+}
+<script src="~/Scripts/AdminLTE/plugins/tree/jquery/jquery-ui.custom.js" type="text/javascript"></script>
+<script src="~/Scripts/AdminLTE/plugins/tree/jquery/jquery.cookie.js" type="text/javascript"></script>
+<link href="~/Scripts/AdminLTE/plugins/tree/src/skin/ui.dynatree.css" rel="stylesheet" />
+<script src="~/Scripts/AdminLTE/plugins/tree/src/jquery.dynatree.js"></script>
+<link href="~/Scripts/AdminLTE/plugins/tree/src/skin-vista/ui.dynatree.css" rel="stylesheet" />
+
+
+
+
+<div class="box box-primary box-body" ng-controller="RoleSetupCtrl" data-ng-init="init()">
+
+    <div class="box-header with-border">
+        <i class="fa fa-tags"></i>
+        <h3 class="box-title">Role Menu Permission Setup</h3>
+        <button type="button" id="btnRefresh" data-ng-click="toggleRefreshTable(row)" class="btn btn-flat pull-right" ng-disabled="loading"><i class="fa fa-refresh"></i> Refresh</button>
+    </div>
+
+    <form name="roleMenuPrmsnFrm" id="roleMenuPrmsnFrm" ng-submit="">
+        <div class="box-body">
+
+            <div class="row">
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <div class="form-group">
+                        <label>Owner Level</label>
+                        <select name="ownerLevel" class="form-control" ng-model="roleSetupModel.OwnerLevel"
+                                ng-options="ownerLevel as ownerLevel.LevelName for ownerLevel in ownerLevels
+                        track by ownerLevel.OwnerLevelID" required>
+                            <option value="">--Select--</option>
+                        </select>
+                        <div ng-show="roleMenuPrmsnFrm.$submitted || roleMenuPrmsnFrm.ownerLevel.$touched">
+                            <span ng-show="!roleMenuPrmsnFrm.ownerLevel.$dirty && roleMenuPrmsnFrm.ownerLevel.$pristine"
+                                  class="label label-danger">Please select an owner level.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <div class="form-group">
+                        <label>Owner</label>
+                        <select name="owner" class="form-control" ng-model="roleSetupModel.Owner"
+                                data-ng-options="owner as owner.OwnerName for owner in ownersForSpecificOwnerLevel
+                                 track by owner.OwnerID" data-ng-disabled="!roleSetupModel.OwnerLevel" required>
+                            <option value="">--Select--</option>
+                        </select>
+                        <div ng-show="roleMenuPrmsnFrm.$submitted || roleMenuPrmsnFrm.owner.$touched">
+                            <span ng-show="!roleMenuPrmsnFrm.owner.$dirty && roleMenuPrmsnFrm.owner.$pristine"
+                                  class="label label-danger">Please select an owner.</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 col-md-4 col-lg-4">
+                    <div class="form-group">
+                        <label>Role</label>
+                        <select name="role" class="form-control" ng-model="roleSetupModel.Role"
+                                data-ng-options="role as role.RoleTitle for role in rolesForSpecificOwner
+                                track by role.RoleID" data-ng-disabled="!roleSetupModel.Owner" required>
+                            <option value="">--Select--</option>
+                        </select>
+                        <div ng-show="roleMenuPrmsnFrm.$submitted || roleMenuPrmsnFrm.role.$touched">
+                            <span ng-show="!roleMenuPrmsnFrm.role.$dirty && roleMenuPrmsnFrm.role.$pristine"
+                                  class="label label-danger">Please select a role.</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-sm-8 col-md-8 col-lg-8">
+                    <div class="form-group">
+                        <label>Menu Permission Setup: </label>
+                        <div id="MenuTree">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary" ng-click="roleMenuPrmsnFrm.$setSubmitted();roleMenuPrmsnFrm.$valid && Save()"
+                            ng-disabled="loading">
+                        Save
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+    <div id="mydiv" data-ng-show="loading">
+        <div class="overlay">
+            <div class="loder">
+                <img src="~/Content/AdminLTE/img/cube.gif" /> <span class="text-bold">Loading...</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script type="text/javascript">
+    
+    app.controller('RoleSetupCtrl', function ($scope, $http) {
+        
+        $scope.roleSetupModel = {
+            OwnerLevel: { OwnerLevelID: "", LevelName: "" },
+            Owner: { OwnerID: "", OwnerName: "" },
+            Role: { RoleID: "", RoleTitle: "" },
+            MenuID: ""
+            //Status: ""
+        };
+
+        $scope.itemsByPage = 10;
+        $scope.loading = true;
+
+        
+        $http.get('/DocScanningModule/OwnerProperIdentity/GetOwnerLevel?_OwnerLevelID=')
+            .success(function (response) {
+                $scope.ownerLevels = response.result;
+                $scope.roleSetupModel.OwnerLevel.OwnerLevelID = "";
+                $scope.roleSetupModel.OwnerLevel.LevelName = "";
+                $scope.loading = false;
+            })
+            .error(function () {
+                $scope.loading = false;
+            });
+
+        
+        $scope.$watch('roleSetupModel.OwnerLevel', function (newVal) {
+            if (newVal) {
+                $scope.roleSetupModel.Owner.OwnerID = "";
+                $scope.roleSetupModel.Owner.OwnerName = "";
+                $scope.roleSetupModel.Role.RoleID = "";
+                $scope.roleSetupModel.Role.RoleTitle = "";
+                $http.post('/DocScanningModule/OwnerProperIdentity/GetOwnerForSpecificOwnerLevel',
+                    { _OwnerLevelID: $scope.roleSetupModel.OwnerLevel.OwnerLevelID })
+                    .success(function (response) {
+                        //GenerateMenuTree();
+                        $scope.ownersForSpecificOwnerLevel = response.result;
+                        $scope.loading = false;
+                    }).error(function () {
+                        $scope.loading = false;
+                    });
+            }
+        });
+        var GenerateMenuTree = function () {
+            $("#MenuTree").dynatree("destroy");
+            $("#MenuTree").dynatree({
+                checkbox: true,
+                selectMode: 3,
+                minExpandLevel: 3,
+                autoFocus: true,
+                //persist: true, // Persist expand-status to a cookie
+                keyboard: true,
+                fx: { height: "toggle", duration: 300 },
+                initAjax: {
+                    url: '/SecurityModule/RoleMenuPermission/GetMenuTreeData',
+                    data: {
+                        "_OwnerID": $scope.roleSetupModel.Owner.OwnerID
+                    }
+                },
+                onSelect: function (select, node) {
+                    // Get a list of all selected nodes, and convert to a key array:
+                    var selKeys = $.map(node.tree.getSelectedNodes(), function (node) {
+                        return node.data.key;
+                    });
+                    $scope.roleSetupModel.MenuID = selKeys.join(",");
+                },
+                onDblClick: function (node, event) {
+                    node.toggleSelect();
+                },
+                onKeydown: function (node, event) {
+                    if (event.which === 32) {
+                        node.toggleSelect();
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+            });
+        };
+
+        $scope.init = function () {
+            $("#MenuTree").dynatree("destroy");
+            $("#MenuTree").dynatree({
+                checkbox: true,
+                selectMode: 3,
+                minExpandLevel: 3,
+                autoFocus: true,
+                //persist: true, // Persist expand-status to a cookie
+                keyboard: true,
+                fx: { height: "toggle", duration: 300 },
+                initAjax: {
+                    url: '/SecurityModule/RoleMenuPermission/GetMenuTreeData',
+                    data: {
+                        "_OwnerID": $scope.roleSetupModel.Owner.OwnerID
+                    }
+                },
+                onSelect: function (select, node) {
+                    // Get a list of all selected nodes, and convert to a key array:
+                    var selKeys = $.map(node.tree.getSelectedNodes(), function (node) {
+                        return node.data.key;
+                    });
+                    $scope.roleSetupModel.MenuID = selKeys.join(",");
+                },
+                onDblClick: function (node, event) {
+                    node.toggleSelect();
+                },
+                onKeydown: function (node, event) {
+                    if (event.which === 32) {
+                        node.toggleSelect();
+                        return false;
+                    } else {
+                        return true;
+                    }
+                }
+            });
+
+        };
+
+        $scope.$watch('roleSetupModel.Owner', function (newVal) {
+            if (newVal) {
+                $scope.roleSetupModel.Role = "";
+                $http.post('/SecurityModule/RoleSetup/GetRole',
+                    { _OwnerID: $scope.roleSetupModel.Owner.OwnerID })
+                    .success(function (response) {
+                        
+                        $scope.rolesForSpecificOwner = response.result;
+                        $scope.loading = false;
+                    }).error(function () {
+                        $scope.loading = false;
+                    });
+            }
+        });
+
+        //---------------------------------------------
+        
+
+        $scope.$watch('roleSetupModel.Role', function (newVal) {
+            if (newVal) {
+                //GenerateMenuTree();
+                $http.post('/SecurityModule/RoleMenuPermission/GetRolePermittedMenu',
+                    { _RoleID: $scope.roleSetupModel.Role.RoleID, 
+                      _OwnerID: $scope.roleSetupModel.Owner.OwnerID })
+                    .success(function (response) {
+                        
+                        $("#MenuTree").dynatree("getRoot").visit(function (node) {
+                            node.select(false);
+                        });
+                        
+                        $.each(response, function (index, value) {
+                                $("#MenuTree").dynatree("getTree").selectKey(value);
+                        });
+                        
+                        $scope.loading = false;
+                    }).error(function () {
+                        $scope.loading = false;
+                    });
+            };
+        });
+
+
+
+        //############## Save Modal ########################
+       
+        $scope.Save = function () {
+            //console.log(x);
+            $scope.loading = true;
+
+            $http.post('/SecurityModule/RoleMenuPermission/SetRoleMenuPermission', JSON.stringify($scope.roleSetupModel))
+                .success(function (response) {
+                    $scope.loading = false;
+
+                    toastr.success(response.Message);
+                }).error(function (response) {
+                    $scope.loading = false;
+                    toastr.error(response.Message);
+                });
+        }
+
+        $scope.toggleRefreshTable = function () {
+            $scope.loading = true;
+            $("#MenuTree").dynatree("getRoot").visit(function (node) {
+                node.select(false);
+            });
+            $scope.loading = false;
+        };
+
+    });
+
+</script>
