@@ -8,3 +8,8 @@ D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.Utillity
 D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.Utillity\obj\x86\Debug\SILDMS.Utillity.csprojResolveAssemblyReference.cache
 D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.Utillity\obj\x86\Debug\SILDMS.Utillity.dll
 D:\Working Application\DMS\Application\SILDMS Application\SILDMS\SILDMS.Utillity\obj\x86\Debug\SILDMS.Utillity.pdb
+D:\Project For Github\4.DMS\SILDMS\SILDMS.Utillity\bin\x86\Debug\SILDMS.Utillity.dll
+D:\Project For Github\4.DMS\SILDMS\SILDMS.Utillity\bin\x86\Debug\SILDMS.Utillity.pdb
+D:\Project For Github\4.DMS\SILDMS\SILDMS.Utillity\obj\x86\Debug\SILDMS.Utillity.csprojResolveAssemblyReference.cache
+D:\Project For Github\4.DMS\SILDMS\SILDMS.Utillity\obj\x86\Debug\SILDMS.Utillity.dll
+D:\Project For Github\4.DMS\SILDMS\SILDMS.Utillity\obj\x86\Debug\SILDMS.Utillity.pdb
